@@ -1,0 +1,89 @@
+@startuml
+class order {
+}
+
+class supplier {
+}
+
+class catalog {
+}
+
+class shop {
+}
+
+class user {
+}
+
+class owner {
+}
+
+class manager {
+}
+
+class employee {
+}
+
+class cashier {
+}
+
+class customer {
+}
+
+class item {
+}
+
+class "item descriptor" {
+}
+
+class "cash register" {
+}
+
+class sale {
+}
+
+class inventory {
+}
+
+class transaction {
+}
+
+class "credit card" {
+}
+
+class cash {
+}
+
+class "fidelity card" {
+}
+
+class purchase {
+}
+
+shop -- inventory
+shop -- catalog
+shop -- "*" order : issues
+shop -- transaction : "Vedi la relazione"
+
+transaction <|-- purchase 
+
+catalog -- "*" "item descriptor" : contains
+
+order "*" -- supplier
+order -- "*" "item descriptor"
+
+user <|-- owner
+user <|-- manager
+user <|-- cashier
+user <|-- employee
+user <|-- customer
+
+
+user -- "0..*" "fidelity card"
+user -- cash
+user -- "0..*" "credit card"
+
+trasnaction -- "0..1" cash
+trasnaction "*" -- "0..1" "credit card"
+
+item -- "item descriptor" : is described by >
+@enduml
