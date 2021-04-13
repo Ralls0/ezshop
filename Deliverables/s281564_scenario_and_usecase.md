@@ -83,7 +83,7 @@ N1-->(Manage inventory)
 |  Precondition     | Customer has not a fidelity card, Cashier can create a new fidelity card and is logged in |
 |  Post condition     | Customer has a fidelity card |
 |  Nominal Scenario     | Creation |
-|  Variants     | Unable to create a new fidelity card |
+|  Variants     |  |
 
 
 | Scenario 1.1 | |
@@ -97,26 +97,13 @@ N1-->(Manage inventory)
 | 4 | The cashier adds the new customer in the system |
 | 5 | The customer has a fidelity card |
 
-
-| Scenario 1.2 | |
-| ------------- |:-------------:|
-|  Precondition     | Customer has not a fidelity card, Cashier can create a new fidelity card and is logged in |
-|  Post condition     | Customer has a fidelity card |
-| Step#        | Description  |
-|  1     | The customer has not a fidelity card |
-|  2     | The cashier is asked to create the fidelity card |
-| 3 | The customer fill the form |
-| 4 | The cashier is not able to add the new customer in the system |
-| 5 | The technical support is contacted |
-| 6 | The customer has a fidelity card |
-
 ### Use case 2, UC2 - Delete fidelity card
 | Actors Involved        | Cashier, Customer |
 | ------------- |:-------------:|
 |  Precondition     | Customer is owner of a fidelity card, Cashier can delete a fidelity card and is logged in |
 |  Post condition     | Customer has not a fidelity card |
 |  Nominal Scenario     | Deletion |
-|  Variants     | Unable to delete a fidelity card |
+|  Variants     |  |
 
 
 | Scenario 2.1 | |
@@ -127,18 +114,6 @@ N1-->(Manage inventory)
 |  1     | The customer want to delete her fidelity card |
 |  2     | The cashier is asked to delete the fidelity card |
 | 4 | The cashier delete the customer in the system |
-| 5 | The customer has not a fidelity card and her data was deleted |
-
-
-| Scenario 2.2 | |
-| ------------- |:-------------:|
-|  Precondition     | Customer is owner of a fidelity card, Cashier can delete a fidelity card and is logged in |
-|  Post condition     | Customer has not a fidelity card |
-| Step#        | Description  |
-|  1     | The customer want to delete her fidelity card |
-|  2     | The cashier is asked to delete the fidelity card |
-| 3 | The cashier is not able to delete the customer data in the system |
-| 4 | The technical support is contacted |
 | 5 | The customer has not a fidelity card and her data was deleted |
 
 ### Use case 3, UC3 - Search and modify customer details
@@ -156,7 +131,7 @@ N1-->(Manage inventory)
 |  Post condition     | Customer's data is updated |
 | Step#        | Description  |
 | 1 | Some personal data of the customer need to be modified |
-| 2 | The cashier is asked to modity the fidelity card data of the customer |
+| 2 | The cashier is asked to modify the fidelity card data of the customer |
 | 3 | The cashier searches the customer in the system |
 | 4 | The customer tells the new personal data that need to be modified |
 | 5 | The cashier modifies the customer's data in the system |
@@ -195,7 +170,7 @@ N1-->(Manage inventory)
 |  Precondition     | Warehouse Worker is logged in and can add a new product, the product is not in the system |
 |  Post condition     | Product is in the system |
 |  Nominal Scenario     | Creaction |
-|  Variants     | Unable to add a new product |
+|  Variants     |  |
 
 
 | Scenario 4.1 | |
@@ -205,18 +180,8 @@ N1-->(Manage inventory)
 | Step#        | Description  |
 | 1 | A new product must be added in the inventory |
 | 2 | The Warehouse Worker fill the form with product data |
-| 3 | The product is added |
-
-| Scenario 4.2 | |
-| ------------- |:-------------:|
-|  Precondition     | Warehouse Worker is logged in and can add a new product, the product is not in the system |
-|  Post condition     | Product is in the system |
-| Step#        | Description  |
-| 1 | A new product must be added in the inventory |
-| 2 | The warehouse worker fill the form with product data |
-| 3 | The warehouse worker is not able to add the product |
-| 4 | The technical support is contacted |
-| 5 | The product is added |
+| 3 | The Warehouse Worker read the bar code of the product |
+| 4 | The product is added |
 
 ### Use case 5, UC5 - delete a product
 | Actors Involved        | Warehouse Worker |
@@ -224,7 +189,7 @@ N1-->(Manage inventory)
 |  Precondition     | Warehouse Worker is logged in and can delete a product, the product is in the system |
 |  Post condition     | Product is deleted |
 |  Nominal Scenario     | Deletion |
-|  Variants     | Unable to delete a product |
+|  Variants     | Unable to find the product |
 
 | Scenario 5.1 | |
 | ------------- |:-------------:|
@@ -235,18 +200,17 @@ N1-->(Manage inventory)
 | 2 | The warehouse worker searches the product |
 | 3 | The product is deleted |
 
-| Scenario 5.2 | |
-| ------------- |:-------------:|
-|  Precondition     | Warehouse Worker is logged in and can delete products, the product is in the system |
-|  Post condition     | Product is deleted |
-| Step#        | Description  |
-| 1 | A product must be deleted from the inventory |
-| 2 | The warehouse worker searches the product |
-| 3 | The warehouse worker is not able to delete the product |
-| 4 | The technical support is contacted |
-| 5 | The product is deleted |
+| Scenario 5.1   |                                                              |
+| -------------- | :----------------------------------------------------------: |
+| Precondition   | Warehouse Worker is logged in and can delete products, the product is in the system |
+| Post condition |                The product is not in the list                |
+| Step#          |                         Description                          |
+| 1              |         A product must be deleted from the inventory         |
+| 2              |          The warehouse worker searches the product           |
+| 3              |                The product is not in the list                |
 
 ### Use case 6, UC6 - Modify a product
+
 | Actors Involved        | Warehouse Worker |
 | ------------- |:-------------:|
 |  Precondition     | Warehouse Worker is logged in and can modify products, the product is in the system |
@@ -257,8 +221,8 @@ N1-->(Manage inventory)
 
 | Scenario 6.1 | |
 | ------------- |:-------------:|
-|  Precondition     |  |
-|  Post condition     |  |
+|  Precondition     | Warehouse Worker is logged in and can modify products, the product is in the system |
+|  Post condition     | Product is updated |
 | Step#        | Description  |
 | 1 | Some data of a product should be modifyed |
 | 2 | The warehouse worker searches the product |
@@ -267,13 +231,13 @@ N1-->(Manage inventory)
 
 | Scenario 6.2 | |
 | ------------- |:-------------:|
-|  Precondition     |  |
-|  Post condition     |  |
+|  Precondition     | Warehouse Worker is logged in and can modify products, the product is in the system |
+|  Post condition     | Product is updated |
 | Step#        | Description  |
 | 1 | Some data of a product should be modifyed |
 | 2 | The warehouse worker searches the product |
 | 3 | Product is not in the list |
-| 4 | warehouse worker adds the product in the system with updated data|
+| 4 | Warehouse worker adds the product in the system with updated data |
 | 5 | Product is updated |
 
 ### Use case 6, UC6 - List all product
@@ -283,22 +247,3 @@ N1-->(Manage inventory)
 |  Post condition     | List of products is shown |
 |  Nominal Scenario     | Showing |
 |  Variants     | System bug with the result of no product shown |
-
-
-| Scenario 6.1 | |
-| ------------- |:-------------:|
-|  Precondition     | Worker is lodded in |
-|  Post condition     | List of products is shown |
-| Step#        | Description  |
-| 1 | Worker should show the list of products |
-| 2 | List of products is shown |
-
-| Scenario 6.2 | |
-| ------------- |:-------------:|
-|  Precondition     | Worker is lodded in |
-|  Post condition     | List of products is shown |
-| Step#        | Description  |
-| 1 | Worker should show the list of products |
-| 2 | A software bug happened |
-| 3 | The technical support is contacted |
-| 4 | List of products is shown |

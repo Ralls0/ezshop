@@ -1,27 +1,28 @@
 @startuml
+
 (EZShop)
 :Worker:
 :Cashier:
 :WarehouseWorker:
-:Maintainer:
 :Owner:
-:Manager:
 :Customer:
-:Subscriber:
 :AnonymousCustomer:
-:Device:
+:CashRegister:
+:FidelityCard:
+:POS:
+:Product:
 
 Worker<|--Cashier
 Worker<|--WarehouseWorker
-Worker<|--Maintainer
 Worker<|--Owner
-Worker<|--Manager
 
-Customer<|--Subscriber
-Customer<|--AnonymousCustomer
+Customer--|>AnonymousCustomer
 
 (EZShop)<--Worker
-(EZShop)<--Customer
-(EZShop)<--Device
+(EZShop)<--AnonymousCustomer
+(EZShop)<--CashRegister
+(EZShop)<--FidelityCard
+(EZShop)<--POS
+(EZShop)<--Product
 
 @enduml
