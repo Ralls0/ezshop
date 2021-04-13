@@ -10,4 +10,5 @@
 | ID | Description |
 | :---: | :---: |
 | FR2.5 | List all workers |
-| 
+| FR3.3 | List all customers |
+| ~FR5~ | ~Contact the maintainers~ |
