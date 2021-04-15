@@ -60,17 +60,18 @@ EZShop is a software application to:
 # Stakeholders
 
 
-| Stakeholder name    |                                   Description                                    |
-| ------------------- | :------------------------------------------------------------------------------: |
-| Owner               |                                Owner of the shop                                 |
-| Cashier             |                   Workers that manage sales through the system                   |
-| Warehouse Worker    |                        Workers that manage the inventory                         |
-| Customer            |                          Customers with a fidelity card                          |
+| Stakeholder name    |                         Description                          |
+| ------------------- | :----------------------------------------------------------: |
+| Owner               |                      Owner of the shop                       |
+| Cashier             |         Workers that manage sales through the system         |
+| Warehouse Worker    |              Workers that manage the inventory               |
+| Customer            |                Customers with a fidelity card                |
 | Anonymous Customers | People that interact with the sytems buying products but without a fidelity card |
-| Fidelity Card       |                          Card associated to a customer                           |
-| POS                 |                                  Point of sale                                   |
-| Product             |                             Product sold by the shop                             |
-| Cash register       |                          Register used to handle sales                           |
+| Fidelity Card       |                Card associated to a customer                 |
+| POS                 |                        Point of sale                         |
+| Product             |                   Product sold by the shop                   |
+| Cash register       |                Register used to handle sales                 |
+| Supplier            |               Person/company for the supplying               |
 
 # Context Diagram and interfaces
 
@@ -768,11 +769,24 @@ Use case 1, UC1 - Manage sale
 \<concepts are used consistently all over the document, ex in use cases, requirements etc>
 
 # System Design
-\<describe here system design>
-
-\<must be consistent with Context diagram>
+Not really meaningful in this case. Only software components are needed.
 
 # Deployment Diagram 
 
-\<describe here deployment diagram >
+```plantuml
+@startuml
+
+node LocalServer
+artifact EZShopApplication
+node PCClient
+node SmartphoneClient
+
+LocalServer -- EZShopApplication
+LocalServer -- "*" PCClient
+LocalServer -- "*" SmartphoneClient 
+
+@enduml
+```
+
+
 

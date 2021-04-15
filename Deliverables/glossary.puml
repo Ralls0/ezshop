@@ -1,6 +1,6 @@
 @startuml
 class order {
-    int oderdNumeber
+    int orderNumber
 }
 
 class supplier {
@@ -12,10 +12,10 @@ class catalogue {
 class shop {
 }
 
-class user {
+class Person {
     String name
     String surname
-    String age
+    int age
     String accountName
     String email
 }
@@ -23,28 +23,27 @@ class user {
 class owner {
 }
 
-class employee {
+class "Warehouse Worker" {
 }
 
 class cashier {
 }
 
 class customer {
-    int fidelityCardAssociated
 }
 
-class item {
-    
+class Product {
+    String barCode
+    int numberOfProducts
 }
 
-class "item descriptor" {
+class "Product descriptor" {
+    int ID
+    String ProductAttribute
 }
 
 class "cash register" {
     int maxAmount
-}
-
-class sale {
 }
 
 class inventory {
@@ -70,32 +69,48 @@ class "fidelity card" {
     string barCode
 }
 
+class POS {
+}
+
 shop -- inventory
 shop -- catalogue
 shop -- "*" order : issues
 shop -- "*" transaction : "manages"
+shop -- owner : manages 
 
-transaction <|-- sale
 
-catalogue -- "*" "item descriptor" : contains
+
+catalogue -- "*" "Product descriptor" : contains
 
 order "*" -- supplier
-order -- "*" "item descriptor"
+order -- "*" "Product descriptor"
 
-user <|-- owner
-user <|-- cashier
-user <|-- employee
-user <|-- customer
+Person <|-- owner
+Person <|-- cashier
+Person <|-- "Warehouse Worker"
+Person <|-- customer
 
 
-user -- "0..*" "fidelity card"
-user --up cash
-user -- "0..*" "credit card"
+customer -- "0..1" "fidelity card"
+customer -- cash
+customer -- "0..*" "credit card"
 
 transaction -- "0..1" cash
 transaction "*" -- "0..1" "credit card"
+transaction "*" -- "0..1" "fidelity card"
 
-cash "*" --right "cash register" : contains
+cash "*" -- "cash register" : contains
 
-item -- "item descriptor" : is described by >
+Product "*" -- "Product descriptor" : is described by >
+Product -- transaction
+Product "*" -- inventory
+
+"cash register" -- cashier : < interacts with
+"fidelity card" -- cashier : < manages
+
+"Warehouse Worker" "*" -- "*" inventory
+
+POS -- cashier : < interacts with
+POS "0..1" -- "*" "credit card"
+POS "0..1" -- "*" transaction 
 @enduml
