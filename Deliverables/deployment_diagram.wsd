@@ -1,0 +1,12 @@
+@startuml
+
+node LocalServer
+artifact EZShopApplication
+node PCClient
+node SmartphoneClient
+
+LocalServer -- EZShopApplication
+LocalServer -- "*" PCClient
+LocalServer -- "*" SmartphoneClient 
+
+@enduml

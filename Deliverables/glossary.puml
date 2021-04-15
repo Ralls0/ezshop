@@ -1,23 +1,26 @@
 @startuml
 class order {
+    int oderdNumeber
 }
 
 class supplier {
 }
 
-class catalog {
+class catalogue {
 }
 
 class shop {
 }
 
 class user {
+    String name
+    String surname
+    String age
+    String accountName
+    String email
 }
 
 class owner {
-}
-
-class manager {
 }
 
 class employee {
@@ -27,63 +30,72 @@ class cashier {
 }
 
 class customer {
+    int fidelityCardAssociated
 }
 
 class item {
+    
 }
 
 class "item descriptor" {
 }
 
 class "cash register" {
+    int maxAmount
 }
 
 class sale {
 }
 
 class inventory {
+    int numberOfObjects
 }
 
 class transaction {
+    int transactionNumber
+    float amount
 }
 
 class "credit card" {
+    int creditCardNumber
+    int creditCardType
 }
 
 class cash {
+    string currency
 }
 
 class "fidelity card" {
-}
-
-class purchase {
+    int fideltyCardNumber
+    string barCode
 }
 
 shop -- inventory
-shop -- catalog
+shop -- catalogue
 shop -- "*" order : issues
-shop -- transaction : "Vedi la relazione"
+shop -- "*" transaction : "manages"
 
-transaction <|-- purchase 
+transaction <|-- sale
 
-catalog -- "*" "item descriptor" : contains
+catalogue -- "*" "item descriptor" : contains
 
 order "*" -- supplier
 order -- "*" "item descriptor"
 
 user <|-- owner
-user <|-- manager
 user <|-- cashier
 user <|-- employee
 user <|-- customer
 
 
 user -- "0..*" "fidelity card"
-user -- cash
+user --up cash
 user -- "0..*" "credit card"
 
-trasnaction -- "0..1" cash
-trasnaction "*" -- "0..1" "credit card"
+transaction -- "0..1" cash
+transaction "*" -- "0..1" "credit card"
+
+cash "*" --right "cash register" : contains
 
 item -- "item descriptor" : is described by >
 @enduml
