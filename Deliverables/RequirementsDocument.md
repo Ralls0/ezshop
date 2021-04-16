@@ -77,7 +77,7 @@ EZShop is a software application to:
 
 ## Context Diagram
 ```plantuml
-@startuml ContextDiagram
+@startuml
 
 (EZShop)
 :Worker:
@@ -158,24 +158,24 @@ Giulia is 45 and she works as a warehouse. She handles supplying and so she is i
 | FR4.5.2 |                      Delete order                      |
 | FR4.5.3 |                      Modify order                      |
 | FR4.5.4 |                 Manage periodic orders                 |
-| FR6     |                      Manage sales                      |
-| FR6.1   |                    Open transaction                    |
-| FR6.2   |                    Manage products                     |
-| FR6.2.1 |                     Read bar code                      |
-| FR6.2.2 |          Add the product to the shopping cart          |
-| FR6.3   |              Visualize the amount to pay               |
-| FR6.4   |                 Manage payment options                 |
-| FR6.4.1 |                 Start POS transaction                  |
-| FR6.4.2 |                  Enter payment amount                  |
-| FR6.4.3 |                  End POS transaction                   |
-| FR6.5   |           Read bar code of the fidelity card           |
-| FR6.6   |                   Print the receipt                    |
-| FR6.7   |                   Close transaction                    |
-| FR7     |                   Support accounting                   |
-| FR7.1   |                   List transactions                    |
-| FR7.2   |                   Visualize incomes                    |
-| FR7.3   |              Visualize product statistics              |
-| FR7.4   |                  Customers statistics                  |
+| FR5     |                      Manage sales                      |
+| FR5.1   |                    Open transaction                    |
+| FR5.2   |                    Manage products                     |
+| FR5.2.1 |                     Read bar code                      |
+| FR5.2.2 |          Add the product to the shopping cart          |
+| FR5.3   |              Visualize the amount to pay               |
+| FR5.4   |                 Manage payment options                 |
+| FR5.4.1 |                 Start POS transaction                  |
+| FR5.4.2 |                  Enter payment amount                  |
+| FR5.4.3 |                  End POS transaction                   |
+| FR5.5   |           Read bar code of the fidelity card           |
+| FR5.6   |                   Print the receipt                    |
+| FR5.7   |                   Close transaction                    |
+| FR6     |                   Support accounting                   |
+| FR6.1   |                   List transactions                    |
+| FR6.2   |                   Visualize incomes                    |
+| FR6.3   |              Visualize product statistics              |
+| FR6.4   |                  Customers statistics                  |
 
 ## Non Functional Requirements
 
@@ -192,7 +192,7 @@ Giulia is 45 and she works as a warehouse. She handles supplying and so she is i
 
 ## Use case diagram
 ```plantuml
-@startuml UseCaseDiagram
+@startuml
 
 :Worker:
 :Cashier:
@@ -285,7 +285,9 @@ AnonymousCustomer<|--Customer
 | Nominal Scenario |        Create account         |
 | Variants         |    Unable to add the user     |
 
-| Scenario 1.1   |                                               |
+##### Scenario 3.1 
+
+| Scenario 3.1   |                                               |
 | -------------- | :-------------------------------------------: |
 | Precondition   |         Worker account doesn't exists         |
 | Post condition |         Worker account doesn't exists         |
@@ -294,7 +296,9 @@ AnonymousCustomer<|--Customer
 | 2              |  The manager is asked to create the account   |
 | 3              | The manager is not able to create the account |
 
-| Scenario 1.2   |                                            |
+##### Scenario 3.2 
+
+| Scenario 3.2   |                                            |
 | -------------- | :----------------------------------------: |
 | Precondition   |       Worker account doesn't exists        |
 | Post condition |           Worker account exists            |
@@ -303,7 +307,7 @@ AnonymousCustomer<|--Customer
 | 2              | The manager is asked to create the account |
 | 3              |         The worker has an account          |
 
-### Use case 4, UC3
+### Use case 4, UC4
 
 | Actors Involved  |                      Worker                       |
 | ---------------- | :-----------------------------------------------: |
@@ -312,7 +316,9 @@ AnonymousCustomer<|--Customer
 | Nominal Scenario |                   Modification                    |
 | Variants         | Delete a worker, cannot find the worker to modify |
 
-| Scenario 1.1   |                                                      |
+##### Scenario 4.1
+
+| Scenario 4.1   |                                                      |
 | -------------- | :--------------------------------------------------: |
 | Precondition   |             Worker account has to exist              |
 | Post condition |         Worker personal details are modified         |
@@ -321,9 +327,9 @@ AnonymousCustomer<|--Customer
 | 2              |                  Search the worker                   |
 | 3              |             Modify his/her personal data             |
 
+##### Scenario 4.2
 
-
-| Scenario 1.2   |                                                      |
+| Scenario 4.2   |                                                      |
 | -------------- | :--------------------------------------------------: |
 | Precondition   |            Worker account does not exist             |
 | Post condition |         Worker personal details are modified         |
@@ -333,7 +339,9 @@ AnonymousCustomer<|--Customer
 | 3              |                Cannot find the worker                |
 | 4              |           Create the account of the worker           |
 
-| Scenario 1.1   |                                                      |
+##### Scenario 4.3
+
+| Scenario 4.3   |                                                      |
 | -------------- | :--------------------------------------------------: |
 | Precondition   |             Worker account has to exist              |
 | Post condition |         Worker personal details are modified         |
@@ -342,7 +350,7 @@ AnonymousCustomer<|--Customer
 | 2              |                  Search the worker                   |
 | 3              |            Delete completely his account             |
 
-### Use case 1, UC1 - Create fidelity card
+### Use case 5, UC5
 | Actors Involved  |                                     Cashier, Customer                                     |
 | ---------------- | :---------------------------------------------------------------------------------------: |
 | Precondition     | Customer has not a fidelity card, Cashier can create a new fidelity card and is logged in |
@@ -764,9 +772,124 @@ Use case 1, UC1 - Manage sale
 
 # Glossary
 
-\<use UML class diagram to define important terms, or concepts in the domain of the system, and their relationships> 
+```plantuml
+@startuml
+class order {
+    int orderNumber
+}
 
-\<concepts are used consistently all over the document, ex in use cases, requirements etc>
+class supplier {
+}
+
+class catalogue {
+}
+
+class shop {
+}
+
+class Person {
+    String name
+    String surname
+    int age
+    String accountName
+    String email
+}
+
+class owner {
+}
+
+class "Warehouse Worker" {
+}
+
+class cashier {
+}
+
+class customer {
+}
+
+class Product {
+    String barCode
+    int numberOfProducts
+}
+
+class "Product descriptor" {
+    int ID
+    String ProductAttribute
+}
+
+class "cash register" {
+    int maxAmount
+}
+
+class inventory {
+    int numberOfObjects
+}
+
+class transaction {
+    int transactionNumber
+    float amount
+}
+
+class "credit card" {
+    int creditCardNumber
+    int creditCardType
+}
+
+class cash {
+    string currency
+}
+
+class "fidelity card" {
+    int fideltyCardNumber
+    string barCode
+}
+
+class POS {
+}
+
+shop --- inventory
+shop --- catalogue
+shop --- "*" order : issues
+shop ---- "*" transaction : "manages"
+shop ---up owner : manages 
+
+
+
+catalogue -- "*" "Product descriptor" : contains
+
+order "*" -- supplier
+order -- "*" "Product descriptor"
+
+Person <|-- owner
+Person <|-- cashier
+Person <|- "Warehouse Worker"
+Person <|-- customer
+
+
+customer --- "0..1" "fidelity card"
+customer --- cash
+customer --- "0..*" "credit card"
+
+transaction ---up "0..1" cash
+transaction "*" ---up "0..1" "credit card"
+transaction "*" ---up "0..1" "fidelity card"
+
+cash "*" --- "cash register" : contains
+
+Product "*" ---up "Product descriptor" : is described by >
+Product ---up transaction
+Product "*" ---up inventory
+
+"cash register" ---- cashier : < interacts with
+"fidelity card" --- cashier : < manages
+
+"Warehouse Worker" "*" -- "*" inventory
+
+POS --up cashier : < interacts with
+POS "0..1" --left "*" "credit card"
+POS "0..1" --up "*" transaction 
+@enduml
+```
 
 # System Design
 Not really meaningful in this case. Only software components are needed.
