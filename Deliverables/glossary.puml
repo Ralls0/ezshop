@@ -72,11 +72,11 @@ class "fidelity card" {
 class POS {
 }
 
-shop -- inventory
-shop -- catalogue
-shop -- "*" order : issues
-shop -- "*" transaction : "manages"
-shop -- owner : manages 
+shop --- inventory
+shop --- catalogue
+shop --- "*" order : issues
+shop ---- "*" transaction : "manages"
+shop ---up owner : manages 
 
 
 
@@ -87,30 +87,30 @@ order -- "*" "Product descriptor"
 
 Person <|-- owner
 Person <|-- cashier
-Person <|-- "Warehouse Worker"
+Person <|- "Warehouse Worker"
 Person <|-- customer
 
 
-customer -- "0..1" "fidelity card"
-customer -- cash
-customer -- "0..*" "credit card"
+customer --- "0..1" "fidelity card"
+customer --- cash
+customer --- "0..*" "credit card"
 
-transaction -- "0..1" cash
-transaction "*" -- "0..1" "credit card"
-transaction "*" -- "0..1" "fidelity card"
+transaction ---up "0..1" cash
+transaction "*" ---up "0..1" "credit card"
+transaction "*" ---up "0..1" "fidelity card"
 
-cash "*" -- "cash register" : contains
+cash "*" --- "cash register" : contains
 
-Product "*" -- "Product descriptor" : is described by >
-Product -- transaction
-Product "*" -- inventory
+Product "*" ---up "Product descriptor" : is described by >
+Product ---up transaction
+Product "*" ---up inventory
 
-"cash register" -- cashier : < interacts with
-"fidelity card" -- cashier : < manages
+"cash register" ---- cashier : < interacts with
+"fidelity card" --- cashier : < manages
 
 "Warehouse Worker" "*" -- "*" inventory
 
-POS -- cashier : < interacts with
-POS "0..1" -- "*" "credit card"
-POS "0..1" -- "*" transaction 
+POS --up cashier : < interacts with
+POS "0..1" --left "*" "credit card"
+POS "0..1" --up "*" transaction 
 @enduml
