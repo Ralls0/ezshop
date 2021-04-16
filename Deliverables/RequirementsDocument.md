@@ -351,6 +351,7 @@ AnonymousCustomer<|--Customer
 | 3              |            Delete completely his account             |
 
 ### Use case 5, UC5
+
 | Actors Involved  |                                     Cashier, Customer                                     |
 | ---------------- | :---------------------------------------------------------------------------------------: |
 | Precondition     | Customer has not a fidelity card, Cashier can create a new fidelity card and is logged in |
@@ -358,8 +359,9 @@ AnonymousCustomer<|--Customer
 | Nominal Scenario |                                         Creation                                          |
 | Variants         |                                                                                           |
 
+##### Scenario 5.1
 
-| Scenario 1.1   |                                                                                           |
+| Scenario 5.1   |                                                                                           |
 | -------------- | :---------------------------------------------------------------------------------------: |
 | Precondition   | Customer has not a fidelity card, Cashier can create a new fidelity card and is logged in |
 | Post condition |                               Customer has a fidelity card                                |
@@ -370,7 +372,8 @@ AnonymousCustomer<|--Customer
 | 4              |                      The cashier adds the new customer in the system                      |
 | 5              |                             The customer has a fidelity card                              |
 
-### Use case 2, UC2 - Delete fidelity card
+### Use case 6, UC6
+
 | Actors Involved  |                                     Cashier, Customer                                     |
 | ---------------- | :---------------------------------------------------------------------------------------: |
 | Precondition     | Customer is owner of a fidelity card, Cashier can delete a fidelity card and is logged in |
@@ -378,8 +381,9 @@ AnonymousCustomer<|--Customer
 | Nominal Scenario |                                         Deletion                                          |
 | Variants         |                                                                                           |
 
+##### Scenario 6.1
 
-| Scenario 2.1   |                                                                                           |
+| Scenario 6.1   |                                                                                           |
 | -------------- | :---------------------------------------------------------------------------------------: |
 | Precondition   | Customer is owner of a fidelity card, Cashier can delete a fidelity card and is logged in |
 | Post condition |                             Customer has not a fidelity card                              |
@@ -389,7 +393,8 @@ AnonymousCustomer<|--Customer
 | 4              |                       The cashier delete the customer in the system                       |
 | 5              |               The customer has not a fidelity card and her data was deleted               |
 
-### Use case 3, UC3 - Search and modify customer details
+### Use case 7, UC7
+
 | Actors Involved  |                                                      Cashier, Customer                                                       |
 | ---------------- | :--------------------------------------------------------------------------------------------------------------------------: |
 | Precondition     | Customer has already a fidelity card and her data is in the system, Cashier can modify a fidelity card data and is logged in |
@@ -398,7 +403,9 @@ AnonymousCustomer<|--Customer
 | Variants         |                                    Delete a customer, cannot find the customers to modify                                    |
 
 
-| Scenario 3.1   |                                                                                                                              |
+##### Scenario 7.1
+
+| Scenario 7.1   |                                                                                                                              |
 | -------------- | :--------------------------------------------------------------------------------------------------------------------------: |
 | Precondition   | Customer has already a fidelity card and her data is in the system, Cashier can modify a fidelity card data and is logged in |
 | Post condition |                                                  Customer's data is updated                                                  |
@@ -410,8 +417,9 @@ AnonymousCustomer<|--Customer
 | 5              |                                    The cashier modifies the customer's data in the system                                    |
 | 6              |                                               The customer's data are updated                                                |
 
+##### Scenario 7.2
 
-| Scenario 3.2   |                                                                                                                              |
+| Scenario 7.2   |                                                                                                                              |
 | -------------- | :--------------------------------------------------------------------------------------------------------------------------: |
 | Precondition   | Customer has already a fidelity card and her data is in the system, Cashier can modify a fidelity card data and is logged in |
 | Post condition |                                                  Customer's data is updated                                                  |
@@ -424,7 +432,9 @@ AnonymousCustomer<|--Customer
 | 6              |                                   The cashier adds the customer's data again in the system                                   |
 | 7              |                                The customer has a new fidelity card and her data are updated                                 |
 
-| Scenario 3.3   |                                                                                                                              |
+##### Scenario 7.3
+
+| Scenario 7.3   |                                                                                                                              |
 | -------------- | :--------------------------------------------------------------------------------------------------------------------------: |
 | Precondition   | Customer has already a fidelity card and her data is in the system, Cashier can modify a fidelity card data and is logged in |
 | Post condition |                                                  Customer's data is updated                                                  |
@@ -436,7 +446,7 @@ AnonymousCustomer<|--Customer
 | 5              |                        The cashier adds the customer's data again in the system with updated version                         |
 | 6              |                                The customer has a new fidelity card and her data are updated                                 |
 
-### Use case 4, UC4 - Add a product
+### Use case 8, UC8
 
 | Actors Involved  |                                     Warehouse Worker                                      |
 | ---------------- | :---------------------------------------------------------------------------------------: |
@@ -445,8 +455,9 @@ AnonymousCustomer<|--Customer
 | Nominal Scenario |                                         Creaction                                         |
 | Variants         |                                                                                           |
 
+##### Scenario 8.1
 
-| Scenario 4.1   |                                                                                           |
+| Scenario 8.1   |                                                                                           |
 | -------------- | :---------------------------------------------------------------------------------------: |
 | Precondition   | Warehouse Worker is logged in and can add a new product, the product is not in the system |
 | Post condition |                                 Product is in the system                                  |
@@ -456,7 +467,8 @@ AnonymousCustomer<|--Customer
 | 3              |                   The Warehouse Worker read the bar code of the product                   |
 | 4              |                                   The product is added                                    |
 
-### Use case 5, UC5 - delete a product
+### Use case 9, UC9
+
 | Actors Involved  |                                   Warehouse Worker                                   |
 | ---------------- | :----------------------------------------------------------------------------------: |
 | Precondition     | Warehouse Worker is logged in and can delete a product, the product is in the system |
@@ -464,7 +476,9 @@ AnonymousCustomer<|--Customer
 | Nominal Scenario |                                       Deletion                                       |
 | Variants         |                              Unable to find the product                              |
 
-| Scenario 5.1   |                                                                                     |
+##### Scenario 9.1
+
+| Scenario 9.1   |                                                                                     |
 | -------------- | :---------------------------------------------------------------------------------: |
 | Precondition   | Warehouse Worker is logged in and can delete products, the product is in the system |
 | Post condition |                                 Product is deleted                                  |
@@ -473,7 +487,9 @@ AnonymousCustomer<|--Customer
 | 2              |                      The warehouse worker searches the product                      |
 | 3              |                               The product is deleted                                |
 
-| Scenario 5.1   |                                                                                     |
+##### Scenario 9.2
+
+| Scenario 9.2   |                                                                                     |
 | -------------- | :---------------------------------------------------------------------------------: |
 | Precondition   | Warehouse Worker is logged in and can delete products, the product is in the system |
 | Post condition |                           The product is not in the list                            |
@@ -482,7 +498,7 @@ AnonymousCustomer<|--Customer
 | 2              |                      The warehouse worker searches the product                      |
 | 3              |                           The product is not in the list                            |
 
-### Use case 6, UC6 - Modify a product
+### Use case 10, UC10
 
 | Actors Involved  |                                  Warehouse Worker                                   |
 | ---------------- | :---------------------------------------------------------------------------------: |
@@ -491,8 +507,9 @@ AnonymousCustomer<|--Customer
 | Nominal Scenario |                                    Modification                                     |
 | Variants         |                          Cannot find the product to modify                          |
 
+##### Scenario 10.1
 
-| Scenario 6.1   |                                                                                     |
+| Scenario 10.1   |                                                                                     |
 | -------------- | :---------------------------------------------------------------------------------: |
 | Precondition   | Warehouse Worker is logged in and can modify products, the product is in the system |
 | Post condition |                                 Product is updated                                  |
@@ -502,7 +519,9 @@ AnonymousCustomer<|--Customer
 | 3              |                          Warehouse worker modifys the data                          |
 | 4              |                                 Product is updated                                  |
 
-| Scenario 6.2   |                                                                                     |
+##### Scenario 10.2
+
+| Scenario 10.2   |                                                                                     |
 | -------------- | :---------------------------------------------------------------------------------: |
 | Precondition   | Warehouse Worker is logged in and can modify products, the product is in the system |
 | Post condition |                                 Product is updated                                  |
@@ -513,7 +532,8 @@ AnonymousCustomer<|--Customer
 | 4              |          Warehouse worker adds the product in the system with updated data          |
 | 5              |                                 Product is updated                                  |
 
-### Use case 6, UC6 - List all product
+### Use case 11, UC11
+
 | Actors Involved  |   Warehouse Worker, Owner, Manager, Cashier    |
 | ---------------- | :--------------------------------------------: |
 | Precondition     |              Worker is lodded in               |
@@ -522,7 +542,7 @@ AnonymousCustomer<|--Customer
 | Variants         | System bug with the result of no product shown |
 
 
-Use case 1, UC1 - Manage sale
+### Use case 12, UC12
 
 | Actors Involved  |                                     Cashier, Customer                                      |
 | :--------------: | :----------------------------------------------------------------------------------------: |
@@ -534,7 +554,9 @@ Use case 1, UC1 - Manage sale
 |                  |              Customer have not enough credit on his card to pay all products               |
 |                  |                      Payment with card fails due to network condition                      |
 
-|  Scenario 1.1  |                                     Customer pay with cash                                      |
+##### Scenario 12.1
+
+|  Scenario 12.1  |                                     Customer pay with cash                                      |
 | :------------: | :---------------------------------------------------------------------------------------------: |
 |  Precondition  |   Customer chose one or more products to buy, cashier is free and can manage the transaction    |
 | Post condition | Customer bought one or more products and receive a receipt, transaction is logged in the system |
@@ -547,7 +569,9 @@ Use case 1, UC1 - Manage sale
 |       6        |                   The cashier close transaction and print transaction receipt                   |
 |       7        |                   The customer has their products and the transaction receipt                   |
 
-|  Scenario 1.2  |                                  Customer pay with credit card                                  |
+##### Scenario 12.2
+
+|  Scenario 12.2  |                                  Customer pay with credit card                                  |
 | :------------: | :---------------------------------------------------------------------------------------------: |
 |  Precondition  |   Customer chose one or more products to buy, cashier is free and can manage the transaction    |
 | Post condition | Customer bought one or more products and receive a receipt, transaction is logged in the system |
@@ -562,7 +586,9 @@ Use case 1, UC1 - Manage sale
 |       8        |                   The cashier close transaction and print transaction receipt                   |
 |       9        |            The customer has their products, the transaction receipt and POS receipt             |
 
-|  Scenario 1.3  | Customer chose to pay with cash but isn't enough for all products, customer chooses to cancel transaction |
+##### Scenario 12.3
+
+|  Scenario 12.3  | Customer chose to pay with cash but isn't enough for all products, customer chooses to cancel transaction |
 | :------------: | :-------------------------------------------------------------------------------------------------------: |
 |  Precondition  |        Customer chose one or more products to buy, cashier is free and can manage the transaction         |
 | Post condition |                           Customer didn't buy products, transaction is deleted                            |
@@ -574,7 +600,9 @@ Use case 1, UC1 - Manage sale
 |       5        |                    The customer has not enough cash and chooses to cancels transaction                    |
 |       6        |                                      The cashier deletes transaction                                      |
 
-|  Scenario 1.4  | Customer chose to pay with cash but isn't enough for all products, customer chooses to leave one or more products |
+##### Scenario 12.4
+
+|  Scenario 12.4  | Customer chose to pay with cash but isn't enough for all products, customer chooses to leave one or more products |
 | :------------: | :---------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |            Customer chose one or more products to buy, cashier is free and can manage the transaction             |
 | Post condition |        Customer bought part of initial products and receive a receipt, transaction is logged in the system        |
@@ -589,7 +617,9 @@ Use case 1, UC1 - Manage sale
 |       6        |                           The cashier closes transaction and prints transaction receipt                           |
 |       7        |                       The customer has part of initial products and the transaction receipt                       |
 
-|  Scenario 1.5  | Customer chose to pay with credit card but have not enough credit for all products, customer chooses to cancel transaction |
+##### Scenario 12.5
+
+|  Scenario 12.5  | Customer chose to pay with credit card but have not enough credit for all products, customer chooses to cancel transaction |
 | :------------: | :------------------------------------------------------------------------------------------------------------------------: |
 |  Precondition  |                 Customer chose one or more products to buy, cashier is free and can manage the transaction                 |
 | Post condition |                                    Customer didn't buy products, transaction is deleted                                    |
@@ -603,7 +633,9 @@ Use case 1, UC1 - Manage sale
 |       7        |           Payment fails due to not sufficient balance on credit card and customer chooses to cancel transaction            |
 |       8        |                                              The cashier deletes transaction                                               |
 
-|  Scenario 1.6  |   Customer chose to pay with credit card but transaction fails due to network condition    |
+##### Scenario 12.6
+
+|  Scenario 12.6  |   Customer chose to pay with credit card but transaction fails due to network condition    |
 | :------------: | :----------------------------------------------------------------------------------------: |
 |  Precondition  | Customer chose one or more products to buy, cashier is free and can manage the transaction |
 | Post condition |                    Customer didn't buy products, transaction is deleted                    |
@@ -617,7 +649,7 @@ Use case 1, UC1 - Manage sale
 |       7        |            Payment fails due to network condition, transaction must be canceled            |
 |       8        |                              The cashier deletes transaction                               |
 
-### Use Case 2, UC2 - Show incomes on fixed time window
+### Use Case 13, UC13
 
 | Actors Involved  |                                 Owner                                  |
 | :--------------: | :--------------------------------------------------------------------: |
@@ -626,7 +658,9 @@ Use case 1, UC1 - Manage sale
 | Nominal Scenario |                              Show incomes                              |
 |     Variants     |                 No transactions in the selected window                 |
 
-|  Scenario 2.1  |                                                                                        |
+##### Scenario 13.1
+
+|  Scenario 13.1  |                                                                                        |
 | :------------: | :------------------------------------------------------------------------------------: |
 |  Precondition  |         System can access previously saved transactions data and products data         |
 | Post condition |                                  System shows incomes                                  |
@@ -638,7 +672,9 @@ Use case 1, UC1 - Manage sale
 |       5        |                    The system computes the net and gross positions                     |
 |       6        |                          System show net and gross positions                           |
 
-|  Scenario 2.2  |                 No transactions in the selected window                 |
+##### Scenario 13.2
+
+|  Scenario 13.2  |                 No transactions in the selected window                 |
 | :------------: | :--------------------------------------------------------------------: |
 |  Precondition  | System can access previously saved transactions data and products data |
 | Post condition |                 System notifies the absence of incomes                 |
@@ -649,7 +685,7 @@ Use case 1, UC1 - Manage sale
 |       4        |                   System have not found transactions                   |
 |       6        |                 System notifies the absence of incomes                 |
 
-#### Use Case 3, UC3 - Show product sell statistics
+#### Use Case 14, UC14
 
 | Actors Involved  |                             Manager, Owner                             |
 | :--------------: | :--------------------------------------------------------------------: |
@@ -658,7 +694,9 @@ Use case 1, UC1 - Manage sale
 | Nominal Scenario |                        Show product statistics                         |
 |     Variants     |                           Product not found                            |
 
-|  Scenario 3.1  |                                                                                       |
+##### Scenario 14.1
+
+|  Scenario 14.1  |                                                                                       |
 | :------------: | :-----------------------------------------------------------------------------------: |
 |  Precondition  |        System can access previously saved transactions data and products data         |
 | Post condition |                         System shows product sell statistics                          |
@@ -671,7 +709,9 @@ Use case 1, UC1 - Manage sale
 |       6        |                  The system computes the total copies on every date                   |
 |       7        |                    System show sell statistics of selected product                    |
 
-|  Scenario 3.2  |                            Product not found                             |
+##### Scenario 14.2
+
+|  Scenario 14.2  |                            Product not found                             |
 | :------------: | :----------------------------------------------------------------------: |
 |  Precondition  |  System can access previously saved transactions data and products data  |
 | Post condition |                  System notifies the absence of product                  |
@@ -682,7 +722,7 @@ Use case 1, UC1 - Manage sale
 |       3        |                    The system cannot find the product                    |
 |       4        |                  System notifies the absence of product                  |
 
-#### Use Case 4, UC4 - Show product sell statistics
+#### Use Case 15, UC15
 
 | Actors Involved  |          Manager, Owner          |
 | :--------------: | :------------------------------: |
@@ -692,7 +732,7 @@ Use case 1, UC1 - Manage sale
 |     Variants     |                                  |
 
 
-### Use Case /PROGN/, UC /PROGN/ - Create Order
+#### Use Case 16, UC16
 
 |  Actor Involved  |             Shop Owner              |
 | :--------------: | :---------------------------------: |
@@ -703,7 +743,9 @@ Use case 1, UC1 - Manage sale
 |     Variants     |   Shop Owner repeats an old order   |
 |                  | Shop Owner creates a periodic order |
 
-| Scenario /PROGN+1/.1 |        Succesful (Periodic) New Order        |
+##### Scenario 16.1
+
+| Scenario 16.1 |        Succesful (Periodic) New Order        |
 | :------------------: | :------------------------------------------: |
 |     Precondition     |                 Items exist                  |
 |    Post-Condition    |                Order Created                 |
@@ -718,7 +760,9 @@ Use case 1, UC1 - Manage sale
 |          8           |          Shop Owner confirms order           |
 |          9           |               Order is created               |
 
-| Scenario /PROGN+1/.2 |                    Repeat Old Order                     |
+##### Scenario 16.2
+
+| Scenario 16.2 |                    Repeat Old Order                     |
 | :------------------: | :-----------------------------------------------------: |
 |     Precondition     |                       Order exist                       |
 |    Post-Condition    |                   Order created anew                    |
@@ -731,7 +775,7 @@ Use case 1, UC1 - Manage sale
 |          6           |                Shop Owner confirms order                |
 |          7           |                    Order is created                     |
 
-### Use Case /PROGN+1/, UC /PROGN+1/ - Modify an Existing Order
+### Use Case 17, UC17
 
 |  Actor Involved  |             Shop Owner              |
 | :--------------: | :---------------------------------: |
@@ -743,7 +787,9 @@ Use case 1, UC1 - Manage sale
 |                  | Shop Owner modifes a periodic order |
 |                  |     Shop Owner deletes an order     |
 
-| Scenario /PROGN+1/.1 |             Modify Order (Not Shipped)              |
+##### Scenario 17.1
+
+| Scenario 17.1 |             Modify Order (Not Shipped)              |
 | :------------------: | :-------------------------------------------------: |
 |     Precondition     |                     Order exist                     |
 |                      |         Order paid or not, but yet to ship          |
@@ -756,7 +802,9 @@ Use case 1, UC1 - Manage sale
 |          5           |                 Shop Owner confirms                 |
 |          6           |                  Order is modified                  |
 
-| Scenario /PROGN+1/.2 |           Modify Order (Shipped)            |
+##### Scenario 17.2
+
+| Scenario 17.2 |           Modify Order (Shipped)            |
 | :------------------: | :-----------------------------------------: |
 |     Precondition     |                 Order exist                 |
 |                      |           Order paid and shipped            |
