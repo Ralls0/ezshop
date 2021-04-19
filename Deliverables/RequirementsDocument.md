@@ -1,6 +1,6 @@
 # Requirements Document 
 
-Authors: S292477 Matteo Quarta, S281564 Manco Marco, SXXXXX, Davide Fersino, S290136, S29260 Giovanni Pollo
+Authors: S292477 Matteo Quarta, S281564 Manco Marco, S290136 Davide Fersino, S29260 Giovanni Pollo
 
 Date: 21/04/2021
 
