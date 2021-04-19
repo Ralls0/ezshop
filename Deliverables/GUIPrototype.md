@@ -13,7 +13,7 @@ Version:
 
 
 ![02 - Login Part 2](GUI Pictures/02 - Login Part 2.png)
-
+![](gif/Login.gif)
 
 
 ### Use case 3, UC3
@@ -26,7 +26,7 @@ Version:
 
 ![06 - Edit Workers](GUI Pictures/06 - Edit Workers.png)
 
-
+![](gif/Worker.gif)
 
 
 
@@ -34,12 +34,12 @@ Version:
 
 ![19 - Manage Sales Fidelity Card](GUI Pictures/19 - Manage Sales Fidelity Card.png)
 
-
+![](gif/Sales.gif)
 
 ### Use case 7, UC7
 
 ![10 - Edit Customer](GUI Pictures/10 - Edit Customer.png)
-
+![](gif/Customers.gif)
 
 
 ### Use case 8, UC8
@@ -60,7 +60,7 @@ Version:
 
 ![12 - Manage Inventory List](GUI Pictures/12 - Manage Inventory List.png)
 
-
+![](gif/Inventory.gif)
 
 ### Use Case 13, UC13
 
@@ -79,7 +79,7 @@ Version:
 
 
 ![27 - Support Accounting Customer Statistics](GUI Pictures/27 - Support Accounting Customer Statistics.png)
-
+![](gif/Accounting.gif)
 
 
 ### Use Case 16, UC16 and Use Case 17, UC17
