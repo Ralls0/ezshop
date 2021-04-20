@@ -136,7 +136,6 @@ Customer--|>AnonymousCustomer
 | Owner, manager   | GUI of the application                                 | Screen, keyboard on PC             |
 | Cashier          | GUI of the application                                 | Screen, touch of the cash register |
 | Warehouse Worker | GUI of the application                                 | Touch screen of the smartphone     |
-| Maintainers      | Phone call/screen share                                | Screen, keyboard on PC             |
 | Fidelity Card    | Serial number                                          | Bar Code                           |
 | POS              | Mastercard API (https://developer.mastercard.com/apis) | Card reader                        |
 | Product          | Serial number                                          | Bar Code                           |
