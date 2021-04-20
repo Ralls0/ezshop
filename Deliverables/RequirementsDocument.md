@@ -177,8 +177,8 @@ Giulia is 45 and she is a warehouse worker. She handles supplying, so she is int
 | FR4.4   |                   List all products                    |
 | FR4.5   |                    Manage supplying                    |
 | FR4.5.1 |                      Create order                      |
-| FR4.5.2 |                      Delete order                      |
-| FR4.5.3 |                      Modify order                      |
+| FR4.5.2 |                      Add product to the order                      |
+| FR4.5.3 |                      Remove product from a order                     |
 | FR4.5.4 |                 Manage periodic orders                 |
 | FR5     |                      Manage sales                      |
 | FR5.1   |                    Open transaction                    |
