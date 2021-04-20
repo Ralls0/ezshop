@@ -60,10 +60,6 @@ Version: 1.0
 		- [Use Case 15, UC15](#use-case-15-uc15)
 		- [Use Case 16, UC16](#use-case-16-uc16)
 			- [Scenario 16.1](#scenario-161)
-			- [Scenario 16.2](#scenario-162)
-		- [Use Case 17, UC17](#use-case-17-uc17)
-			- [Scenario 17.1](#scenario-171)
-			- [Scenario 17.2](#scenario-172)
 - [Glossary](#glossary)
 - [System Design](#system-design)
 - [Deployment Diagram](#deployment-diagram)
@@ -760,8 +756,7 @@ AnonymousCustomer<|--Customer
 |                  |         Items are available         |
 |  Post Condition  |        The order is created         |
 | Nominal Scenario |   Shop Owner creates a new order    |
-|     Variants     |   Shop Owner repeats an old order   |
-|                  | Shop Owner creates a periodic order |
+|     Variants     |    Shop Owner creates a periodic order |
 
 ##### Scenario 16.1
 
@@ -779,61 +774,6 @@ AnonymousCustomer<|--Customer
 |       7        |          System shows order summary           |
 |       8        |           Shop Owner confirms order           |
 |       9        |               Order is created                |
-
-##### Scenario 16.2
-
-| Scenario 16.2  |                    Repeat Old Order                     |
-| :------------: | :-----------------------------------------------------: |
-|  Precondition  |                       Order exist                       |
-| Post-Condition |                   Order created anew                    |
-|     Step#      |                       Description                       |
-|       1        |             Shop Owner opens order history              |
-|       2        |                Shop Owner picks an order                |
-|       3        |         If not to repeat periodically skip to 5         |
-|       4        | Select how often to repeat and maximum acceptable price |
-|       5        |               System shows order summary                |
-|       6        |                Shop Owner confirms order                |
-|       7        |                    Order is created                     |
-
-### Use Case 17, UC17
-
-|  Actor Involved  |             Shop Owner              |
-| :--------------: | :---------------------------------: |
-|   Precondtion    |            Order exists             |
-|  Post Condition  |                  -                  |
-| Nominal Scenario |    Shop Owner modifies an order     |
-|     Variants     |     Order paid but not shipped      |
-|                  |       Order paid and shipped        |
-|                  | Shop Owner modifes a periodic order |
-|                  |     Shop Owner deletes an order     |
-
-##### Scenario 17.1
-
-| Scenario 17.1  |             Modify Order (Not Shipped)              |
-| :------------: | :-------------------------------------------------: |
-|  Precondition  |                     Order exist                     |
-|                |         Order paid or not, but yet to ship          |
-| Post-Condition |                   Order modified                    |
-|     Step#      |                     Description                     |
-|       1        |           Shop Owner opens order history            |
-|       2        |              Shop Owner picks an order              |
-|       3        | Alter quantities, items or mark order to be deleted |
-|       4        |               System reports summary                |
-|       5        |                 Shop Owner confirms                 |
-|       6        |                  Order is modified                  |
-
-##### Scenario 17.2
-
-| Scenario 17.2  |           Modify Order (Shipped)            |
-| :------------: | :-----------------------------------------: |
-|  Precondition  |                 Order exist                 |
-|                |           Order paid and shipped            |
-| Post-Condition |         Order not modified modified         |
-|     Step#      |                 Description                 |
-|       1        |       Shop Owner opens order history        |
-|       2        |          Shop Owner picks an order          |
-|       3        | System prompts that order is not modifiable |
-|       4        |            Order is not modified            |
 
 
 
