@@ -969,10 +969,10 @@ Not really meaningful in this case. Only software components are needed.
 
 node LocalServer
 artifact EZShopApplication
-node "Client for the Application"
+node ClientForTheApplication
 
 LocalServer -- EZShopApplication
-LocalServer -- "*" "Client for the Application"
+LocalServer -- "*" ClientForTheApplication
 
 @enduml
 ```
