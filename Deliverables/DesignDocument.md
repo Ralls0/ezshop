@@ -21,17 +21,29 @@ The design must satisfy the Official Requirements document, notably functional a
 
 # High level design 
 
-<discuss architectural styles used, if any>
+We choose the MVC pattern
 <report package diagram>
 
+```plantuml
+@startuml
+
+note "Architecture \nIt is a stand alone application \nThe architectural pattern used is MVC \nWe have 2 layers, as show in the diagram" as N1
 
 
+package "GUI" {
+  
+}
+package "Model And Application Logic" {
+  
+}
 
+@enduml
+```
 
 
 # Low level design
 
-<for each package, report class diagram>
+
 
 
 
