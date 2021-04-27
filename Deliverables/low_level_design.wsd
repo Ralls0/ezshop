@@ -19,13 +19,12 @@ class Customer {
     String name
     LoyaltyCard card
 
-    'setId()
+    setId()
     getId()
     setName()
     getName()
-    setSurname()
-    getSurname()
-
+    getCard()
+    setCard()
 }
 class Debit {
 
@@ -39,8 +38,8 @@ class LoyaltyCard {
     String id
     int points
 
-    'getId()
-    'setId()
+    getId()
+    setId()
     getPoints()
     setPoints()
     
@@ -53,6 +52,19 @@ class Order {
     double pricePerUnit
     int quantity
     String status
+
+    setOrderId()
+    getOrderId()
+    setSupplier()
+    getSupplier()
+    setProductCode()
+    getProductCode()
+    setPricePerUnit()
+    getPricePerUnit()
+    setQuantity()
+    getQuantity()
+    setStatus()
+    getStatus()
 }
 
 class ProductType{
@@ -63,12 +75,32 @@ class ProductType{
     String note
     int quantity
     Position position
+
+    setId()
+    getId()
+    setProductCode()
+    getProductCode()
+    setDescription()
+    getDescription()
+    setPricePerUnit()
+    getPricePerUnit()
+    setQuantity()
+    getQuantity()
+    setPosition()
+    getPosition()
 }
 
 class Position {
     String aisleID
     String rackID
     String levelID
+
+    setAisle()
+    getAisle()
+    setRack()
+    getRack()
+    setLevel()
+    getLevel()
 }
 
 class Return {
@@ -85,6 +117,13 @@ class ProductQuantityAndDiscount {
     Integer quantity
     double discountRate
     ProductType product
+    
+    setQuantity()
+    getQuantity()
+    setDiscountRate()
+    getDiscountRate()
+    setProduct()
+    getProduct()
 }
 
 class SaleTransaction {
@@ -98,7 +137,24 @@ class SaleTransaction {
     LoyaltyCard customerCard
     Ticket ticket
 
+    setId()
+    getId()
+    setDate()
+    getDate()
+    setTime()
+    getTime()
+    setCost()
+    getCost()
+    setPaymentType()
+    getPaymentType()
+    setDiscountRate()
+    getDiscountRate()
+    setCustomerCard()
+    getCustomerCard()
+    setTicket()
+    getTicket()
     Integer computePoints()
+
 }
 
 class Sale {
@@ -118,11 +174,10 @@ class Shop {
     +boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote)
     +boolean deleteProductType(Integer id)
     +List<ProductType> getAllProductTypes()
-    +ProductType getProductTypeByBarCode(String productCode)
+    +ProductType getProductTypeByBarCode(String barCode)
     +List<ProductType> getProductTypesByDescription(String description)
-    +boolean updateQuantity(Integer id, int toBeAdded)
-    +boolean updatePosition(Integer id, String newPos)
-    '+boolean updatePosition(Integer id, Position newPos)
+    +boolean updateQuantity(Integer productId, int toBeAdded)
+    +boolean updatePosition(Integer productId, String newPos)
     +Integer issueReorder(String productCode, int quantity, double pricePerUnit)
     +Integer payOrderFor(String productCode, int quantity, double pricePerUnit)
     +boolean payOrder(Integer orderId)
@@ -142,7 +197,6 @@ class Shop {
     +boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate)
     +boolean applyDiscountRateToSale(Integer transactionId, double discountRate)
     +int computePointsForSale(Integer transactionId)
-    +boolean attachCardToSaleTransaction(Integer transactionId, String customerCard)
     +boolean closeSaleTransaction(Integer transactionId)
     +boolean deleteSaleTicket(Integer ticketNumber)
     +Ticket getSaleTicket(Integer transactionId)
@@ -158,11 +212,6 @@ class Shop {
     +boolean recordBalanceUpdate(double toBeAdded)
     +List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
     +double computeBalance()
-
-
-
-
-
 }
 class ShopManager {
 
@@ -181,8 +230,14 @@ class User {
     String password
     String username
 
+    setId()
+    getId()
     getRole()
     setRole()
+    setPassword()
+    getPassword()
+    setUsername()
+    getUsername()
 }
 
 AccountBook - Shop
