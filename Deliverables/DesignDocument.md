@@ -10,9 +10,12 @@ Version:
 
 # Contents
 
-- [High level design](#package-diagram)
-- [Low level design](#class-diagram)
-- [Verification traceability matrix](#verification-traceability-matrix)
+- [Design Document](#design-document)
+- [Contents](#contents)
+- [Instructions](#instructions)
+- [High level design](#high-level-design)
+- [Low level design](#low-level-design)
+- [Verification Traceability Matrix](#verification-traceability-matrix)
 - [Verification sequence diagrams](#verification-sequence-diagrams)
 
 # Instructions
@@ -43,19 +46,28 @@ package "Model And Application Logic" {
 
 # Low level design
 
+# Verification Traceability Matrix
 
+for each functional requirement from the requirement document, list which classes concur to implement it
 
+|                           |  FR1  |  FR2  |  FR3  |  FR4  |  FR5  |  FR6  |  FR7  |  FR8  |  FR9  |
+| ------------------------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Account Book              |       |   ?   |       | **X** |       |       |       |       |       |
+| Return Transaction        |       |   ?   |       |       |       |       |       |       |       |
+| Order                     |       |   ?   |       | **X** |       |       |       |       |       |
+| BalanceOperation          |       |   ?   |       | **X** |       |       |       |       |       |
+| Shop                      | **X** |   ?   | **X** | **X** | **X** |       |       |       |       |
+| User                      | **X** |   ?   |       |       |       |       |       |       |       |
+| CreditCardCircuit         |       |   ?   |       |       |       |       |       |       |       |
+| Sale Transaction          |       |   ?   |       |       |       |       |       |       |       |
+| ProdctQuantityAndDiscount |       |   ?   | **X** | **X** |       |       |       |       |       |
+| ProductType               |       |   ?   | **X** | **X** |       |       |       |       |       |
+| Position                  |       |   ?   | **X** | **X** |       |       |       |       |       |
+| LoyaltyCard               |       |   ?   |       |       | **X** |       |       |       |       |
+| Customer                  |       |   ?   |       |       | **X** |       |       |       |       |
 
+(Ho messo FR2 ma negli OR non c'è...)
 
-
-
-
-
-
-
-# Verification traceability matrix
-
-\<for each functional requirement from the requirement document, list which classes concur to implement it>
 
 
 
