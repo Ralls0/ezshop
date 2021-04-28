@@ -27,7 +27,8 @@ class Customer {
     String name
     LoyaltyCard card
 
-    boolean attachCardToCustomer(String customerCard)
+    boolean attachCard(String customerCard)
+    void setName()
 }
 
 class Debit {
@@ -87,6 +88,7 @@ class ReturnTransaction {
     double returnCreditCardPayment(CreditCardCircuit circuit)
     boolean addProductToReturn(String productCode, int amount)
     boolean endReturnTransaction(Integer returnId, boolean commit)
+    boolean commit()
 }
 
 class ProductQuantityAndDiscount {
