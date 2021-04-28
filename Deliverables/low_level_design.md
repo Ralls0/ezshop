@@ -1,3 +1,8 @@
+
+
+
+
+```plantuml
 @startuml
 class AccountBook {
     double totalBalance
@@ -6,6 +11,7 @@ class AccountBook {
     boolean recordBalanceUpdate(double toBeAdded)
     double computeBalance()
     List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
+
 }
 
 class CreditCardCircuit {
@@ -15,6 +21,7 @@ class CreditCardCircuit {
     boolean hasEnoughCredit(String creditCard, double requiredBalance)
     boolean processPayment(String creditCard, double requiredBalance)
     boolean returnPayment(String creditCard, double requiredBalance)
+
 }
 
 class Credit {
@@ -28,6 +35,7 @@ class Customer {
 
     boolean attachCard(String customerCard)
     void setName()
+
 }
 
 class Debit {
@@ -54,6 +62,7 @@ class Order {
     String status
 
     boolean changeStatus(String status)
+
 }
 
 class ProductType{
@@ -68,6 +77,7 @@ class ProductType{
     boolean updateQuantity(int toBeAdded) 
     boolean updatePosition(String newPos) 
     boolean updateProduct(String newDescription, String newCode, double newPrice, String newNote)
+
 }
 
 
@@ -83,11 +93,13 @@ class ReturnTransaction {
     Map<ProductType, Integer> productAndAmount
     boolean commit
     
+
     double returnCashPayment()
     double returnCreditCardPayment(CreditCardCircuit circuit)
     boolean addProductToReturn(String productCode, int amount)
     boolean endReturnTransaction(Integer returnId, boolean commit)
     boolean commit()
+
 }
 
 class ProductQuantityAndDiscount {
@@ -107,6 +119,7 @@ class SaleTransaction {
     String status
     double discountRate
     
+
     Integer computePoints()
     double receiveCashPayment()
     boolean receiveCreditCardPayment(CreditCardCircuit circuit)
@@ -115,6 +128,7 @@ class SaleTransaction {
     boolean applyDiscountRateToProduct(String productCode, double discountRate)
     boolean applyDiscountRateToSale(double discountRate)
     boolean endSaleTransaction()
+
 }
 
 class Shop {
@@ -214,3 +228,5 @@ SaleTransaction --|> Credit
 ReturnTransaction --|> Debit
 
 @enduml
+```
+
