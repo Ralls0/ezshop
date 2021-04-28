@@ -1,11 +1,14 @@
 # Design Document 
 
-
 Authors: 
+* S292477 Matteo Quarta
+* S281564 Manco Marco
+* S290136 Davide Fersino
+* S29260 Giovanni Pollo
+  
+Date: 30/04/2021
 
-Date:
-
-Version:
+Version: 1.0
 
 
 # Contents
@@ -50,33 +53,23 @@ package "Model And Application Logic" {
 
 for each functional requirement from the requirement document, list which classes concur to implement it
 
-|                           |  FR1  |  FR2  |  FR3  |  FR4  |  FR5  |  FR6  |  FR7  |  FR8  |  FR9  |
-| ------------------------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| Account Book              |       |   ?   |       | **X** |       |       |       |       |       |
-| Return Transaction        |       |   ?   |       |       |       |       |       |       |       |
-| Order                     |       |   ?   |       | **X** |       |       |       |       |       |
-| BalanceOperation          |       |   ?   |       | **X** |       |       |       |       |       |
-| Shop                      | **X** |   ?   | **X** | **X** | **X** |       |       |       |       |
-| User                      | **X** |   ?   |       |       |       |       |       |       |       |
-| CreditCardCircuit         |       |   ?   |       |       |       |       |       |       |       |
-| Sale Transaction          |       |   ?   |       |       |       |       |       |       |       |
-| ProdctQuantityAndDiscount |       |   ?   | **X** | **X** |       |       |       |       |       |
-| ProductType               |       |   ?   | **X** | **X** |       |       |       |       |       |
-| Position                  |       |   ?   | **X** | **X** |       |       |       |       |       |
-| LoyaltyCard               |       |   ?   |       |       | **X** |       |       |       |       |
-| Customer                  |       |   ?   |       |       | **X** |       |       |       |       |
-
-(Ho messo FR2 ma negli OR non c'è...)
-
-
-
-
-
-
-
-
-
-
+|                           |  FR1  |  FR2  |  FR3  |  FR4  |  FR5  |  FR6  |  FR7  |
+| ------------------------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| Account Book              |       |       | **X** |       |       | **X** | **X** |
+| BalanceOperation          |       |       | **X** |       |       | **X** | **X** |
+| Return Transaction        |       |       |       |       | **X** | **X** |       |
+| Credit                    |       |       |       |       |       | **X** |       |
+| CreditCardCircuit         |       |       |       |       |       | **X** |       |
+| Debit                     |       |       | **X** |       |       | **X** |       |
+| Customer                  |       |       |       | **X** | **X** |       |       |
+| LoyaltyCard               |       |       |       | **X** | **X** |       |       |
+| Order                     |       |       | **X** |       |       |       |       |
+| Position                  |       | **X** | **X** |       |       |       |       |
+| ProdctQuantityAndDiscount |       | **X** | **X** |       | **X** |       |       |
+| ProductType               |       | **X** | **X** |       | **X** |       |       |
+| Sale Transaction          |       |       |       |       | **X** | **X** |       |
+| Shop                      | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
+| User                      | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
 
 
 # Verification sequence diagrams 
