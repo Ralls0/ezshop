@@ -51,6 +51,7 @@ CreditCardCircuit --> SaleTransaction : enough
 SaleTransaction -> CreditCardCircuit : processPayment()
 CreditCardCircuit --> Shop: processed
 Shop -> AccountBook : recordBalanceUpdate()
+AccountBook -> AccountBook : recordBalanceUpdate()
 ```
 ### Manage return with credit card
 ```plantuml
