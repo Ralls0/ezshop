@@ -1,8 +1,8 @@
 
 
 
-
 ```plantuml
+PLANTUML_LIMIT_SIZE=8192
 @startuml
 class AccountBook {
     double totalBalance
