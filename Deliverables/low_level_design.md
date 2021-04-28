@@ -1,5 +1,4 @@
-@startuml
-
+@startuml prova
 class AccountBook {
     double totalBalance
     List<BalanceOperation> operations
