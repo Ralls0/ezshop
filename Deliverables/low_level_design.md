@@ -1,5 +1,4 @@
 ```plantuml
-scale 1024 width // 1024 pixels
 @startuml
 class AccountBook {
     double totalBalance
