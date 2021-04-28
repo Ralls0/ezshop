@@ -1,11 +1,11 @@
-###Add new product
+### Add new product
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : createProductType()
 Shop -> ProductType : updatePosition()
 ProductType -> ProductType : updatePosition()
 ```
-###Issue and pay order
+### Issue and pay order
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : issueOrder()
@@ -15,7 +15,7 @@ Order -> Order: changeStatus()
 Shop -> AccountBook : recordBalanceUpdate()
 AccountBook -> AccountBook : recordBalanceUpdate()
 ```
-###Define costumer and card
+### Define costumer and card
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : defineCustomer()
@@ -24,7 +24,7 @@ Shop -> Shop : getCustomer()
 Shop -> Customer : attachCardToCustomer()
 Customer -> Customer : attachCard()
 ```
-###Modify customer
+### Modify customer
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : getCustomer()
@@ -32,7 +32,7 @@ Shop -> Customer : modifyCustomer()
 Customer -> Customer : setName()
 Customer -> Customer : attachCard()
 ```
-###Manage sale with credit card
+### Manage sale with credit card
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : startSaleTransaction()
@@ -52,7 +52,7 @@ SaleTransaction -> CreditCardCircuit : processPayment()
 CreditCardCircuit --> Shop: processed
 Shop -> AccountBook : recordBalanceUpdate()
 ```
-###Manage return with credit card
+### Manage return with credit card
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : startReturnTransaction()
@@ -70,7 +70,7 @@ CreditCardCircuit --> Shop: returned
 Shop -> AccountBook : recordBalanceUpdate()
 AccountBook -> AccountBook : recordBalanceUpdate()
 ```
-###Accounting
+### Accounting
 ```plantuml
 Shop -> Shop : login()
 Shop -> AccountingBook : getCreditsAndDebits()
