@@ -132,6 +132,7 @@ class Shop {
     List<ProductType> products
     List<Customer> customers
     User authenticatedUser
+    AccountBook accountBook
     + void reset();
     + Integer createUser(String username, String password, String role) 
     + boolean deleteUser(Integer id) 
@@ -183,6 +184,7 @@ class Shop {
     + double computeBalance()
 }
 
+
 class User {
     Integer id
     String role
@@ -191,37 +193,43 @@ class User {
 
 }
 
-AccountBook - Shop
-AccountBook -- "*" BalanceOperation
+AccountBook -up Shop
+AccountBook - "*" BalanceOperation
 
-User -- Shop
+User "0..*" -- Shop
 
-CreditCardCircuit -- Shop
+CreditCardCircuit "0..*"-- Shop
 
-Credit --|> BalanceOperation
+Credit "0..*"--|> BalanceOperation
 
-Debit --|> BalanceOperation
+Debit "0..*"---|> BalanceOperation
 
 Order --|> Debit
-Order "*" - ProductType
+Order "*" -- ProductType
 
-Shop - "*" ProductType
-SaleTransaction - "*" ProductType
+Shop --right "*" ProductType
+SaleTransaction -- "*" ProductType
 
-LoyaltyCard "0..1" --> Customer
+LoyaltyCard "0..1" -- Customer
 
 SaleTransaction "*" -- "0..1" LoyaltyCard
 
 ProductType - "0..1" Position
 
-ReturnTransaction "*" - SaleTransaction
-ReturnTransaction "*" - ProductType
+ReturnTransaction "*" --up SaleTransaction
+ReturnTransaction "*" --up ProductType
 
-ProductQuantityAndDiscount -- SaleTransaction
-ProductQuantityAndDiscount -- ProductType
+ProductQuantityAndDiscount - SaleTransaction
+ProductQuantityAndDiscount - ProductType
 
 SaleTransaction --|> Credit
 ReturnTransaction --|> Debit
+
+
+note "Persistent class" as N1  
+N1 .. Shop
+note "Persistent class" as N2
+N2 .. SaleTransaction
 
 @enduml
 ```
