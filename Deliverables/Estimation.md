@@ -67,3 +67,84 @@ Version: 1.0
 
 ###
 Insert here Gantt chart with above activities
+
+```plantuml
+@startgantt
+Project starts the 3th of april 2021
+
+saturday are closed
+sunday are closed
+
+2021-04-03 to 2021-04-12 are named [Requirements planning]
+2021-04-03 to 2021-04-12 are colored in salmon 
+
+2021-04-12 to 2021-04-15 are named [Design]
+2021-04-12 to 2021-04-15 are colored in Lavender
+
+2021-04-15 to 2021-04-27 are named [Coding]
+2021-04-15 to 2021-04-27 are colored in #AAF
+
+2021-04-27 to 2021-04-30 are named [Testing]
+2021-04-27 to 2021-04-30 are colored in Yellow
+
+2021-04-30 to 2021-05-07 are named [Integration test + GUI]
+2021-04-30 to 2021-05-07 are colored in #ADD
+
+2021-05-07 to 2021-05-14 are named [Revisioning]
+2021-05-07 to 2021-05-14 are colored in Pink
+
+
+[Perform work analysis] starts 2021-04-06 and lasts 1 days
+[Model process] starts 2021-04-06 and lasts 1 days
+[Work estimation] starts 2021-04-06 and lasts 1 days 
+[Create requirements document] starts 2021-04-06 and lasts 3 days
+[Identify stakeholders] starts 2021-04-06 and lasts 1 days
+[Identify context and interfaces] starts 2021-04-06 and lasts 1 days
+[Analize stories and personas] starts 2021-04-06 and lasts 1 days
+[Identify user requirements] starts 2021-04-06 and lasts 2 days
+[Identify non functional requirements] lasts 1 days
+[Define deployment] lasts 1 days
+[Define important terms] lasts 1 days
+[Identify use cases] lasts 1 days
+[Create a GUI prototype] lasts 1 days
+[Define high level design]  lasts 1 days
+[Define low level design] lasts 2 days
+[Verification traceability matrix] lasts 1 days
+[Verification sequence diagrams] lasts 1 days
+[Identify algorithm for methods class] lasts 1 days
+[Write the code] lasts 8 days
+[Identify test cases] lasts 1 days
+[Write test code] lasts 2 days
+[Analize test and solve bug] lasts 1 days
+
+[Integration GUI with code] lasts 2 days
+[Identify GUI test cases]  lasts 1 days
+[Write GUI test code]  lasts 2 days
+[Analize GUI test result and solve bug]  lasts 1 days
+
+[Final revisioning] lasts 4 days
+
+
+[Identify non functional requirements] starts at [Identify user requirements]'s end
+[Identify use cases] starts at [Identify user requirements]'s end
+[Define important terms] starts at [Identify user requirements]'s end
+[Define deployment] starts at [Identify user requirements]'s end
+[Create a GUI prototype] starts at [Identify use cases]'s end
+
+[Define high level design] starts at [Create a GUI prototype]'s end
+[Define low level design] starts at [Create a GUI prototype]'s end
+[Verification traceability matrix] starts at [Define low level design]'s end
+[Verification sequence diagrams] starts at [Define low level design]'s end
+[Identify algorithm for methods class] starts at [Verification sequence diagrams]'s end
+[Write the code] starts at [Verification sequence diagrams]'s end
+[Identify test cases] starts at [Write the code]'s end
+[Write test code] starts at [Write the code]'s end
+[Analize test and solve bug] starts at [Write test code]'s end
+
+[Integration GUI with code] starts at [Analize test and solve bug]'s end
+[Identify GUI test cases] starts at [Integration GUI with code]'s end
+[Write GUI test code] starts at [Integration GUI with code]'s end
+[Analize GUI test result and solve bug] starts at [Write GUI test code]'s end
+[Final revisioning] starts at [Analize GUI test result and solve bug]'s end
+@endgantt
+```
