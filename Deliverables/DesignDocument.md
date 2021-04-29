@@ -55,21 +55,21 @@ class AccountBook {
     double totalBalance
     List<BalanceOperation> operations
 
-    boolean recordBalanceUpdate(double toBeAdded)
-    double computeBalance()
-    List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
-    boolean addBalanceOperation()
-    boolean removeBalanceOperation()
+    + boolean recordBalanceUpdate(double toBeAdded)
+    + double computeBalance()
+    + List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
+    + boolean addBalanceOperation()
+    + boolean removeBalanceOperation()
     
 }
 
 class CreditCardCircuit {
 
-    boolean isValid(String creditCard)
-    boolean isExpired(String creditCard)
-    boolean hasEnoughCredit(String creditCard, double requiredBalance)
-    boolean processPayment(String creditCard, double requiredBalance)
-    boolean returnPayment(String creditCard, double requiredBalance)
+    + boolean isValid(String creditCard)
+    + boolean isExpired(String creditCard)
+    + boolean hasEnoughCredit(String creditCard, double requiredBalance)
+    + boolean processPayment(String creditCard, double requiredBalance)
+    + boolean returnPayment(String creditCard, double requiredBalance)
 
 }
 
@@ -82,8 +82,11 @@ class Customer {
     String name
     LoyaltyCard card
 
-    boolean attachCard(String customerCard)
-    void setName()
+    + boolean attachCard(String customerCard)
+    + void setName()
+    + List<Customer> loadAllCustomers()
+    + Customer loadCustomer()
+    + void saveCustomer(Customer customer)
 
 }
 
@@ -95,6 +98,9 @@ class BalanceOperation {
     description
     amount
     date
+    + List<BalanceOperation> loadAllOperations()
+    + BalanceOperation loadOperation()
+    + void saveOperation(BalanceOperation operation)
 }
 
 class LoyaltyCard {
@@ -110,7 +116,7 @@ class Order {
     int quantity
     String status
 
-    boolean changeStatus(String status)
+    +boolean changeStatus(String status)
 
 }
 
@@ -123,9 +129,12 @@ class ProductType{
     int quantity
     Position position
 
-    boolean updateQuantity(int toBeAdded) 
-    boolean updatePosition(String newPos) 
-    boolean updateProduct(String newDescription, String newCode, double newPrice, String newNote)
+    + boolean updateQuantity(int toBeAdded) 
+    + boolean updatePosition(String newPos) 
+    + boolean updateProduct(String newDescription, String newCode, + + double newPrice, String newNote)
+    + List<ProductType> loadAllProdcuts()
+    + ProductType loadProdcut()
+    + void saveProduct(ProductType product)
 
 }
 
@@ -143,11 +152,11 @@ class ReturnTransaction {
     boolean commit
     
 
-    double returnCashPayment()
-    double returnCreditCardPayment(CreditCardCircuit circuit)
-    boolean addProductToReturn(String productCode, int amount)
-    boolean endReturnTransaction(Integer returnId, boolean commit)
-    boolean commit()
+    +double returnCashPayment()
+    +double returnCreditCardPayment(CreditCardCircuit circuit)
+    +boolean addProductToReturn(String productCode, int amount)
+    +boolean endReturnTransaction(Integer returnId, boolean commit)
+    +boolean commit()
 
 }
 
@@ -165,23 +174,24 @@ class SaleTransaction {
     String paymentType
     String status
     double discountRate
-    Integer computePoints()
-    double receiveCashPayment()
-    boolean receiveCreditCardPayment(CreditCardCircuit circuit)
-    boolean addProductToSale(String productCode, int amount)
-    boolean deleteProductFromSale(String productCode, int amount)
-    boolean applyDiscountRateToProduct(String productCode, double discountRate)
-    boolean applyDiscountRateToSale(double discountRate)
-    boolean endSaleTransaction()
+    +Integer computePoints()
+    +double receiveCashPayment()
+    +boolean receiveCreditCardPayment(CreditCardCircuit circuit)
+    +boolean addProductToSale(String productCode, int amount)
+    +boolean deleteProductFromSale(String productCode, int amount)
+    +boolean applyDiscountRateToProduct(String productCode, double discountRate)
+    +boolean applyDiscountRateToSale(double discountRate)
+    +boolean endSaleTransaction()
 
 }
 
 class Shop {
-    List<User> users
-    List<ProductType> products
-    List<Customer> customers
+    'List<User> users
+    'List<ProductType> products
+    'List<Customer> customers
     User authenticatedUser
     AccountBook accountBook
+    'AccountBook accountBook
     + void reset();
     + Integer createUser(String username, String password, String role) 
     + boolean deleteUser(Integer id) 
@@ -239,7 +249,9 @@ class User {
     String role
     String password
     String username
-
+    +User loadUser()
+    +List<User> loadAllUsers()
+    +void saveUsers(User user)
 }
 
 AccountBook -up Shop
@@ -261,8 +273,7 @@ SaleTransaction -- "*" ProductType
 
 LoyaltyCard "0..1" -- Customer
 
-SaleTransaction "*" -- "0..1" LoyaltyCard
-
+Customer "0..*"-- Shop
 ProductType - "0..1" Position
 
 ReturnTransaction "*" --up SaleTransaction
@@ -276,10 +287,13 @@ ReturnTransaction --|> Debit
 
 
 note "Persistent class" as N1  
-N1 .. Shop
+N1 .. User
 note "Persistent class" as N2
-N2 .. SaleTransaction
-
+N2 .. BalanceOperation
+note "Persistent class" as N3
+N3 .. Customer
+note "Persistent class" as N4
+N4 .. ProductType
 @enduml
 ```
 
