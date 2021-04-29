@@ -3,7 +3,7 @@
 - [Design Document](#design-document)
 - [Instructions](#instructions)
 - [High Level Design](#high-level-design)
-- [Low level design](#low-level-design)
+- [Low Level Design](#low-level-design)
 - [Verification Traceability Matrix](#verification-traceability-matrix)
 - [Verification sequence diagrams](#verification-sequence-diagrams)
     - [Add new product](#add-new-product)
@@ -53,7 +53,7 @@ package "Model And Application Logic" {
 ```
 
 
-# Low level design
+# Low Level Design
 
 ```plantuml
 @startuml
