@@ -99,9 +99,9 @@ class Debit {
 }
 
 class BalanceOperation {
-    description
-    amount
-    date
+    String description
+    double amount
+    Date date
     + List<BalanceOperation> loadAllOperations()
     + BalanceOperation loadOperation()
     + void saveOperation(BalanceOperation operation)
