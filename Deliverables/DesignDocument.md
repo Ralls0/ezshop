@@ -1,33 +1,39 @@
 # Design Document 
 
+- [Design Document](#design-document)
+- [Instructions](#instructions)
+- [High Level Design](#high-level-design)
+- [Low level design](#low-level-design)
+- [Verification Traceability Matrix](#verification-traceability-matrix)
+- [Verification sequence diagrams](#verification-sequence-diagrams)
+    - [Add new product](#add-new-product)
+    - [Issue and Pay Order](#issue-and-pay-order)
+    - [Define Costumer and Card](#define-costumer-and-card)
+    - [Modify Customer](#modify-customer)
+    - [Manage Sale with Credit Card](#manage-sale-with-credit-card)
+    - [Manage Return with Credit Card](#manage-return-with-credit-card)
+    - [Accounting](#accounting)
+
+
 Authors: 
+
+* S281564 Marco Manco
+* S290136 Giovanni Pollo
 * S292477 Matteo Quarta
-* S281564 Manco Marco
-* S290136 Davide Fersino
-* S29260 Giovanni Pollo
+* S29260  Davide Fersino
   
 Date: 30/04/2021
 
 Version: 1.0
 
-
-# Contents
-
-- [Design Document](#design-document)
-- [Contents](#contents)
-- [Instructions](#instructions)
-- [High level design](#high-level-design)
-- [Low level design](#low-level-design)
-- [Verification Traceability Matrix](#verification-traceability-matrix)
-- [Verification sequence diagrams](#verification-sequence-diagrams)
-
 # Instructions
 
 The design must satisfy the Official Requirements document, notably functional and non functional requirements
 
-# High level design 
+# High Level Design 
 
-We choose the MVC pattern
+We chose the MVC pattern
+
 <report package diagram>
 
 ```plantuml
@@ -299,8 +305,6 @@ N4 .. ProductType
 
 # Verification Traceability Matrix
 
-for each functional requirement from the requirement document, list which classes concur to implement it
-
 |                           |  FR1  |  FR2  |  FR3  |  FR4  |  FR5  |  FR6  |  FR7  |
 | ------------------------- | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | Account Book              |       |       | **X** |       |       | **X** | **X** |
@@ -329,7 +333,7 @@ Shop -> Shop : createProductType()
 Shop -> ProductType : updatePosition()
 ProductType -> ProductType : updatePosition()
 ```
-### Issue and pay order
+### Issue and Pay Order
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : issueOrder()
@@ -339,7 +343,7 @@ Order -> Order: changeStatus()
 Shop -> AccountBook : recordBalanceUpdate()
 AccountBook -> AccountBook : recordBalanceUpdate()
 ```
-### Define costumer and card
+### Define Costumer and Card
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : defineCustomer()
@@ -348,7 +352,7 @@ Shop -> Shop : getCustomer()
 Shop -> Customer : attachCardToCustomer()
 Customer -> Customer : attachCard()
 ```
-### Modify customer
+### Modify Customer
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : getCustomer()
@@ -356,7 +360,7 @@ Shop -> Customer : modifyCustomer()
 Customer -> Customer : setName()
 Customer -> Customer : attachCard()
 ```
-### Manage sale with credit card
+### Manage Sale with Credit Card
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : startSaleTransaction()
@@ -377,7 +381,7 @@ CreditCardCircuit --> Shop: processed
 Shop -> AccountBook : recordBalanceUpdate()
 AccountBook -> AccountBook : recordBalanceUpdate()
 ```
-### Manage return with credit card
+### Manage Return with Credit Card
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : startReturnTransaction()

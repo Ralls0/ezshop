@@ -1,18 +1,20 @@
-# Project Estimation  
+# Project Estimation 
+- [Project Estimation](#project-estimation)
+- [Estimate by Product Decomposition](#estimate-by-product-decomposition)
+- [Estimate by activity decomposition](#estimate-by-activity-decomposition)
+- [Gantt Diagram](#gantt-diagram)
+
+
 Authors: 
+* S281564 Marco Manco
+* S290136 Giovanni Pollo
 * S292477 Matteo Quarta
-* S281564 Manco Marco
-* S290136 Davide Fersino
-* S29260 Giovanni Pollo
+* S29260  Davide Fersino
   
 Date: 30/04/2021
 
 Version: 1.0
-# Contents
-- [Estimate by product decomposition]
-- [Estimate by activity decomposition ]
-# Estimation approach
-<Consider the EZGas  project as described in YOUR requirement document, assume that you are going to develop the project INDEPENDENT of the deadlines of the course>
+
 # Estimate by Product Decomposition
 
 |                         | Estimate |    Unit     |
@@ -24,10 +26,7 @@ Version: 1.0
 | Estimated Cost          |  20'500  |      €      |
 | Estimated Time          |   4-5    |    Weeks    |
 
-###### (10 LOC = 1 Person Hour = 30€)
-
 # Estimate by activity decomposition
-### 
 | Activity name                            | Estimated effort (person hours) |
 | ---------------------------------------- | ------------------------------- |
 | 1 Requirements planning                  |                                 |
@@ -64,9 +63,7 @@ Version: 1.0
 | 6 Revisioning                            |                                 |
 | 6.1 Final revisioning                    | 100                             |
 
-
-###
-Insert here Gantt chart with above activities
+# Gantt Diagram
 
 ```plantuml
 @startgantt
