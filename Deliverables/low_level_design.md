@@ -110,14 +110,10 @@ class ProductQuantityAndDiscount {
 class SaleTransaction {
     Integer id 
     List<ProductQuantityAndDiscount> products
-    String date
-    String time
     double cost
     String paymentType
     String status
     double discountRate
-    
-
     Integer computePoints()
     double receiveCashPayment()
     boolean receiveCreditCardPayment(CreditCardCircuit circuit)
