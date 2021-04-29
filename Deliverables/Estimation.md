@@ -9,7 +9,7 @@ Authors:
 * S281564 Marco Manco
 * S290136 Giovanni Pollo
 * S292477 Matteo Quarta
-* S29260  Davide Fersino
+* S292602 Davide Fersino
   
 Date: 30/04/2021
 
