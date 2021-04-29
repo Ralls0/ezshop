@@ -7,7 +7,9 @@ class AccountBook {
     boolean recordBalanceUpdate(double toBeAdded)
     double computeBalance()
     List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
-
+    boolean addBalanceOperation()
+    boolean removeBalanceOperation()
+    
 }
 
 class CreditCardCircuit {
