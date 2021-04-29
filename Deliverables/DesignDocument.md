@@ -32,25 +32,25 @@ The design must satisfy the Official Requirements document, notably functional a
 
 # High Level Design 
 
-We chose the MVC pattern
+We chose the 3-Tier Architectural Pattern
 
-<report package diagram>
 
 ```plantuml
-@startuml
 
-note "Architecture \nIt is a stand alone application \nThe architectural pattern used is MVC \nWe have 2 layers, as show in the diagram" as N1
+[GUI] as GUI
+
+[Model and Logic Application] as MLA
+
+[Data Storage] as DS
 
 
-package "GUI" {
-  
-}
-package "Model And Application Logic" {
-  
-}
+GUI --> MLA
+MLA --> DS
 
-@enduml
+note "Contains API, \nExceptions and Classes" as N2
+N2 ..left.. MLA 
 ```
+
 
 
 # Low Level Design
