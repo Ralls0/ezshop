@@ -59,9 +59,9 @@ class AccountBook {
     double totalBalance
     List<BalanceOperation> operations
 
+    + List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
     + boolean recordBalanceUpdate(double toBeAdded)
     + double computeBalance()
-    + List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
     + boolean addBalanceOperation()
     + boolean removeBalanceOperation()
     
@@ -88,10 +88,6 @@ class Customer {
 
     + boolean attachCard(String customerCard)
     + void setName()
-    + List<Customer> loadAllCustomers()
-    + Customer loadCustomer()
-    + void saveCustomer(Customer customer)
-
 }
 
 class Debit {
@@ -102,9 +98,6 @@ class BalanceOperation {
     String description
     double amount
     Date date
-    + List<BalanceOperation> loadAllOperations()
-    + BalanceOperation loadOperation()
-    + void saveOperation(BalanceOperation operation)
 }
 
 class LoyaltyCard {
@@ -120,8 +113,7 @@ class Order {
     int quantity
     String status
 
-    +boolean changeStatus(String status)
-
+    + boolean changeStatus(String status)
 }
 
 class ProductType{
@@ -136,9 +128,6 @@ class ProductType{
     + boolean updateQuantity(int toBeAdded) 
     + boolean updatePosition(String newPos) 
     + boolean updateProduct(String newDescription, String newCode, + + double newPrice, String newNote)
-    + List<ProductType> loadAllProdcuts()
-    + ProductType loadProdcut()
-    + void saveProduct(ProductType product)
 
 }
 
@@ -168,7 +157,6 @@ class ProductQuantityAndDiscount {
     Integer quantity
     double discountRate
     ProductType product
-
 }
 
 class SaleTransaction {
@@ -178,6 +166,7 @@ class SaleTransaction {
     String paymentType
     String status
     double discountRate
+
     +Integer computePoints()
     +double receiveCashPayment()
     +boolean receiveCreditCardPayment(CreditCardCircuit circuit)
@@ -190,12 +179,13 @@ class SaleTransaction {
 }
 
 class Shop {
-    'List<User> users
-    'List<ProductType> products
-    'List<Customer> customers
+    List<ProductType> products
+    List<Customer> customers
+    List<User> users
     User authenticatedUser
     AccountBook accountBook
-    'AccountBook accountBook
+    ShopDBManager db
+
     + void reset();
     + Integer createUser(String username, String password, String role) 
     + boolean deleteUser(Integer id) 
@@ -253,9 +243,48 @@ class User {
     String role
     String password
     String username
-    +User loadUser()
-    +List<User> loadAllUsers()
-    +void saveUsers(User user)
+
+}
+
+class DatabaseConnector {
+    String driver
+    String URL
+    DatabaseConnector db
+
+    + DatabaseConnector getInstance()
+    + boolean executeQuery(String query)
+    + ResultSet selectData(String query)
+    + boolean closeConnection()
+}
+
+class ShopDBManager {
+    DatabaseConnector connector
+
+    --Operations--
+    + boolean saveOperation(BalanceOperation operation)
+    + BalanceOperation loadOperation()
+    + List<BalanceOperation> loadAllOperations()
+    + boolean updateBalanceOperation()
+    + boolean deleteBalanceOperation()
+    --Products--
+    + ProductType loadProdcut()
+    + List<ProductType> loadAllProdcuts()
+    + boolean saveProduct(ProductType product)
+    + boolean updateProduct(ProductType product)
+    + boolean deleteProduct(ProductType product)
+    --Users--
+    + User loadUser()
+    + List<User> loadAllUsers()
+    + boolean saveUser(User user)
+    + boolean updateUser(User user)
+    + boolean deleteUser(User user)
+    --Customers--
+    + Customer loadCustomer()
+    + List<Customer> loadAllCustomers()
+    + boolean saveCustomer(Customer customer)
+    + boolean updateCustomer(Customer customer)
+    + boolean deleteCustomer(Customer customer)
+
 }
 
 AccountBook -up Shop
@@ -267,13 +296,7 @@ CreditCardCircuit "0..*"-- Shop
 
 Credit "0..*"--|> BalanceOperation
 
-Debit "0..*"---|> BalanceOperation
-
-Order --|> Debit
-Order "*" -- ProductType
-
-Shop --right "*" ProductType
-SaleTransaction -- "*" ProductType
+Debit "0..*"--|> BalanceOperation
 
 LoyaltyCard "0..1" -- Customer
 
@@ -283,11 +306,18 @@ ProductType - "0..1" Position
 ReturnTransaction "*" --up SaleTransaction
 ReturnTransaction "*" --up ProductType
 
+Order "*" --  ProductType
+Order --|> Debit
+
 ProductQuantityAndDiscount - SaleTransaction
 ProductQuantityAndDiscount - ProductType
 
 SaleTransaction --|> Credit
 ReturnTransaction --|> Debit
+
+ShopDBManager -- AccountBook
+ShopDBManager -- Shop
+ShopDBManager -- DatabaseConnector
 
 
 note "Persistent class" as N1  
