@@ -360,6 +360,9 @@ Shop -> Shop : login()
 Shop -> Shop : createProductType()
 Shop -> ProductType : updatePosition()
 ProductType -> ProductType : updatePosition()
+Shop -> ShopDBManager : saveProduct()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> Shop: executed
 ```
 ### Issue and Pay Order
 ```plantuml
@@ -368,8 +371,15 @@ Shop -> Shop : issueOrder()
 Shop -> Shop : getOrder()
 Shop -> Order : payOrder()
 Order -> Order: changeStatus()
-Shop -> AccountBook : recordBalanceUpdate()
+Order --> Shop: changed
+Shop -> AccountBook : addBalanceOperation()
 AccountBook -> AccountBook : recordBalanceUpdate()
+AccountBook -> ShopDBManager : saveOperation()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> AccountBook : executed
+AccountBook -> ShopDBManager : updateProduct()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> Shop : executed
 ```
 ### Define Costumer and Card
 ```plantuml
@@ -379,6 +389,9 @@ Shop -> Shop : createCard()
 Shop -> Shop : getCustomer()
 Shop -> Customer : attachCardToCustomer()
 Customer -> Customer : attachCard()
+Shop -> ShopDBManager : saveCustomer()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> Shop: executed
 ```
 ### Modify Customer
 ```plantuml
@@ -387,6 +400,9 @@ Shop -> Shop : getCustomer()
 Shop -> Customer : modifyCustomer()
 Customer -> Customer : setName()
 Customer -> Customer : attachCard()
+Shop -> ShopDBManager : updateCustomer()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> Shop: executed
 ```
 ### Manage Sale with Credit Card
 ```plantuml
@@ -406,8 +422,14 @@ SaleTransaction -> CreditCardCircuit : hasEnoughCash()
 CreditCardCircuit --> SaleTransaction : enough
 SaleTransaction -> CreditCardCircuit : processPayment()
 CreditCardCircuit --> Shop: processed
-Shop -> AccountBook : recordBalanceUpdate()
+Shop -> AccountBook : addBalanceOperation()
 AccountBook -> AccountBook : recordBalanceUpdate()
+AccountBook -> ShopDBManager : saveOperation()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> AccountBook : executed
+AccountBook -> ShopDBManager : updateProduct()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> Shop : executed
 ```
 ### Manage Return with Credit Card
 ```plantuml
@@ -424,8 +446,14 @@ ReturnTransaction -> CreditCardCircuit : isValid()
 CreditCardCircuit --> ReturnTransaction : valid
 ReturnTransaction -> CreditCardCircuit : returnPayment()
 CreditCardCircuit --> Shop: returned
-Shop -> AccountBook : recordBalanceUpdate()
+Shop -> AccountBook : addBalanceOperation()
 AccountBook -> AccountBook : recordBalanceUpdate()
+AccountBook -> ShopDBManager : saveOperation()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> AccountBook : executed
+AccountBook -> ShopDBManager : updateProduct()
+ShopDBManager -> DBConnector : executeQuery()
+DBConnector --> Shop : executed
 ```
 ### Accounting
 ```plantuml
