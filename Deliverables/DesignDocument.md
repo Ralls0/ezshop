@@ -67,6 +67,13 @@ class AccountBook {
     
 }
 
+class BalanceOperation {
+    String description
+    double amount
+    Date date
+}
+
+
 class CreditCardCircuit {
 
     + boolean isValid(String creditCard)
@@ -90,14 +97,19 @@ class Customer {
     + void setName()
 }
 
-class Debit {
+class DatabaseConnector {
+    String driver
+    String URL
+    DatabaseConnector db
 
+    + DatabaseConnector getInstance()
+    + boolean executeQuery(String query)
+    + ResultSet selectData(String query)
+    + boolean closeConnection()
 }
 
-class BalanceOperation {
-    String description
-    double amount
-    Date date
+class Debit {
+
 }
 
 class LoyaltyCard {
@@ -131,6 +143,11 @@ class ProductType{
 
 }
 
+class ProductQuantityAndDiscount {
+    Integer quantity
+    double discountRate
+    ProductType product
+}
 
 class Position {
     String aisleID
@@ -151,12 +168,6 @@ class ReturnTransaction {
     +boolean endReturnTransaction(Integer returnId, boolean commit)
     +boolean commit()
 
-}
-
-class ProductQuantityAndDiscount {
-    Integer quantity
-    double discountRate
-    ProductType product
 }
 
 class SaleTransaction {
@@ -187,6 +198,8 @@ class Shop {
     ShopDBManager db
 
     + void reset();
+
+    -- User --
     + Integer createUser(String username, String password, String role) 
     + boolean deleteUser(Integer id) 
     + List<User> getAllUsers() 
@@ -194,6 +207,8 @@ class Shop {
     + boolean updateUserRights(Integer id, String role) 
     + User login(String username, String password) 
     + boolean logout();
+
+    -- Product --
     + Integer createProductType(String description, String productCode, double pricePerUnit, String note)
     + boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote)
     + boolean deleteProductType(Integer id) 
@@ -202,11 +217,14 @@ class Shop {
     + List<ProductType> getProductTypesByDescription(String description) 
     + boolean updateQuantity(Integer productId, int toBeAdded) 
     + boolean updatePosition(Integer productId, String newPos) 
+    -- Order --
     + Integer issueOrder(String productCode, int quantity, double pricePerUnit)
     + Integer payOrderFor(String productCode, int quantity, double pricePerUnit)
     + boolean payOrder(Integer orderId) 
     + boolean recordOrderArrival(Integer orderId) 
     + List<Order> getAllOrders() 
+
+    -- Customer & Fidelity Card--
     + Integer defineCustomer(String customerName) 
     + boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard)
     + boolean deleteCustomer(Integer id) 
@@ -215,6 +233,8 @@ class Shop {
     + String createCard()
     + boolean attachCardToCustomer(String customerCard, Integer customerId)
     + boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded)
+
+    -- Sale Transaction --
     + Integer startSaleTransaction()
     + boolean addProductToSale(Integer transactionId, String productCode, int amount)
     + boolean deleteProductFromSale(Integer transactionId, String productCode, int amount)
@@ -224,37 +244,23 @@ class Shop {
     + boolean endSaleTransaction(Integer transactionId)
     + boolean deleteSaleTransaction(Integer transactionId)
     + SaleTransaction getSaleTransaction(Integer transactionId)
+
+    --Return Transaction --
     + Integer startReturnTransaction(Integer transactionId)
     + boolean returnProduct(Integer returnId, String productCode, int amount)
     + boolean endReturnTransaction(Integer returnId, boolean commit)
     + boolean deleteReturnTransaction(Integer returnId)
+
+    -- Payment --
     + double receiveCashPayment(Integer transactionId, double cash)
     + boolean receiveCreditCardPayment(Integer transactionId, String creditCard)
     + double returnCashPayment(Integer returnId)
     + double returnCreditCardPayment(Integer returnId, String creditCard)
+
+    -- Balance --
     + boolean recordBalanceUpdate(double toBeAdded)
     + List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to)
     + double computeBalance()
-}
-
-
-class User {
-    Integer id
-    String role
-    String password
-    String username
-
-}
-
-class DatabaseConnector {
-    String driver
-    String URL
-    DatabaseConnector db
-
-    + DatabaseConnector getInstance()
-    + boolean executeQuery(String query)
-    + ResultSet selectData(String query)
-    + boolean closeConnection()
 }
 
 class ShopDBManager {
@@ -287,43 +293,52 @@ class ShopDBManager {
 
 }
 
-AccountBook -up Shop
-AccountBook - "*" BalanceOperation
 
-User "0..*" -- Shop
+class User {
+    Integer id
+    String role
+    String password
+    String username
+
+}
+
+
+AccountBook -up Shop
+AccountBook --up "*" BalanceOperation
 
 CreditCardCircuit "0..*"-- Shop
 
 Credit "0..*"--|> BalanceOperation
 
+Customer "0..*"-- Shop
+
 Debit "0..*"--|> BalanceOperation
 
 LoyaltyCard "0..1" -- Customer
 
-Customer "0..*"-- Shop
-ProductType - "0..1" Position
+Order "*" --up  ProductType
+Order --|> Debit
+
+ProductType --up "0..1" Position
+ProductQuantityAndDiscount --down SaleTransaction
+ProductQuantityAndDiscount --down ProductType
 
 ReturnTransaction "*" --up SaleTransaction
 ReturnTransaction "*" --up ProductType
-
-Order "*" --  ProductType
-Order --|> Debit
-
-ProductQuantityAndDiscount - SaleTransaction
-ProductQuantityAndDiscount - ProductType
-
-SaleTransaction --|> Credit
 ReturnTransaction --|> Debit
 
-ShopDBManager -- AccountBook
-ShopDBManager -- Shop
+SaleTransaction --|> Credit
+
+ShopDBManager --left AccountBook
+ShopDBManager --up Shop
 ShopDBManager -- DatabaseConnector
 
+User "0..*" -- Shop
 
 note "Persistent class" as N1  
 N1 .. User
 note "Persistent class" as N2
-N2 .. BalanceOperation
+N2 ..left BalanceOperation
 note "Persistent class" as N3
 N3 .. Customer
 note "Persistent class" as N4
