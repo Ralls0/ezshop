@@ -355,6 +355,7 @@ N4 .. ProductType
 | Return Transaction        |       |       |       |       | **X** | **X** |       |
 | Credit                    |       |       |       |       |       | **X** |       |
 | CreditCardCircuit         |       |       |       |       |       | **X** |       |
+| DatabaseConnector         | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
 | Debit                     |       |       | **X** |       |       | **X** |       |
 | Customer                  |       |       |       | **X** | **X** |       |       |
 | LoyaltyCard               |       |       |       | **X** | **X** |       |       |
@@ -364,6 +365,7 @@ N4 .. ProductType
 | ProductType               |       | **X** | **X** |       | **X** |       |       |
 | Sale Transaction          |       |       |       |       | **X** | **X** |       |
 | Shop                      | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
+| ShopDBManager             | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
 | User                      | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
 
 
