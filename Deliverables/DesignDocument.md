@@ -1,12 +1,11 @@
 # Design Document 
 
 - [Design Document](#design-document)
-- [Instructions](#instructions)
 - [High Level Design](#high-level-design)
 - [Low Level Design](#low-level-design)
 - [Verification Traceability Matrix](#verification-traceability-matrix)
-- [Verification sequence diagrams](#verification-sequence-diagrams)
-    - [Add new product](#add-new-product)
+- [Verification Sequence Diagrams](#verification-sequence-diagrams)
+    - [Add New Product](#add-new-product)
     - [Issue and Pay Order](#issue-and-pay-order)
     - [Define Costumer and Card](#define-costumer-and-card)
     - [Modify Customer](#modify-customer)
@@ -23,10 +22,6 @@ Authors:
 Date: 30/04/2021
 
 Version: 1.0
-
-# Instructions
-
-The design must satisfy the Official Requirements document, notably functional and non functional requirements
 
 # High Level Design 
 
@@ -369,9 +364,9 @@ N4 .. ProductType
 | User                      | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
 
 
-# Verification sequence diagrams 
+# Verification Sequence Diagrams 
 
-### Add new product
+### Add New Product 
 ```plantuml
 Shop -> Shop : login()
 Shop -> Shop : createProductType()
