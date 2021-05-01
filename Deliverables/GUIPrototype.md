@@ -1,6 +1,10 @@
 # Graphical User Interface Prototype  
 
-Authors: S292477 Matteo Quarta, S281564 Manco Marco, S290136 Davide Fersino, S29260 Giovanni Pollo
+Authors: 
+* S281564 Marco Manco
+* S290136 Giovanni Pollo
+* S292477 Matteo Quarta
+* S292602  Davide Fersino
 
 Date: 21/04/2021
 
