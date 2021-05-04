@@ -3,11 +3,13 @@ package it.polito.ezshop.data;
 import it.polito.ezshop.exceptions.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class EZShop implements EZShopInterface {
 
+    EzUser user;
 
     @Override
     public void reset() {
@@ -16,7 +18,13 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        return null;
+        user = new EzUser(0, username, password, role);
+        //  select user count from db
+        //  new User...
+
+        //  return user
+
+        return 0;
     }
 
     @Override
@@ -41,7 +49,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        return null;
+        return user;
     }
 
     @Override
@@ -66,7 +74,8 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
-        return null;
+        List<ProductType> list = new ArrayList<>();
+        return list;
     }
 
     @Override
@@ -136,7 +145,8 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        return null;
+        List<Customer> list = new ArrayList<Customer>();
+        return list;
     }
 
     @Override
