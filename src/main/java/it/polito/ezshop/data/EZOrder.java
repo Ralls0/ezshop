@@ -13,17 +13,18 @@ public class EZOrder implements Order {
 
 
     private static void readProgressiveOrderId() {
-        // Call the DB, SELECT MAX(OrderID) FROM ...
+        //TODO: Call the DB, SELECT MAX(OrderID) FROM ...
         if (!progressiveOrderIdSet)
             progressiveOrderId = 1;
+        //TODO: What if DB fails? -> Handle this
     }
 
     private static int getProgressiveOrderId(){
+        EZOrder.readProgressiveOrderId();
         return ++progressiveOrderId;
     }
 
     public EZOrder(String productCode, int quantity, double pricePerUnit) {
-        EZOrder.readProgressiveOrderId();
         this.orderId = Integer.valueOf(getProgressiveOrderId());
         this.quantity = Integer.valueOf(quantity);
         this.pricePerUnit = Double.valueOf(pricePerUnit);
