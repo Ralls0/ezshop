@@ -1,12 +1,12 @@
 package it.polito.ezshop.data;
 
-public class EzUser implements User{
+public class MyUser implements User{
     private Integer id;
     private String username;
     private String password;
     private String role;
 
-    public EzUser(Integer id, String username, String password, String role) {
+    public MyUser(Integer id, String username, String password, String role) {
         this.id = id;
         this.username = username;
         this.password = password;

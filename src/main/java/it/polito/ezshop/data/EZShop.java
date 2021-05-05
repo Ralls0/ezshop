@@ -18,7 +18,6 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public void reset() {
-
     }
 
     @Override
@@ -27,12 +26,14 @@ public class EZShop implements EZShopInterface {
             throw new InvalidUsernameException();
         if(password.equals("") || password == null)
             throw new InvalidPasswordException();
-        if(role.equals("") || role == null || !(role.equals("Cashier") || role.equals("Administrator") || role.equals("ShopManager")))
+        if(authenticatedUser == null && (role.equals("") || role == null || !(role.equals("Administrator") || role.equals("ShopManager"))))
             throw new InvalidRoleException();
 
-        user = new EzUser(i, username, password, role);
+        user = new MyUser(i, username, password, role);
         i++;
-        users.add(user);
+        if(authenticatedUser == null){
+            users.add(user);
+        }
 
         //  select user count from db
         //  update the db
@@ -116,6 +117,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean logout() {
+        authenticatedUser = null;
         return true;
     }
 
