@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EZShop implements EZShopInterface {
 
@@ -164,19 +165,29 @@ public class EZShop implements EZShopInterface {
             return false;
         if (!myOrder.getStatus().matches("(ORDERED|ISSUED)"))
             return false;
-        myOrder.setStatus("PAYED"); //TODO: Sarebbe Paid...
+        myOrder.setStatus("PAYED"); // Sarebbe Paid...
         return true;
     }
 
     @Override
     public boolean recordOrderArrival(Integer orderId)
             throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
+
         return false;
     }
 
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
-        return null;
+        String re = "(ISSUED|ORDERED|COMPLETED)";
+        if (user == null)
+            throw new UnauthorizedException("No User Logged In");
+        if (!user.getRole().matches("(Administrator|ShopManager)"))
+            throw new UnauthorizedException("User has not enough rights");
+        return orderMap
+            .values()
+            .stream()
+            .filter( o -> o.getStatus().matches(re))
+            .collect(Collectors.toList());
     }
 
     @Override
