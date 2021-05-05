@@ -111,14 +111,14 @@ public class EZShop implements EZShopInterface {
     }
 
     private boolean initOrderMap() {
-        //TODO: Laod From DB...
+        // TODO: Laod From DB...
         orderMap = new HashMap<Integer, Order>();
         return true;
     }
 
     private boolean validBarCode(String barCode) {
         int sum = 0;
-        int checksum = Integer.valueOf(barCode.charAt(barCode.length())-1);
+        int checksum = Character.getNumericValue(barCode.charAt(barCode.length() - 1));
         int offset = barCode.length() % 2;
         for (int i = 0; i < barCode.length() - 1; i++)
             sum += Integer.valueOf(barCode.charAt(i)) * (i + offset) % 2 == 0 ? 3 : 1;
@@ -161,13 +161,13 @@ public class EZShop implements EZShopInterface {
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit)
             throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException,
             UnauthorizedException {
-        double totalCost = quantity * pricePerUnit;
 
         Integer orderId = issueOrder(productCode, quantity, pricePerUnit);
         if (orderId.intValue() < 0)
             return orderId.intValue();
 
-        if (!recordBalanceUpdate(-1 * pricePerUnit * quantity))
+        double totalCost = -1 * quantity * pricePerUnit;
+        if (!recordBalanceUpdate(totalCost))
             return Integer.valueOf(-1);
 
         try {
@@ -177,9 +177,6 @@ public class EZShop implements EZShopInterface {
             return Integer.valueOf(-1); // Can never happen...
         }
 
-        Integer balanceId = orderMap.get(orderId).getBalanceId();
-        BalanceOperation balanceOperation = new EZBalanceOperation("DEBIT", totalCost);
-        accountBook.put(balanceId, balanceOperation);
         return orderId;
     }
 
@@ -240,7 +237,7 @@ public class EZShop implements EZShopInterface {
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
         if (orderMap == null)
-            initOrderMap(); //TODO: What if false?
+            initOrderMap(); // TODO: What if false?
         return orderMap.values().stream().filter(o -> o.getStatus().matches(re)).collect(Collectors.toList());
     }
 
@@ -391,9 +388,8 @@ public class EZShop implements EZShopInterface {
         return 0;
     }
 
-
     private boolean initAccountBook() {
-        //TODO: Load From DB...
+        // TODO: Load From DB...
         shopBalance = 0.0;
         accountBook = new HashMap<Integer, BalanceOperation>();
         return true;
@@ -406,9 +402,23 @@ public class EZShop implements EZShopInterface {
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
-        if (shopBalance - toBeAdded < 0)
+        String type = "CREDIT";
+
+        if (toBeAdded + shopBalance < 0)
             return false;
-        shopBalance -= toBeAdded;
+
+        Integer nextBOId = 1; // TODO: Call DB...
+        if (nextBOId < 0)
+            return false;
+
+        if (toBeAdded < 0){
+            type = "DEBIT";
+            toBeAdded = -1 * toBeAdded;
+        }
+
+        EZBalanceOperation bo = new EZBalanceOperation(type, toBeAdded);
+        bo.setBalanceId(nextBOId);
+        accountBook.put(nextBOId, bo);
         return true;
     }
 
@@ -424,16 +434,12 @@ public class EZShop implements EZShopInterface {
                 return getCreditsAndDebits(to, from);
 
         if (accountBook == null)
-            initAccountBook(); //TODO: What if null?
+            initAccountBook(); // TODO: What if null?
 
-        return accountBook
-            .values()
-            .stream()
-            .filter( bo -> from == null ? 
-                true : ( bo.getDate().isAfter(from)  || bo.getDate().isEqual(from)))
-            .filter( bo -> to == null ?
-                true : (bo.getDate().isBefore(to) || bo.getDate().isEqual(to)))
-            .collect(Collectors.toList());
+        return accountBook.values().stream()
+                .filter(bo -> from == null ? true : (bo.getDate().isAfter(from) || bo.getDate().isEqual(from)))
+                .filter(bo -> to == null ? true : (bo.getDate().isBefore(to) || bo.getDate().isEqual(to)))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -443,12 +449,9 @@ public class EZShop implements EZShopInterface {
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
-        shopBalance = accountBook
-            .values()
-            .stream()
-            .mapToDouble( bo -> bo.getMoney() * (bo.getType() == "DEBIT" ? -1 : 1) )
-            .sum();
-            
+        shopBalance = accountBook.values().stream()
+                .mapToDouble(bo -> bo.getMoney() * (bo.getType() == "DEBIT" ? -1 : 1)).sum();
+
         return shopBalance;
     }
 }
