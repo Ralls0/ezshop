@@ -162,7 +162,7 @@ public class EZShop implements EZShopInterface {
         Order myOrder = orderMap.get(orderId);
         if (myOrder == null)
             return false;
-        if (!myOrder.getStatus().matches("(PAYED|ISSUED)"))
+        if (!myOrder.getStatus().matches("(ORDERED|ISSUED)"))
             return false;
         myOrder.setStatus("PAYED"); //TODO: Sarebbe Paid...
         return true;
