@@ -155,20 +155,25 @@ public class EZShop implements EZShopInterface {
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit)
             throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException,
             UnauthorizedException {
-            double totalCost = quantity * pricePerUnit;
+        double totalCost = quantity * pricePerUnit;
 
-            if (shopBalance < totalCost) 
+        Integer orderId = issueOrder(productCode, quantity, pricePerUnit);
+        if (orderId.intValue() < 0)
+            return orderId.intValue();
+
+        if (!recordBalanceUpdate(-1 * pricePerUnit * quantity))
+            return Integer.valueOf(-1);
+
+        try {
+            if (!payOrder(orderId))
                 return Integer.valueOf(-1);
+        } catch (InvalidOrderIdException e) {
+            return Integer.valueOf(-1); // Can never happen...
+        }
 
-            Integer orderId = issueOrder(productCode, quantity, pricePerUnit);
-            if (orderId.intValue() < 0 ) 
-                return orderId.intValue();
-
-            Integer balanceId = orderMap.get(orderId).getBalanceId();
-            BalanceOperation balanceOperation = new EZBalanceOperation("DEBIT", totalCost);
-            accountBook.put(balanceId, balanceOperation);
-            shopBalance -= totalCost;
-            orderMap.get(orderId).setStatus("PAYED");
+        Integer balanceId = orderMap.get(orderId).getBalanceId();
+        BalanceOperation balanceOperation = new EZBalanceOperation("DEBIT", totalCost);
+        accountBook.put(balanceId, balanceOperation);
         return orderId;
     }
 
@@ -182,11 +187,20 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
+
         Order myOrder = orderMap.get(orderId);
+
         if (myOrder == null)
             return false;
         if (!myOrder.getStatus().matches("(ORDERED|ISSUED)"))
             return false;
+
+        Order o = orderMap.get(orderId);
+        double orderPrice = o.getPricePerUnit() * o.getQuantity() * -1;
+
+        if (!recordBalanceUpdate(orderPrice))
+            return false;
+
         myOrder.setStatus("PAYED"); // Sarebbe Paid...
         return true;
     }
@@ -207,7 +221,7 @@ public class EZShop implements EZShopInterface {
         if (!myOrder.getStatus().matches("(ORDERED|COMPLETED)"))
             return false;
         // TODO: Increment Product Quantity CC: Giovanni
-        // Integer qty = myOrder.getQuantity()
+        // Integer quantity = myOrder.getQuantity()
         myOrder.setStatus("COMPLETED");
         return true;
     }
@@ -371,16 +385,50 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
-        return false;
+        if (user == null)
+            throw new UnauthorizedException("No User Logged In");
+        if (!user.getRole().matches("(Administrator|ShopManager)"))
+            throw new UnauthorizedException("User has not enough rights");
+
+        if (shopBalance - toBeAdded < 0)
+            return false;
+        shopBalance -= toBeAdded;
+        return true;
     }
 
     @Override
     public List<BalanceOperation> getCreditsAndDebits(LocalDate from, LocalDate to) throws UnauthorizedException {
-        return null;
+        if (user == null)
+            throw new UnauthorizedException("No User Logged In");
+        if (!user.getRole().matches("(Administrator|ShopManager)"))
+            throw new UnauthorizedException("User has not enough rights");
+
+        if (from.isAfter(to))
+            return getCreditsAndDebits(to, from);
+
+        return accountBook
+            .values()
+            .stream()
+            .filter( bo -> from == null ? 
+                true : ( bo.getDate().isAfter(from)  || bo.getDate().isEqual(from)))
+            .filter( bo -> to == null ?
+                true : (bo.getDate().isBefore(to) || bo.getDate().isEqual(to)))
+            .collect(Collectors.toList());
     }
 
     @Override
     public double computeBalance() throws UnauthorizedException {
-        return 0;
+        if (user == null)
+            throw new UnauthorizedException("No User Logged In");
+        if (!user.getRole().matches("(Administrator|ShopManager)"))
+            throw new UnauthorizedException("User has not enough rights");
+
+        shopBalance = accountBook
+            .values()
+            .stream()
+            .mapToDouble( bo -> bo.getMoney() * (bo.getType() == "DEBIT" ? -1 : 1) )
+            .sum();
+            
+        return shopBalance;
     }
 }
