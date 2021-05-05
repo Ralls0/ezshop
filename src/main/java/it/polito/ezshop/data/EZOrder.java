@@ -2,12 +2,35 @@ package it.polito.ezshop.data;
 
 public class EZOrder implements Order {
 
+    private static int progressiveOrderId = 0;
+    private static boolean progressiveOrderIdSet = false;
     private Integer balanceId;
     private Integer orderId;
     private Integer quantity;
     private String productCode;
     private String status;
     private Double pricePerUnit;
+
+
+    private static void readProgressiveOrderId() {
+        // Call the DB, SELECT MAX(OrderID) FROM ...
+        if (!progressiveOrderIdSet)
+            progressiveOrderId = 1;
+    }
+
+    private static int getProgressiveOrderId(){
+        return ++progressiveOrderId;
+    }
+
+    public EZOrder(String productCode, int quantity, double pricePerUnit) {
+        EZOrder.readProgressiveOrderId();
+        this.orderId = Integer.valueOf(getProgressiveOrderId());
+        this.quantity = Integer.valueOf(quantity);
+        this.pricePerUnit = Double.valueOf(pricePerUnit);
+        this.status = "Created";
+        this.productCode = productCode;
+        this.balanceId = 0; //TODO: FIX THIS
+    }
 
     @Override
     public Integer getBalanceId() {

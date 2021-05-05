@@ -1,16 +1,17 @@
 package it.polito.ezshop.data;
 
 import it.polito.ezshop.exceptions.*;
-
+import it.polito.ezshop.data.EZOrder;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
 public class EZShop implements EZShopInterface {
 
     EzUser user;
-
+    HashMap<Integer, Order> orderMap;
     @Override
     public void reset() {
 
@@ -98,9 +99,39 @@ public class EZShop implements EZShopInterface {
         return false;
     }
 
+    private boolean validBarCode(String barCode) {
+        int sum = 0;
+        int checksum = Integer.valueOf(barCode.charAt(barCode.length()));
+        int offset = barCode.length() == 13 ? 1 : 0;
+        for(int i = 0; i < barCode.length() - 1; i++)
+            sum += Integer.valueOf(barCode.charAt(i)) *
+                (i + offset) % 2 == 0 ? 3 : 1;
+        return checksum == -10 + (sum % 10);
+    }
+
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+        if (quantity <= 0) 
+            throw new InvalidQuantityException("Invalid quantity: " + String.valueOf(quantity) );
+        if (pricePerUnit <= 0.0) 
+            throw new InvalidPricePerUnitException("Invalid PPU: " + String.valueOf(pricePerUnit));
+        if (user == null) 
+            throw new UnauthorizedException("Invalid User: No User Logged In");
+        String role = user.getRole();
+        if (role.compareTo("Administrator") != 0 && role.compareTo("ShopManager") != 0)
+            throw new UnauthorizedException("Invalid User: " + role + " has not enough rights");
+        if (productCode == null)
+            throw new InvalidProductCodeException("Invalid BarCode: Null Pointer");
+        if (productCode.length() < 12 || productCode.length() > 14)
+            throw new InvalidProductCodeException("Invalid BarCode: Incorrect Length");
+        if (!validBarCode(productCode))
+            throw new InvalidProductCodeException("Invalid BarCode: Failed Test Algorithm");
+        EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit);
+        if (orderMap == null)
+            orderMap = new HashMap<Integer, Order>(); //TODO: Restore from DB
+        orderMap.put(newOrder.getOrderId(), newOrder);
+        return newOrder.getOrderId(); //TODO: Return -1 if DB problem or product does not exist
+                                      // cc: Giovanni
     }
 
     @Override
