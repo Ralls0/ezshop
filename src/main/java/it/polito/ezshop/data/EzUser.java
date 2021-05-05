@@ -20,7 +20,7 @@ public class EzUser implements User{
 
     @Override
     public void setId(Integer id) {
-
+        this.id = id;
     }
 
     @Override
@@ -30,7 +30,7 @@ public class EzUser implements User{
 
     @Override
     public void setUsername(String username) {
-
+        this.username = username;
     }
 
     @Override
@@ -40,7 +40,7 @@ public class EzUser implements User{
 
     @Override
     public void setPassword(String password) {
-
+        this.password = password;
     }
 
     @Override
@@ -50,6 +50,6 @@ public class EzUser implements User{
 
     @Override
     public void setRole(String role) {
-
+        this.role = role;
     }
 }

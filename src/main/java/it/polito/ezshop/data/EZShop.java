@@ -9,7 +9,12 @@ import java.util.List;
 
 public class EZShop implements EZShopInterface {
 
-    EzUser user;
+    private User user;
+    private List<User> users = new ArrayList<>();
+    private User authenticatedUser;
+
+    // test for the id of the user
+    int i = 1;
 
     @Override
     public void reset() {
@@ -18,43 +23,100 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        user = new EzUser(0, username, password, role);
+        if(username.equals("") || username == null)
+            throw new InvalidUsernameException();
+        if(password.equals("") || password == null)
+            throw new InvalidPasswordException();
+        if(role.equals("") || role == null || !(role.equals("Cashier") || role.equals("Administrator") || role.equals("ShopManager")))
+            throw new InvalidRoleException();
+
+        user = new EzUser(i, username, password, role);
+        i++;
+        users.add(user);
+
         //  select user count from db
-        //  new User...
+        //  update the db
 
-        //  return user
-
-        return 0;
+        return user.getId();
     }
 
     @Override
     public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return false;
+        if(!authenticatedUser.getRole().equals("Administrator"))
+            throw new UnauthorizedException();
+        boolean foundAndDeleted = false;
+        for (User user: users){
+            if (user.getId().equals(id)) {
+                foundAndDeleted = true;
+                users.remove(user);
+            }
+        }
+        if (!foundAndDeleted) {
+            throw new InvalidUserIdException();
+        }
+        return foundAndDeleted;
     }
 
     @Override
     public List<User> getAllUsers() throws UnauthorizedException {
-        return null;
+        return users;
     }
 
     @Override
     public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return null;
+        if(!authenticatedUser.getRole().equals("Administrator"))
+            throw new UnauthorizedException();
+        boolean found = false;
+        User toReturn = null;
+        for (User user: users){
+            if (user.getId().equals(id)) {
+                found = true;
+                toReturn = user;
+            }
+        }
+        if (!found) {
+            throw new InvalidUserIdException();
+        }
+        return toReturn;
     }
 
     @Override
     public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        return false;
+        if(!authenticatedUser.getRole().equals("Administrator"))
+            throw new UnauthorizedException();
+        if(role.equals("") || role == null || !(role.equals("Cashier") || role.equals("Administrator") || role.equals("ShopManager")))
+            throw new InvalidRoleException();
+        boolean foundAndModified = false;
+        for (User user: users){
+            if (user.getId().equals(id)) {
+                foundAndModified = true;
+                user.setRole(role);
+            }
+        }
+        if (!foundAndModified) {
+            throw new InvalidUserIdException();
+        }
+
+        return foundAndModified;
     }
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        return user;
+        if(username.equals("") || username == null)
+            throw new InvalidUsernameException();
+        if(password.equals("") || password == null)
+            throw new InvalidPasswordException();
+        for (User user: users){
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                 authenticatedUser = user;
+            }
+        }
+        return authenticatedUser;
     }
 
     @Override
     public boolean logout() {
-        return false;
+        return true;
     }
 
     @Override
