@@ -27,7 +27,7 @@ public class EZOrder implements Order {
         this.orderId = Integer.valueOf(getProgressiveOrderId());
         this.quantity = Integer.valueOf(quantity);
         this.pricePerUnit = Double.valueOf(pricePerUnit);
-        this.status = "Created";
+        this.status = "ISSUED";
         this.productCode = productCode;
         this.balanceId = 0; //TODO: FIX THIS
     }
