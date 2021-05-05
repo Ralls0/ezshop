@@ -2,8 +2,6 @@ package it.polito.ezshop.data;
 
 public class EZOrder implements Order {
 
-    private static int progressiveOrderId = 0;
-    private static boolean progressiveOrderIdSet = false;
     private Integer balanceId;
     private Integer orderId;
     private Integer quantity;
@@ -11,26 +9,13 @@ public class EZOrder implements Order {
     private String status;
     private Double pricePerUnit;
 
-
-    private static void readProgressiveOrderId() {
-        //TODO: Call the DB, SELECT MAX(OrderID) FROM ...
-        if (!progressiveOrderIdSet)
-            progressiveOrderId = 1;
-        //TODO: What if DB fails? -> Handle this
-    }
-
-    private static int getProgressiveOrderId(){
-        EZOrder.readProgressiveOrderId();
-        return ++progressiveOrderId;
-    }
-
     public EZOrder(String productCode, int quantity, double pricePerUnit) {
-        this.orderId = Integer.valueOf(getProgressiveOrderId());
+        this.orderId = Integer.valueOf(-1);
         this.quantity = Integer.valueOf(quantity);
         this.pricePerUnit = Double.valueOf(pricePerUnit);
         this.status = "ISSUED";
         this.productCode = productCode;
-        this.balanceId = 0; //TODO: FIX THIS
+        this.balanceId = 0; // TODO: FIX THIS
     }
 
     @Override
@@ -51,7 +36,7 @@ public class EZOrder implements Order {
     @Override
     public void setProductCode(String productCode) {
         this.productCode = productCode;
-        
+
     }
 
     @Override
@@ -62,7 +47,7 @@ public class EZOrder implements Order {
     @Override
     public void setPricePerUnit(double pricePerUnit) {
         this.pricePerUnit = Double.valueOf(pricePerUnit);
-        
+
     }
 
     @Override
@@ -83,7 +68,7 @@ public class EZOrder implements Order {
     @Override
     public void setStatus(String status) {
         this.status = status;
-        
+
     }
 
     @Override
@@ -95,5 +80,5 @@ public class EZOrder implements Order {
     public void setOrderId(Integer orderId) {
         this.orderId = orderId;
     }
-    
+
 }
