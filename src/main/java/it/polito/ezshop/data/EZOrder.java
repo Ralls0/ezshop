@@ -2,30 +2,30 @@ package it.polito.ezshop.data;
 
 public class EZOrder implements Order {
 
-    private Integer balanceId;
+    private BalanceOperation balanceOperation;
     private Integer orderId;
     private Integer quantity;
     private String productCode;
     private String status;
     private Double pricePerUnit;
 
-    public EZOrder(String productCode, int quantity, double pricePerUnit) {
+    public EZOrder(String productCode, int quantity, double pricePerUnit, BalanceOperation balanceOperation) {
         this.orderId = Integer.valueOf(-1);
         this.quantity = Integer.valueOf(quantity);
         this.pricePerUnit = Double.valueOf(pricePerUnit);
         this.status = "ISSUED";
         this.productCode = productCode;
-        this.balanceId = 0; // TODO: FIX THIS
+        this.balanceOperation = balanceOperation;
     }
 
     @Override
     public Integer getBalanceId() {
-        return balanceId;
+        return Integer.valueOf(balanceOperation.getBalanceId());
     }
 
     @Override
     public void setBalanceId(Integer balanceId) {
-        this.balanceId = balanceId;
+        this.balanceOperation.setBalanceId(Integer.valueOf(balanceId));
     }
 
     @Override

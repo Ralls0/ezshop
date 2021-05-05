@@ -9,7 +9,7 @@ public class EZBalanceOperation implements BalanceOperation {
     private Double money;
     private String type;
 
-    public EZBalanceOperation(String date, String type, double money) {
+    public EZBalanceOperation(String type, double money) {
         this.balanceId = Integer.valueOf(-1);
         this.type = type;
         this.money = money;

@@ -1,7 +1,6 @@
 package it.polito.ezshop.data;
 
 import it.polito.ezshop.exceptions.*;
-import it.polito.ezshop.data.EZOrder;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -135,12 +134,18 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductCodeException("Wrong Format");
         if (!validBarCode(productCode))
             throw new InvalidProductCodeException("Failed Checksum");
-        EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit);
-        if (orderMap == null)
-            orderMap = new HashMap<Integer, Order>(); // TODO: Restore from DB
+
+        Integer nextOrderId = 1; //TODO: db.getNextOrderId();
+        if (nextOrderId < 0) 
+            return Integer.valueOf(-1);
+
+        EZBalanceOperation balanceOperation = new EZBalanceOperation("ORDER", pricePerUnit * quantity);
+        EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit, balanceOperation);
+        newOrder.setOrderId(nextOrderId);
+        if (orderMap == null) // TODO: Restore from DB
+            orderMap = new HashMap<Integer, Order>(); 
         orderMap.put(newOrder.getOrderId(), newOrder);
-        return newOrder.getOrderId(); // TODO: Return -1 if DB problem or product does not exist
-                                      // cc: Giovanni
+        return newOrder.getOrderId(); // TODO: Return -1 if product does not exist @Giovanni
     }
 
     @Override
