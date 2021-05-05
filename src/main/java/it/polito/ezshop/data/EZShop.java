@@ -110,6 +110,12 @@ public class EZShop implements EZShopInterface {
         return false;
     }
 
+    private boolean initOrderMap() {
+        //TODO: Laod From DB...
+        orderMap = new HashMap<Integer, Order>();
+        return true;
+    }
+
     private boolean validBarCode(String barCode) {
         int sum = 0;
         int checksum = Integer.valueOf(barCode.charAt(barCode.length()));
@@ -146,7 +152,7 @@ public class EZShop implements EZShopInterface {
         EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit, balanceOperation);
         newOrder.setOrderId(nextOrderId);
         if (orderMap == null) // TODO: Restore from DB
-            orderMap = new HashMap<Integer, Order>();
+            initOrderMap(); // TODO: What if false?
         orderMap.put(newOrder.getOrderId(), newOrder);
         return newOrder.getOrderId(); // TODO: Return -1 if product does not exist @Giovanni
     }
@@ -383,6 +389,14 @@ public class EZShop implements EZShopInterface {
         return 0;
     }
 
+
+    private boolean initAccountBook() {
+        //TODO: Load From DB...
+        shopBalance = 0.0;
+        accountBook = new HashMap<Integer, BalanceOperation>();
+        return true;
+    }
+
     @Override
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
         if (user == null)
@@ -405,6 +419,9 @@ public class EZShop implements EZShopInterface {
 
         if (from.isAfter(to))
             return getCreditsAndDebits(to, from);
+
+        if (accountBook == null)
+            initAccountBook(); //TODO: What if null?
 
         return accountBook
             .values()
