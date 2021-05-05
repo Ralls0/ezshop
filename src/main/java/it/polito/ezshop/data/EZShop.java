@@ -118,7 +118,7 @@ public class EZShop implements EZShopInterface {
 
     private boolean validBarCode(String barCode) {
         int sum = 0;
-        int checksum = Integer.valueOf(barCode.charAt(barCode.length()));
+        int checksum = Integer.valueOf(barCode.charAt(barCode.length())-1);
         int offset = barCode.length() % 2;
         for (int i = 0; i < barCode.length() - 1; i++)
             sum += Integer.valueOf(barCode.charAt(i)) * (i + offset) % 2 == 0 ? 3 : 1;
@@ -239,6 +239,8 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
+        if (orderMap == null)
+            initOrderMap(); //TODO: What if false?
         return orderMap.values().stream().filter(o -> o.getStatus().matches(re)).collect(Collectors.toList());
     }
 
@@ -417,8 +419,9 @@ public class EZShop implements EZShopInterface {
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
-        if (from.isAfter(to))
-            return getCreditsAndDebits(to, from);
+        if (from != null && to != null)
+            if (from.isAfter(to))
+                return getCreditsAndDebits(to, from);
 
         if (accountBook == null)
             initAccountBook(); //TODO: What if null?
