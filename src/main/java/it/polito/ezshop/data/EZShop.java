@@ -11,6 +11,8 @@ public class EZShop implements EZShopInterface {
 
     EzUser user;
     HashMap<Integer, Order> orderMap;
+    HashMap<Integer, BalanceOperation> accountBook;
+    double shopBalance;
 
     @Override
     public void reset() {
@@ -135,15 +137,16 @@ public class EZShop implements EZShopInterface {
         if (!validBarCode(productCode))
             throw new InvalidProductCodeException("Failed Checksum");
 
-        Integer nextOrderId = 1; //TODO: db.getNextOrderId();
-        if (nextOrderId < 0) 
+        Integer nextOrderId = 1; // TODO: db.getNextOrderId();
+        if (nextOrderId < 0)
             return Integer.valueOf(-1);
 
-        EZBalanceOperation balanceOperation = new EZBalanceOperation("ORDER", pricePerUnit * quantity);
+        // TODO: DEBIT or ORDER?
+        EZBalanceOperation balanceOperation = new EZBalanceOperation("DEBIT", pricePerUnit * quantity);
         EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit, balanceOperation);
         newOrder.setOrderId(nextOrderId);
         if (orderMap == null) // TODO: Restore from DB
-            orderMap = new HashMap<Integer, Order>(); 
+            orderMap = new HashMap<Integer, Order>();
         orderMap.put(newOrder.getOrderId(), newOrder);
         return newOrder.getOrderId(); // TODO: Return -1 if product does not exist @Giovanni
     }
@@ -152,7 +155,21 @@ public class EZShop implements EZShopInterface {
     public Integer payOrderFor(String productCode, int quantity, double pricePerUnit)
             throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException,
             UnauthorizedException {
-        return null;
+            double totalCost = quantity * pricePerUnit;
+
+            if (shopBalance < totalCost) 
+                return Integer.valueOf(-1);
+
+            Integer orderId = issueOrder(productCode, quantity, pricePerUnit);
+            if (orderId.intValue() < 0 ) 
+                return orderId.intValue();
+
+            Integer balanceId = orderMap.get(orderId).getBalanceId();
+            BalanceOperation balanceOperation = new EZBalanceOperation("DEBIT", totalCost);
+            accountBook.put(balanceId, balanceOperation);
+            shopBalance -= totalCost;
+            orderMap.get(orderId).setStatus("PAYED");
+        return orderId;
     }
 
     @Override
@@ -186,9 +203,10 @@ public class EZShop implements EZShopInterface {
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
         Order myOrder = orderMap.get(orderId);
-        //TODO: InvalidLocationException if no valid location CC: Giovanni
-        if (!myOrder.getStatus().matches("(ORDERED|COMPLETED)")) return false;
-        //TODO: Increment Product Quantity  CC: Giovanni
+        // TODO: InvalidLocationException if no valid location CC: Giovanni
+        if (!myOrder.getStatus().matches("(ORDERED|COMPLETED)"))
+            return false;
+        // TODO: Increment Product Quantity CC: Giovanni
         // Integer qty = myOrder.getQuantity()
         myOrder.setStatus("COMPLETED");
         return true;
