@@ -172,8 +172,21 @@ public class EZShop implements EZShopInterface {
     @Override
     public boolean recordOrderArrival(Integer orderId)
             throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
-
-        return false;
+        if (orderId == null)
+            throw new InvalidOrderIdException("Null Order ID");
+        if (orderId <= 0)
+            throw new InvalidOrderIdException("Negative (or zero) Order ID");
+        if (user == null)
+            throw new UnauthorizedException("No User Logged In");
+        if (!user.getRole().matches("(Administrator|ShopManager)"))
+            throw new UnauthorizedException("User has not enough rights");
+        Order myOrder = orderMap.get(orderId);
+        //TODO: InvalidLocationException if no valid location CC: Giovanni
+        if (!myOrder.getStatus().matches("(ORDERED|COMPLETED)")) return false;
+        //TODO: Increment Product Quantity  CC: Giovanni
+        // Integer qty = myOrder.getQuantity()
+        myOrder.setStatus("COMPLETED");
+        return true;
     }
 
     @Override
@@ -183,11 +196,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
-        return orderMap
-            .values()
-            .stream()
-            .filter( o -> o.getStatus().matches(re))
-            .collect(Collectors.toList());
+        return orderMap.values().stream().filter(o -> o.getStatus().matches(re)).collect(Collectors.toList());
     }
 
     @Override
