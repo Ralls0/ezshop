@@ -9,7 +9,7 @@ import java.util.List;
 
 public class EZShop implements EZShopInterface {
 
-    EzUser user;
+    EZUser user;
 
     @Override
     public void reset() {
@@ -18,7 +18,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        user = new EzUser(0, username, password, role);
+        user = new EZUser(0, username, password, role);
         //  select user count from db
         //  new User...
 
