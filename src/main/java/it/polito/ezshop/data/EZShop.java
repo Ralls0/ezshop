@@ -142,13 +142,13 @@ public class EZShop implements EZShopInterface {
         if (!validBarCode(productCode))
             throw new InvalidProductCodeException("Failed Checksum");
 
-        Integer nextOrderId = Integer.valueOf(1); // TODO: db.getNextOrderId();
-        if (nextOrderId < 0 )
-            return Integer.valueOf(-1);
+        Integer nextOrderId = 1; // TODO: db.getNextOrderId();
+        if (nextOrderId < 0)
+            return -1;
 
         EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit);
         newOrder.setOrderId(nextOrderId);
-        newOrder.setBalanceId(Integer.valueOf(-1));
+        newOrder.setBalanceId(-1);
         if (orderMap == null) // TODO: Restore from DB
             initOrderMap(); // TODO: What if false?
         orderMap.put(newOrder.getOrderId(), newOrder);
@@ -162,20 +162,14 @@ public class EZShop implements EZShopInterface {
 
         Integer orderId = issueOrder(productCode, quantity, pricePerUnit);
         if (orderId.intValue() < 0)
-            return Integer.valueOf(-1);
-
-        double totalCost = -1 * quantity * pricePerUnit;
-        if (!recordBalanceUpdate(totalCost))
-            return Integer.valueOf(-1);
+            return -1;
 
         try {
-            if (!payOrder(orderId))
-                return Integer.valueOf(-1);
+            return !payOrder(orderId) ? -1 : orderId;
         } catch (InvalidOrderIdException e) {
-            return Integer.valueOf(-1); // Can never happen...
+            return -1; // Can't get here
         }
 
-        return orderId;
     }
 
     @Override
@@ -201,7 +195,6 @@ public class EZShop implements EZShopInterface {
         if (!recordBalanceUpdate(orderPrice))
             return false;
 
-        
         orderToPay.setStatus("PAYED"); // Sarebbe Paid...
         orderToPay.setBalanceId(accountBook.getCurrentBalanceOperationID());
         return true;
@@ -387,7 +380,6 @@ public class EZShop implements EZShopInterface {
         return 0;
     }
 
-
     @Override
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
         if (user == null)
@@ -412,10 +404,7 @@ public class EZShop implements EZShopInterface {
         if (accountBook == null)
             accountBook = EZAccountBook.loadAccountBook();
 
-        return accountBook
-                .getAccountBookEntries()
-                .values()
-                .stream()
+        return accountBook.getAccountBookEntries().values().stream()
                 .filter(bo -> from == null ? true : (bo.getDate().isAfter(from) || bo.getDate().isEqual(from)))
                 .filter(bo -> to == null ? true : (bo.getDate().isBefore(to) || bo.getDate().isEqual(to)))
                 .collect(Collectors.toList());
@@ -427,7 +416,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
-            
+
         return accountBook.getBalance();
     }
 }
