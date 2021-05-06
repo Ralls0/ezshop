@@ -3,6 +3,7 @@ package it.polito.ezshop.data;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -455,6 +456,85 @@ public class EZShopDBManager {
 
     public boolean deleteSale(Integer id) throws SQLException {
         PreparedStatement statement = db.prepareStatement("DELETE FROM Sales WHERE ID = ?");
+        statement.setInt(1, id);
+
+        boolean returnValue = statement.execute();
+        statement.close();
+
+        return returnValue;
+    }
+
+    //      BALANCE CLASS QUERIES
+
+    public Integer getNextBalanceOperationID() throws SQLException {
+        String sql = "SELECT MAX(ID) FROM BalanceOperations";
+        ResultSet res = db.executeSelectionQuery(sql);
+
+        if (res.next()) {
+            Integer nextID = res.getInt("ID") + 1;
+            return nextID;
+        }
+        return 1;
+    }
+
+    public List<BalanceOperation> loadAllBalanceOperations() throws SQLException {
+        String sql = "SELECT * FROM BalanceOperations";
+        ResultSet res = db.executeSelectionQuery(sql);
+        List<BalanceOperation> ops = new ArrayList<>();
+        while (res.next()) {
+            Integer id = res.getInt("ID");
+            Integer amount = res.getInt("Amount");
+            LocalDate date = res.getDate("Date").toLocalDate();
+            String type = res.getString("Type");
+
+            EZBalanceOperation operation = new EZBalanceOperation(id, date, amount, type);
+            ops.add(operation);
+        }
+
+        return ops;
+    }
+
+    public BalanceOperation loadBalanceOperation(Integer id) throws SQLException {
+        String sql = "SELECT * FROM BalanceOperations WHERE ID = "+ id;
+        ResultSet res = db.executeSelectionQuery(sql);
+        if (res.next()) {
+            Integer amount = res.getInt("Amount");
+            LocalDate date = res.getDate("Date").toLocalDate();
+            String type = res.getString("Type");
+
+            return new EZBalanceOperation(id, date, amount, type);
+        }
+        return null;
+    }
+
+    public boolean saveBalanceOperation(BalanceOperation operation) throws SQLException {
+        PreparedStatement statement = db.prepareStatement("INSERT INTO BalanceOperations (ID, Amount, Date, Type) VALUES (?, ?, '?', '?')");
+        statement.setInt(1, operation.getBalanceId());
+        statement.setDouble(2, operation.getMoney());
+        statement.setString(3, operation.getDate().toString());
+        statement.setString(4, operation.getType());
+
+        boolean returnValue = statement.execute();
+        statement.close();
+
+        return returnValue;
+    }
+
+    public boolean updateBalanceOperation(BalanceOperation operation) throws SQLException {
+        PreparedStatement statement = db.prepareStatement("UPDATE BalanceOperations SET Amount = ?, Date = '?', Type = '?' WHERE ID = ?");
+        statement.setInt(4, operation.getBalanceId());
+        statement.setDouble(1, operation.getMoney());
+        statement.setString(2, operation.getDate().toString());
+        statement.setString(3, operation.getType());
+
+        boolean returnValue = statement.execute();
+        statement.close();
+
+        return returnValue;
+    }
+
+    public boolean deleteBalanceOperation(Integer id) throws SQLException {
+        PreparedStatement statement = db.prepareStatement("DELETE FROM BalanceOperations WHERE ID = ?");
         statement.setInt(1, id);
 
         boolean returnValue = statement.execute();

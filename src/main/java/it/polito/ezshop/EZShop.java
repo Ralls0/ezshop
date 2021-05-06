@@ -47,9 +47,9 @@ public class EZShop {
 
             EZShopDBManager.getInstance().getConnector().execute("CREATE TABLE BalanceOperations (" +
                                                                     " ID int NOT NULL," +
-                                                                    " Description varchar(255) NOT NULL," +
                                                                     " Amount double NOT NULL," +
                                                                     " Date date NOT NULL," +
+                                                                    " Type varchar(255) NOT NULL," +
                                                                     " PRIMARY KEY(ID)" +
                                                                     ")");
 
