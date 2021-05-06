@@ -11,9 +11,7 @@ public class EZShop implements EZShopInterface {
 
     private EzUser user;
     private HashMap<Integer, Order> orderMap;
-    private HashMap<Integer, BalanceOperation> accountBook;
-    private double shopBalance;
-    private Integer currentBalanceId;
+    private EZAccountBook accountBook;
 
     @Override
     public void reset() {
@@ -205,7 +203,7 @@ public class EZShop implements EZShopInterface {
 
         
         orderToPay.setStatus("PAYED"); // Sarebbe Paid...
-        orderToPay.setBalanceId(currentBalanceId);
+        orderToPay.setBalanceId(accountBook.getCurrentBalanceOperationID());
         return true;
     }
 
@@ -389,13 +387,6 @@ public class EZShop implements EZShopInterface {
         return 0;
     }
 
-    private boolean initAccountBook() {
-        // TODO: Load From DB...
-        shopBalance = 0.0;
-        accountBook = new HashMap<Integer, BalanceOperation>();
-        // TODO: Calculate balance from map and set it
-        return true;
-    }
 
     @Override
     public boolean recordBalanceUpdate(double toBeAdded) throws UnauthorizedException {
@@ -404,27 +395,7 @@ public class EZShop implements EZShopInterface {
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
-        String type = "CREDIT";
-
-        if (toBeAdded + shopBalance < 0)
-            return false;
-
-        currentBalanceId = 1; // TODO: Call DB...
-        
-        if (currentBalanceId < 0)
-            return false;
-
-        shopBalance += toBeAdded;
-
-        if (toBeAdded < 0){
-            type = "DEBIT";
-            toBeAdded = -1 * toBeAdded;
-        }
-
-        EZBalanceOperation bo = new EZBalanceOperation(type, toBeAdded);
-        bo.setBalanceId(currentBalanceId);
-        accountBook.put(currentBalanceId, bo);
-        return true;
+        return accountBook.recordBalance(toBeAdded);
     }
 
     @Override
@@ -439,9 +410,12 @@ public class EZShop implements EZShopInterface {
                 return getCreditsAndDebits(to, from);
 
         if (accountBook == null)
-            initAccountBook(); // TODO: What if null?
+            accountBook = EZAccountBook.loadAccountBook();
 
-        return accountBook.values().stream()
+        return accountBook
+                .getAccountBookEntries()
+                .values()
+                .stream()
                 .filter(bo -> from == null ? true : (bo.getDate().isAfter(from) || bo.getDate().isEqual(from)))
                 .filter(bo -> to == null ? true : (bo.getDate().isBefore(to) || bo.getDate().isEqual(to)))
                 .collect(Collectors.toList());
@@ -453,11 +427,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
-
-        //shopBalance = accountBook.values().stream()
-        //        .mapToDouble(bo -> bo.getMoney() * (bo.getType().matches("DEBIT") ? -1 : 1)).sum();
-        //TODO: Delete this comment later
-
-        return shopBalance;
+            
+        return accountBook.getBalance();
     }
 }
