@@ -9,10 +9,11 @@ import java.util.stream.Collectors;
 
 public class EZShop implements EZShopInterface {
 
-    EzUser user;
-    HashMap<Integer, Order> orderMap;
-    HashMap<Integer, BalanceOperation> accountBook;
-    double shopBalance;
+    private EzUser user;
+    private HashMap<Integer, Order> orderMap;
+    private HashMap<Integer, BalanceOperation> accountBook;
+    private double shopBalance;
+    private Integer currentBalanceId;
 
     @Override
     public void reset() {
@@ -143,14 +144,13 @@ public class EZShop implements EZShopInterface {
         if (!validBarCode(productCode))
             throw new InvalidProductCodeException("Failed Checksum");
 
-        Integer nextOrderId = 1; // TODO: db.getNextOrderId();
-        if (nextOrderId < 0)
+        Integer nextOrderId = Integer.valueOf(1); // TODO: db.getNextOrderId();
+        if (nextOrderId < 0 )
             return Integer.valueOf(-1);
 
-        // TODO: DEBIT or ORDER?
-        EZBalanceOperation balanceOperation = new EZBalanceOperation("DEBIT", pricePerUnit * quantity);
-        EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit, balanceOperation);
+        EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit);
         newOrder.setOrderId(nextOrderId);
+        newOrder.setBalanceId(Integer.valueOf(-1));
         if (orderMap == null) // TODO: Restore from DB
             initOrderMap(); // TODO: What if false?
         orderMap.put(newOrder.getOrderId(), newOrder);
@@ -164,7 +164,7 @@ public class EZShop implements EZShopInterface {
 
         Integer orderId = issueOrder(productCode, quantity, pricePerUnit);
         if (orderId.intValue() < 0)
-            return orderId.intValue();
+            return Integer.valueOf(-1);
 
         double totalCost = -1 * quantity * pricePerUnit;
         if (!recordBalanceUpdate(totalCost))
@@ -191,20 +191,21 @@ public class EZShop implements EZShopInterface {
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
-        Order myOrder = orderMap.get(orderId);
+        Order orderToPay = orderMap.get(orderId);
 
-        if (myOrder == null)
+        if (orderToPay == null)
             return false;
-        if (!myOrder.getStatus().matches("(ORDERED|ISSUED)"))
+        if (!orderToPay.getStatus().matches("(ORDERED|ISSUED)"))
             return false;
 
-        Order o = orderMap.get(orderId);
-        double orderPrice = o.getPricePerUnit() * o.getQuantity() * -1;
+        double orderPrice = orderToPay.getPricePerUnit() * orderToPay.getQuantity() * -1;
 
         if (!recordBalanceUpdate(orderPrice))
             return false;
 
-        myOrder.setStatus("PAYED"); // Sarebbe Paid...
+        
+        orderToPay.setStatus("PAYED"); // Sarebbe Paid...
+        orderToPay.setBalanceId(currentBalanceId);
         return true;
     }
 
@@ -392,6 +393,7 @@ public class EZShop implements EZShopInterface {
         // TODO: Load From DB...
         shopBalance = 0.0;
         accountBook = new HashMap<Integer, BalanceOperation>();
+        // TODO: Calculate balance from map and set it
         return true;
     }
 
@@ -407,9 +409,12 @@ public class EZShop implements EZShopInterface {
         if (toBeAdded + shopBalance < 0)
             return false;
 
-        Integer nextBOId = 1; // TODO: Call DB...
-        if (nextBOId < 0)
+        currentBalanceId = 1; // TODO: Call DB...
+
+        if (currentBalanceId < 0)
             return false;
+
+        shopBalance += toBeAdded;
 
         if (toBeAdded < 0){
             type = "DEBIT";
@@ -417,8 +422,8 @@ public class EZShop implements EZShopInterface {
         }
 
         EZBalanceOperation bo = new EZBalanceOperation(type, toBeAdded);
-        bo.setBalanceId(nextBOId);
-        accountBook.put(nextBOId, bo);
+        bo.setBalanceId(currentBalanceId);
+        accountBook.put(currentBalanceId, bo);
         return true;
     }
 
@@ -449,8 +454,9 @@ public class EZShop implements EZShopInterface {
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
-        shopBalance = accountBook.values().stream()
-                .mapToDouble(bo -> bo.getMoney() * (bo.getType() == "DEBIT" ? -1 : 1)).sum();
+        //shopBalance = accountBook.values().stream()
+        //        .mapToDouble(bo -> bo.getMoney() * (bo.getType().matches("DEBIT") ? -1 : 1)).sum();
+        //TODO: Delete this comment later
 
         return shopBalance;
     }
