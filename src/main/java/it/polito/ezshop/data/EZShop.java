@@ -223,14 +223,13 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<Order> getAllOrders() throws UnauthorizedException {
-        String re = "(ISSUED|ORDERED|COMPLETED)";
         if (user == null)
             throw new UnauthorizedException("No User Logged In");
         if (!user.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
         if (orderMap == null)
             initOrderMap(); // TODO: What if false?
-        return orderMap.values().stream().filter(o -> o.getStatus().matches(re)).collect(Collectors.toList());
+        return orderMap.values().stream().collect(Collectors.toList());
     }
 
     @Override

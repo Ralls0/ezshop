@@ -36,10 +36,6 @@ public class EZAccountBook {
         return currentBalance;
     }
 
-    public void addToBalance(double value) {
-        currentBalance += value;
-    }
-
     public Integer getCurrentBalanceOperationID() {
         return currentBalanceOperationID;
     }
