@@ -49,14 +49,14 @@ public class EZAccountBook {
     }
 
     public boolean recordBalance(Double amount) {
-        if (currentBalance + amount < 0)
+        if (currentBalance + amount < 0.0)
             return false;
 
         currentBalanceOperationID = 1; // TODO: Get from DB, return false on failure
-
+        
+        currentBalance += amount;
         String type = amount > 0 ? "CREDIT" : "DEBIT";
         amount = amount > 0 ? amount : amount * -1;
-        currentBalance += amount;
 
         EZBalanceOperation operation = new EZBalanceOperation(type, amount);
         balanceOperations.put(currentBalanceOperationID, operation);
