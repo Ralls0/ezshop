@@ -410,7 +410,7 @@ public class EZShop implements EZShopInterface {
             return false;
 
         currentBalanceId = 1; // TODO: Call DB...
-
+        
         if (currentBalanceId < 0)
             return false;
 
