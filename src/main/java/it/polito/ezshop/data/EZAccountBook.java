@@ -45,7 +45,7 @@ public class EZAccountBook {
     }
 
     public void setCurrentBalanceOperationID(Integer currentID) {
-        currentBalanceOperationID = currentID == null ? Integer.valueOf(-1) : currentID;
+        currentBalanceOperationID = currentID == null ? -1 : currentID;
     }
 
     public boolean recordBalance(Double amount) {

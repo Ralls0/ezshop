@@ -10,7 +10,7 @@ public class EZBalanceOperation implements BalanceOperation {
     private String type;
 
     public EZBalanceOperation(String type, double money) {
-        this.balanceId = Integer.valueOf(-1);
+        this.balanceId = -1; //TODO: Get from DB...
         this.type = type;
         this.money = money;
         this.date = LocalDate.now(); //TODO: ???
@@ -18,12 +18,12 @@ public class EZBalanceOperation implements BalanceOperation {
 
     @Override
     public int getBalanceId() {
-        return balanceId.intValue();
+        return balanceId;
     }
 
     @Override
     public void setBalanceId(int balanceId) {
-        this.balanceId = Integer.valueOf(balanceId);
+        this.balanceId = balanceId;
         
     }
 
@@ -45,7 +45,7 @@ public class EZBalanceOperation implements BalanceOperation {
 
     @Override
     public void setMoney(double money) {
-        this.money = Double.valueOf(money);
+        this.money = money;
     }
 
     @Override

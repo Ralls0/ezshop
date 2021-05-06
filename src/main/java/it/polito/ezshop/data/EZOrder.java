@@ -10,10 +10,10 @@ public class EZOrder implements Order {
     private Double pricePerUnit;
 
     public EZOrder(String productCode, int quantity, double pricePerUnit) {
-        this.orderId = Integer.valueOf(-1);
-        this.balanceId = Integer.valueOf(-1);
-        this.quantity = Integer.valueOf(quantity);
-        this.pricePerUnit = Double.valueOf(pricePerUnit);
+        this.orderId = -1;
+        this.balanceId = -1;
+        this.quantity = quantity;
+        this.pricePerUnit = pricePerUnit;
         this.status = "ISSUED";
         this.productCode = productCode;
     }
@@ -41,23 +41,23 @@ public class EZOrder implements Order {
 
     @Override
     public double getPricePerUnit() {
-        return pricePerUnit.doubleValue();
+        return pricePerUnit;
     }
 
     @Override
     public void setPricePerUnit(double pricePerUnit) {
-        this.pricePerUnit = Double.valueOf(pricePerUnit);
+        this.pricePerUnit = pricePerUnit;
 
     }
 
     @Override
     public int getQuantity() {
-        return quantity.intValue();
+        return quantity;
     }
 
     @Override
     public void setQuantity(int quantity) {
-        quantity = Integer.valueOf(quantity);
+        this.quantity = quantity;
     }
 
     @Override
