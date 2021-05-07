@@ -3,7 +3,6 @@ package it.polito.ezshop.data;
 import it.polito.ezshop.exceptions.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -329,8 +328,8 @@ public class EZShop implements EZShopInterface {
             return -1;
         }
 
-        //if (nextOrderId < 0 || nextBalanceOperationId < 0)
-        //    return -1;
+        // if (nextOrderId < 0 || nextBalanceOperationId < 0)
+        // return -1;
         // Superfluo?
 
         return nextOrderId;
@@ -365,7 +364,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("User has not enough rights");
 
         Order orderToPay = null;
-        Integer orderBalanceOperationID;
+        Integer orderBalanceOperationID = null;
 
         try {
             orderToPay = EZShopDBManager.getInstance().loadOrder(orderId);
@@ -386,7 +385,7 @@ public class EZShop implements EZShopInterface {
 
         try {
             EZShopDBManager.getInstance().updateOrderStatus(orderId, "PAYED");
-            //TODO : BalanceID???
+            // TODO : BalanceID???
         } catch (Exception dbException) {
             dbException.printStackTrace();
             return false;
@@ -406,10 +405,21 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
-        Order myOrder = orderMap.get(orderId);
-        // TODO: InvalidLocationException if no valid location CC: Giovanni
+
+        Order myOrder = null;
+        Integer productCode;
+
+        try {
+            myOrder = EZShopDBManager.getInstance().loadOrder(orderId);
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return false;
+        }
+
         if (!myOrder.getStatus().matches("(ORDERED|COMPLETED)"))
             return false;
+
+        // TODO: InvalidLocationException if no valid location CC: Giovanni
         // TODO: Increment Product Quantity CC: Giovanni
         // Integer quantity = myOrder.getQuantity()
         myOrder.setStatus("COMPLETED");
@@ -422,10 +432,17 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
-        if (orderMap == null)
-            initOrderMap();
-        // TODO: fix
-        return orderMap.values().stream().collect(Collectors.toList());
+
+        List<Order> orders = null;
+
+        try {
+            orders = EZShopDBManager.getInstance().loadAllOrders();
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            orders = new ArrayList<Order>();
+        }
+
+        return orders;
     }
 
     @Override
