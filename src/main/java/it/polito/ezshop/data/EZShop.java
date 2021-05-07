@@ -6,108 +6,295 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class EZShop implements EZShopInterface {
 
-    EZUser user;
-    List<EZProductType> products;
-    List<EZSaleTransaction> transactions;
+    // Users variable
+    private List<User> users = new ArrayList<>();
+    private User authenticatedUser;
+
+    // Products variable
+    private List<ProductType> products = new ArrayList<>();
+    private List<EZSaleTransaction> transactions;
+    // test for the id of the user
+    int i = 1;
+
+    // test for the id of the product
+    int j = 1;
+
 
 
     @Override
     public void reset() {
-
     }
 
     @Override
-    public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        user = new EZUser(0, username, password, role);
-        //  select user count from db
-        //  new User...
+    public Integer createUser(String username, String password, String role)
+            throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
+        if (username.equals("") || username == null)
+            throw new InvalidUsernameException();
+        if (password.equals("") || password == null)
+            throw new InvalidPasswordException();
+        if (authenticatedUser == null
+                && (role.equals("") || role == null || !(role.equals("Administrator") || role.equals("ShopManager"))))
+            throw new InvalidRoleException();
 
-        //  return user
+        EZUser user = new EZUser(i, username, password, role);
+        i++;
 
-        return 0;
+        // Solve the duplicate problem
+        if (authenticatedUser == null) {
+            users.add(user);
+        }
+
+        // select user count from db
+        // update the db
+
+        return user.getId();
     }
 
     @Override
     public boolean deleteUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return false;
+        if (!authenticatedUser.getRole().equals("Administrator"))
+            throw new UnauthorizedException();
+        boolean foundAndDeleted = false;
+        for (User user : users) {
+            if (user.getId().equals(id)) {
+                foundAndDeleted = true;
+                users.remove(user);
+                break;
+            }
+        }
+        if (!foundAndDeleted) {
+            throw new InvalidUserIdException();
+        }
+        return foundAndDeleted;
     }
 
     @Override
     public List<User> getAllUsers() throws UnauthorizedException {
-        return null;
+        return users;
     }
 
     @Override
     public User getUser(Integer id) throws InvalidUserIdException, UnauthorizedException {
-        return null;
+        if (!authenticatedUser.getRole().equals("Administrator"))
+            throw new UnauthorizedException();
+        boolean found = false;
+        User toReturn = null;
+        for (User user : users) {
+            if (user.getId().equals(id)) {
+                found = true;
+                toReturn = user;
+            }
+        }
+        if (!found) {
+            throw new InvalidUserIdException();
+        }
+        return toReturn;
     }
 
     @Override
-    public boolean updateUserRights(Integer id, String role) throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
-        return false;
+    public boolean updateUserRights(Integer id, String role)
+            throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
+        if (!authenticatedUser.getRole().equals("Administrator"))
+            throw new UnauthorizedException();
+        if (role.equals("") || role == null
+                || !(role.equals("Cashier") || role.equals("Administrator") || role.equals("ShopManager")))
+            throw new InvalidRoleException();
+        boolean foundAndModified = false;
+        for (User user : users) {
+            if (user.getId().equals(id)) {
+                foundAndModified = true;
+                user.setRole(role);
+            }
+        }
+        if (!foundAndModified) {
+            throw new InvalidUserIdException();
+        }
+
+        return foundAndModified;
     }
 
     @Override
     public User login(String username, String password) throws InvalidUsernameException, InvalidPasswordException {
-        return user;
+        if (username.equals("") || username == null)
+            throw new InvalidUsernameException();
+        if (password.equals("") || password == null)
+            throw new InvalidPasswordException();
+        for (User user : users) {
+            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
+                authenticatedUser = user;
+            }
+        }
+        return authenticatedUser;
     }
 
     @Override
     public boolean logout() {
-        return false;
+        authenticatedUser = null;
+        return true;
     }
 
     @Override
-    public Integer createProductType(String description, String productCode, double pricePerUnit, String note) throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return null;
+    public Integer createProductType(String description, String productCode, double pricePerUnit, String note)
+            throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException,
+            UnauthorizedException {
+
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+            throw new UnauthorizedException();
+        if (description == "" || description == null)
+            throw new InvalidProductDescriptionException();
+        if (pricePerUnit <= 0)
+            throw new InvalidPricePerUnitException();
+
+        // add the if to check if the barcode is valid
+        EZProductType product = new EZProductType(j, 0, productCode, description, note, "", pricePerUnit);
+        
+        if (authenticatedUser == null) {
+            
+            products.add(product);
+            j++;
+        }
+
+        return product.getId();
     }
 
     @Override
-    public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote) throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException, UnauthorizedException {
-        return false;
+    public boolean updateProduct(Integer id, String newDescription, String newCode, double newPrice, String newNote)
+            throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException,
+            InvalidPricePerUnitException, UnauthorizedException {
+
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+            throw new UnauthorizedException();
+        if (newDescription == "" || newDescription == null)
+            throw new InvalidProductDescriptionException();
+        if (id <= 0 || id == null)
+            throw new InvalidProductIdException();
+        if (newPrice <= 0)
+            throw new InvalidPricePerUnitException();
+
+        // add the if to check if the barcode is valid
+
+        boolean foundAndModified = false;
+        for (ProductType product : products) {
+            if (product.getId().equals(id)) {
+                foundAndModified = true;
+                product.setBarCode(newCode);
+                product.setNote(newNote);
+                product.setPricePerUnit(newPrice);
+                product.setProductDescription(newDescription);
+            }
+        }
+        return foundAndModified;
     }
 
     @Override
     public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
-        return false;
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+            throw new UnauthorizedException();
+        boolean foundAndDeleted = false;
+        for (ProductType product : products) {
+            if (product.getId().equals(id)) {
+                foundAndDeleted = true;
+                products.remove(product);
+                break;
+            }
+        }
+        return foundAndDeleted;
     }
 
     @Override
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
-        List<ProductType> list = new ArrayList<>();
-        return list;
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+            throw new UnauthorizedException();
+        return products;
     }
 
     @Override
-    public ProductType getProductTypeByBarCode(String barCode) throws InvalidProductCodeException, UnauthorizedException {
-        return null;
+    public ProductType getProductTypeByBarCode(String barCode)
+            throws InvalidProductCodeException, UnauthorizedException {
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+            throw new UnauthorizedException();
+        ProductType toReturn = null;
+        for (ProductType product : products) {
+            if (product.getBarCode().equals(barCode))
+                toReturn = product;
+        }
+
+        if (toReturn == null) {
+            throw new InvalidProductCodeException();
+        }
+        return toReturn;
     }
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
-        return null;
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+            throw new UnauthorizedException();
+
+        List<ProductType> toReturn = new ArrayList<>();
+        for (ProductType product : products) {
+            if (product.getProductDescription().equals(description))
+                toReturn.add(product);
+        }
+
+        return toReturn;
     }
 
     @Override
-    public boolean updateQuantity(Integer productId, int toBeAdded) throws InvalidProductIdException, UnauthorizedException {
+    public boolean updateQuantity(Integer productId, int toBeAdded)
+            throws InvalidProductIdException, UnauthorizedException {
+
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+            throw new UnauthorizedException();
+
+        if(productId <= 0)
+            throw new InvalidProductIdException();
+
+        for (ProductType product : products) {
+            if (product.getId().equals(productId)){
+                if(!product.getLocation().equals("")){
+                    if(product.getQuantity() + toBeAdded < 0)
+                        product.setQuantity(0);
+                    else
+                        product.setQuantity(product.getQuantity() + toBeAdded);
+                }
+            }
+        }    
         return false;
     }
 
     @Override
-    public boolean updatePosition(Integer productId, String newPos) throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
+    public boolean updatePosition(Integer productId, String newPos)
+            throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
+                // TO DO
         return false;
     }
 
     @Override
-    public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
+    public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException,
+            InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
         return null;
     }
 
     @Override
-    public Integer payOrderFor(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
+    public Integer payOrderFor(String productCode, int quantity, double pricePerUnit)
+            throws InvalidProductCodeException, InvalidQuantityException, InvalidPricePerUnitException,
+            UnauthorizedException {
         return null;
     }
 
@@ -117,7 +304,8 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
-    public boolean recordOrderArrival(Integer orderId) throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
+    public boolean recordOrderArrival(Integer orderId)
+            throws InvalidOrderIdException, UnauthorizedException, InvalidLocationException {
         return false;
     }
 
@@ -132,7 +320,9 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
-    public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard) throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException, UnauthorizedException {
+    public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard)
+            throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException,
+            UnauthorizedException {
         return false;
     }
 
@@ -158,19 +348,21 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
-    public boolean attachCardToCustomer(String customerCard, Integer customerId) throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
+    public boolean attachCardToCustomer(String customerCard, Integer customerId)
+            throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
         return false;
     }
 
     @Override
-    public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded) throws InvalidCustomerCardException, UnauthorizedException {
+    public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded)
+            throws InvalidCustomerCardException, UnauthorizedException {
         return false;
     }
 
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
         // TODO: controlli ed eccezioni
-        EZSaleTransaction transaction = new EZSaleTransaction();
+        EZSaleTransaction transaction = new EZSaleTransaction(); // Passa id
         this.transactions.add(transaction);
         // TODO: aggiornare db
         return transaction.getId();
@@ -202,17 +394,22 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
-    public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+    public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount)
+            throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException,
+            UnauthorizedException {
         return false;
     }
 
     @Override
-    public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException, UnauthorizedException {
+    public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate)
+            throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException,
+            UnauthorizedException {
         return false;
     }
 
     @Override
-    public boolean applyDiscountRateToSale(Integer transactionId, double discountRate) throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
+    public boolean applyDiscountRateToSale(Integer transactionId, double discountRate)
+            throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
         return false;
     }
 
@@ -222,47 +419,56 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
-    public boolean endSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
+    public boolean endSaleTransaction(Integer transactionId)
+            throws InvalidTransactionIdException, UnauthorizedException {
         return false;
     }
 
     @Override
-    public boolean deleteSaleTransaction(Integer saleNumber) throws InvalidTransactionIdException, UnauthorizedException {
+    public boolean deleteSaleTransaction(Integer saleNumber)
+            throws InvalidTransactionIdException, UnauthorizedException {
         return false;
     }
 
     @Override
-    public SaleTransaction getSaleTransaction(Integer transactionId) throws InvalidTransactionIdException, UnauthorizedException {
+    public SaleTransaction getSaleTransaction(Integer transactionId)
+            throws InvalidTransactionIdException, UnauthorizedException {
         return null;
     }
 
     @Override
-    public Integer startReturnTransaction(Integer saleNumber) throws /*InvalidTicketNumberException,*/InvalidTransactionIdException, UnauthorizedException {
+    public Integer startReturnTransaction(Integer saleNumber)
+            throws /* InvalidTicketNumberException, */InvalidTransactionIdException, UnauthorizedException {
         return null;
     }
 
     @Override
-    public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+    public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException,
+            InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
         return false;
     }
 
     @Override
-    public boolean endReturnTransaction(Integer returnId, boolean commit) throws InvalidTransactionIdException, UnauthorizedException {
+    public boolean endReturnTransaction(Integer returnId, boolean commit)
+            throws InvalidTransactionIdException, UnauthorizedException {
         return false;
     }
 
     @Override
-    public boolean deleteReturnTransaction(Integer returnId) throws InvalidTransactionIdException, UnauthorizedException {
+    public boolean deleteReturnTransaction(Integer returnId)
+            throws InvalidTransactionIdException, UnauthorizedException {
         return false;
     }
 
     @Override
-    public double receiveCashPayment(Integer ticketNumber, double cash) throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
+    public double receiveCashPayment(Integer ticketNumber, double cash)
+            throws InvalidTransactionIdException, InvalidPaymentException, UnauthorizedException {
         return 0;
     }
 
     @Override
-    public boolean receiveCreditCardPayment(Integer ticketNumber, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
+    public boolean receiveCreditCardPayment(Integer ticketNumber, String creditCard)
+            throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
         return false;
     }
 
@@ -272,7 +478,8 @@ public class EZShop implements EZShopInterface {
     }
 
     @Override
-    public double returnCreditCardPayment(Integer returnId, String creditCard) throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
+    public double returnCreditCardPayment(Integer returnId, String creditCard)
+            throws InvalidTransactionIdException, InvalidCreditCardException, UnauthorizedException {
         return 0;
     }
 
