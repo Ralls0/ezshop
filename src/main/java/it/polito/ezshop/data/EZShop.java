@@ -17,6 +17,7 @@ public class EZShop implements EZShopInterface {
     // Products variable
     private List<ProductType> products = new ArrayList<>();
     private List<EZSaleTransaction> transactions;
+    private EZSaleTransaction openTransaction = null;
     // test for the id of the user
     int i = 1;
 
@@ -521,14 +522,31 @@ public class EZShop implements EZShopInterface {
         return false;
     }
 
-    // TODO: Sistema
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
-        // TODO: controlli ed eccezioni
-        EZSaleTransaction transaction = new EZSaleTransaction(1); // TODO
-        this.transactions.add(transaction);
-        // TODO: aggiornare db
-        return transaction.getTicketNumber();
+
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+                )
+            ) throw new UnauthorizedException();
+
+        Integer id = null;
+
+        try {
+            id = EZShopDBManager.getInstance().getNextSaleID();
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+        
+        EZSaleTransaction transaction = new EZSaleTransaction(id);
+        this.openTransaction = transaction;
+
+        return id;
     }
 
         // TODO: diminuisci la quantità su scaffali. ProductType quantity?
@@ -540,7 +558,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (productCode == null || productCode == "")
+        if (productCode == null || productCode == "" || validBarCode(productCode))
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0)
             throw new InvalidQuantityException("quantity is less than 0");
@@ -554,20 +572,37 @@ public class EZShop implements EZShopInterface {
                 )
             ) throw new UnauthorizedException();
 
-        for (EZSaleTransaction t : transactions) {
-            if (transactionId == t.getTicketNumber()) {
-                for (ProductType p : products) {
-                    if (p.getBarCode().equals(productCode)) {
-                        t.addProductToSale(productCode, "", Double.valueOf(0.0), Double.valueOf(0.0), amount); // TODO: aggiungi: productDescription, pricePerUnit e discountRate = 0; dopo averlo cercato
-                        return true;
-                    }
-                }
-                throw new InvalidProductCodeException("product code is invalid");
-            }
+        if(transactionId != openTransaction.getTicketNumber() || !openTransaction.getStatus().equals("open")) return false;
 
+        List<ProductType> products = null;
+
+        try {
+            products = EZShopDBManager.getInstance().loadAllProducts();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
 
+        for (ProductType p : products) {
+            if (p.getBarCode().equals(productCode)) {
+                if(p.getQuantity() < Integer.valueOf(amount)) return false;
+                openTransaction.addProductToSale(productCode, p.getProductDescription(), p.getPricePerUnit(), Double.valueOf(0.0), amount);
+                p.setQuantity(p.getQuantity()-amount);
+                try {
+                    EZShopDBManager.getInstance().saveProduct(p);
+                } catch (ClassNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }
         return false;
+            
     }
 
     @Override
@@ -591,6 +626,33 @@ public class EZShop implements EZShopInterface {
             )
         ) throw new UnauthorizedException();
 
+        if(transactionId != openTransaction.getTicketNumber() || !openTransaction.getStatus().equals("open")) return false;
+
+        try {
+            products = EZShopDBManager.getInstance().loadAllProducts();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        for (ProductType p : products) {
+            if (p.getBarCode().equals(productCode)) {
+                //if(p.getQuantity() < Integer.valueOf(amount)) return false;
+                openTransaction.deleteProductFromSale(productCode, amount);
+                p.setQuantity(p.getQuantity()+amount);
+                try {
+                    EZShopDBManager.getInstance().saveProduct(p);
+                } catch (ClassNotFoundException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                } catch (SQLException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                return true;
+            }
+        }
         return false;
     }
 
