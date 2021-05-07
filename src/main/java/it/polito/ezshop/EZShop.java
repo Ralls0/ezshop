@@ -28,7 +28,7 @@ public class EZShop {
 
             EZShopDBManager.getInstance().getConnector().execute("CREATE TABLE Customers (" +
                                                                     " ID int NOT NULL," +
-                                                                    " Name varchar(255) NOT NULL," +
+                                                                    " Name varchar(255) UNIQUE," +
                                                                     " Card varchar(255) NOT NULL," +
                                                                     " Points int NOT NULL," +
                                                                     " PRIMARY KEY(ID)" +
