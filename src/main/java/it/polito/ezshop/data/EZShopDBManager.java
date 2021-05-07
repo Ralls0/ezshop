@@ -23,7 +23,7 @@ public class EZShopDBManager {
         return instance;
     }
 
-    //      USER CLASS QUERIES
+    // USER CLASS QUERIES
 
     public Integer getNextUserID() throws SQLException {
         String sql = "SELECT MAX(ID) FROM Users";
@@ -54,7 +54,7 @@ public class EZShopDBManager {
     }
 
     public User loadUser(String username, String password) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE Username = '"+ username +"'";
+        String sql = "SELECT * FROM Users WHERE Username = '" + username + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             String pass = res.getString("Password");
@@ -68,7 +68,7 @@ public class EZShopDBManager {
     }
 
     public User loadUser(Integer id) throws SQLException {
-        String sql = "SELECT * FROM Users WHERE ID = "+ id;
+        String sql = "SELECT * FROM Users WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             String username = res.getString("Username");
@@ -81,7 +81,8 @@ public class EZShopDBManager {
     }
 
     public boolean saveUser(User user) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("INSERT INTO Users (ID, Username, Password, Role) VALUES (?, '?', '?', '?')");
+        PreparedStatement statement = db
+                .prepareStatement("INSERT INTO Users (ID, Username, Password, Role) VALUES (?, '?', '?', '?')");
         statement.setInt(1, user.getId());
         statement.setString(2, user.getUsername());
         statement.setString(3, user.getPassword());
@@ -114,7 +115,7 @@ public class EZShopDBManager {
         return returnValue;
     }
 
-    //      CUSTOMER CLASS QUERIES
+    // CUSTOMER CLASS QUERIES
 
     public Integer getNextCustomerID() throws SQLException {
         String sql = "SELECT MAX(ID) FROM Customers";
@@ -145,7 +146,7 @@ public class EZShopDBManager {
     }
 
     public Customer loadCustomer(Integer id) throws SQLException {
-        String sql = "SELECT * FROM Customers WHERE ID = "+ id;
+        String sql = "SELECT * FROM Customers WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             String name = res.getString("Name");
@@ -158,7 +159,8 @@ public class EZShopDBManager {
     }
 
     public boolean saveCustomer(Customer customer) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("INSERT INTO Customers (ID, Name, Card, Points) VALUES (?, '?', '?', ?)");
+        PreparedStatement statement = db
+                .prepareStatement("INSERT INTO Customers (ID, Name, Card, Points) VALUES (?, '?', '?', ?)");
         statement.setInt(1, customer.getId());
         statement.setString(2, customer.getCustomerName());
         statement.setString(3, customer.getCustomerCard());
@@ -192,17 +194,18 @@ public class EZShopDBManager {
         return returnValue;
     }
 
-    //      ORDER CLASS QUERIES
+    // ORDER CLASS QUERIES
 
     public Integer getNextOrderID() throws SQLException {
         String sql = "SELECT MAX(ID) FROM Orders";
         ResultSet res = db.executeSelectionQuery(sql);
-
-        if (res.next()) {
-            Integer nextID = res.getInt("ID") + 1;
-            return nextID;
+        
+        try {
+            res.next();
+            return res.getInt("ID") + 1;
+        } catch (Exception e) {
+            return 1;
         }
-        return 1;
     }
 
     public List<Order> loadAllOrders() throws SQLException {
@@ -225,7 +228,7 @@ public class EZShopDBManager {
     }
 
     public Order loadOrder(Integer id) throws SQLException {
-        String sql = "SELECT * FROM Orders WHERE ID = "+ id;
+        String sql = "SELECT * FROM Orders WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             Integer balanceID = res.getInt("BalanceID");
@@ -240,12 +243,14 @@ public class EZShopDBManager {
     }
 
     public boolean saveOrder(Order order) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("INSERT INTO Orders (ID, BalanceID, ProductCode, Status, PricePerUnit, Quantity) VALUES (?, '?', '?', ?, ?)");
+        PreparedStatement statement = db.prepareStatement(
+                "INSERT INTO Orders (ID, ProductCode, Status, PricePerUnit, Quantity, BalanceID) VALUES (?, ?, ?, ?, ?, ?)");
         statement.setInt(1, order.getOrderId());
         statement.setString(2, order.getProductCode());
         statement.setString(3, order.getStatus());
         statement.setDouble(4, order.getPricePerUnit());
         statement.setInt(5, order.getQuantity());
+        statement.setInt(6, order.getBalanceId());
 
         boolean returnValue = statement.execute();
         statement.close();
@@ -253,10 +258,11 @@ public class EZShopDBManager {
         return returnValue;
     }
 
-    public boolean updateOrderStatus(Integer id, String status) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE Orders SET Status = '?' WHERE ID = ?");
-        statement.setInt(2, id);
-        statement.setString(1, status);
+    public boolean updateOrder(Order toUpdate) throws SQLException {
+        PreparedStatement statement = db.prepareStatement("UPDATE Orders SET Status = ?, BalanceID = ? WHERE ID = ?");
+        statement.setString(1, toUpdate.getStatus());
+        statement.setInt(2, toUpdate.getBalanceId());
+        statement.setInt(3, toUpdate.getOrderId());
 
         boolean returnValue = statement.execute();
         statement.close();
@@ -264,7 +270,7 @@ public class EZShopDBManager {
         return returnValue;
     }
 
-    //      PRODUCT CLASS QUERIES
+    // PRODUCT CLASS QUERIES
 
     public Integer getNextProductID() throws SQLException {
         String sql = "SELECT MAX(ID) FROM Products";
@@ -290,7 +296,8 @@ public class EZShopDBManager {
             Integer quantity = res.getInt("Quantity");
             Double pricePerUnit = res.getDouble("PricePerUnit");
 
-            EZProductType product = new EZProductType(id, quantity, productCode, description, note, location, pricePerUnit);
+            EZProductType product = new EZProductType(id, quantity, productCode, description, note, location,
+                    pricePerUnit);
             products.add(product);
         }
 
@@ -298,7 +305,7 @@ public class EZShopDBManager {
     }
 
     public ProductType loadProduct(Integer id) throws SQLException {
-        String sql = "SELECT * FROM Products WHERE ID = "+ id;
+        String sql = "SELECT * FROM Products WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             String productCode = res.getString("ProductCode");
@@ -314,7 +321,8 @@ public class EZShopDBManager {
     }
 
     public boolean saveProduct(ProductType product) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("INSERT INTO Products (ID, ProductCode, Description, Note, Location, Quantity, PricePerUnit) VALUES (?, '?', '?', '?', '?', ?, ?)");
+        PreparedStatement statement = db.prepareStatement(
+                "INSERT INTO Products (ID, ProductCode, Description, Note, Location, Quantity, PricePerUnit) VALUES (?, '?', '?', '?', '?', ?, ?)");
         statement.setInt(1, product.getId());
         statement.setString(2, product.getBarCode());
         statement.setString(3, product.getProductDescription());
@@ -330,7 +338,8 @@ public class EZShopDBManager {
     }
 
     public boolean updateProduct(ProductType product) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE Products SET ProductCode = '?', Description = '?', Note = '?', Location = '?', Quantity = ?, PricePerUnit = ? WHERE ID = ?");
+        PreparedStatement statement = db.prepareStatement(
+                "UPDATE Products SET ProductCode = '?', Description = '?', Note = '?', Location = '?', Quantity = ?, PricePerUnit = ? WHERE ID = ?");
         statement.setInt(7, product.getId());
         statement.setString(1, product.getBarCode());
         statement.setString(2, product.getProductDescription());
@@ -355,7 +364,7 @@ public class EZShopDBManager {
         return returnValue;
     }
 
-    //      SALE CLASS QUERIES
+    // SALE CLASS QUERIES
 
     public Integer getNextSaleID() throws SQLException {
         String sql = "SELECT MAX(ID) FROM Sales";
@@ -390,7 +399,8 @@ public class EZShopDBManager {
                 Integer quantity = res2.getInt("Quantity");
                 Double productDiscountRate = res2.getDouble("DiscountRate");
 
-                EZTicketEntry ticketEntry = new EZTicketEntry(productCode, productDescription, quantity, pricePerUnit, productDiscountRate);
+                EZTicketEntry ticketEntry = new EZTicketEntry(productCode, productDescription, quantity, pricePerUnit,
+                        productDiscountRate);
                 sale.addTicketEntry(ticketEntry);
             }
             sales.add(sale);
@@ -400,7 +410,7 @@ public class EZShopDBManager {
     }
 
     public SaleTransaction loadSale(Integer id) throws SQLException {
-        String sql = "SELECT * FROM Sales WHERE ID = "+ id;
+        String sql = "SELECT * FROM Sales WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             Double price = res.getDouble("Price");
@@ -419,7 +429,8 @@ public class EZShopDBManager {
                 Integer quantity = res2.getInt("Quantity");
                 Double productDiscountRate = res2.getDouble("DiscountRate");
 
-                EZTicketEntry ticketEntry = new EZTicketEntry(productCode, productDescription, quantity, pricePerUnit, productDiscountRate);
+                EZTicketEntry ticketEntry = new EZTicketEntry(productCode, productDescription, quantity, pricePerUnit,
+                        productDiscountRate);
                 sale.addTicketEntry(ticketEntry);
             }
 
@@ -429,7 +440,8 @@ public class EZShopDBManager {
     }
 
     public boolean saveSale(SaleTransaction sale) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("INSERT INTO Sales (ID, Price, DiscountRate) VALUES (?, ?, ?)");
+        PreparedStatement statement = db
+                .prepareStatement("INSERT INTO Sales (ID, Price, DiscountRate) VALUES (?, ?, ?)");
         statement.setInt(1, sale.getTicketNumber());
         statement.setDouble(2, sale.getPrice());
         statement.setDouble(3, sale.getDiscountRate());
@@ -437,7 +449,8 @@ public class EZShopDBManager {
         boolean saleSaved = statement.execute();
         statement.close();
 
-        statement = db.prepareStatement("INSERT INTO TicketsEntries (SaleID, ProductCode, ProductDescription, Quantity, DiscountRate, PricePerUnit) VALUES (?, '?', '?', ?, ?, ?)");
+        statement = db.prepareStatement(
+                "INSERT INTO TicketsEntries (SaleID, ProductCode, ProductDescription, Quantity, DiscountRate, PricePerUnit) VALUES (?, '?', '?', ?, ?, ?)");
         for (TicketEntry entry : sale.getEntries()) {
             statement.setInt(1, sale.getTicketNumber());
             statement.setString(2, entry.getBarCode());
@@ -447,7 +460,8 @@ public class EZShopDBManager {
             statement.setDouble(6, entry.getPricePerUnit());
 
             statement.execute();
-            //  TODO check if all ticket entry are inserted, and eventually revert all insertion
+            // TODO check if all ticket entry are inserted, and eventually revert all
+            // insertion
         }
         statement.close();
 
@@ -464,17 +478,17 @@ public class EZShopDBManager {
         return returnValue;
     }
 
-    //      BALANCE CLASS QUERIES
+    // BALANCE CLASS QUERIES
 
     public Integer getNextBalanceOperationID() throws SQLException {
-        String sql = "SELECT MAX(ID) FROM BalanceOperations";
+        String sql = "SELECT * FROM BalanceOperations";
         ResultSet res = db.executeSelectionQuery(sql);
-
-        if (res.next()) {
-            Integer nextID = res.getInt("ID") + 1;
-            return nextID;
+        try {
+            res.next();
+            return res.getInt("ID") + 1;
+        } catch (Exception e) {
+            return 1;
         }
-        return 1;
     }
 
     public List<BalanceOperation> loadAllBalanceOperations() throws SQLException {
@@ -495,7 +509,7 @@ public class EZShopDBManager {
     }
 
     public BalanceOperation loadBalanceOperation(Integer id) throws SQLException {
-        String sql = "SELECT * FROM BalanceOperations WHERE ID = "+ id;
+        String sql = "SELECT * FROM BalanceOperations WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             Double amount = res.getDouble("Amount");
@@ -508,7 +522,8 @@ public class EZShopDBManager {
     }
 
     public boolean saveBalanceOperation(BalanceOperation operation) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("INSERT INTO BalanceOperations (ID, Amount, Date, Type) VALUES (?, ?, '?', '?')");
+        PreparedStatement statement = db
+                .prepareStatement("INSERT INTO BalanceOperations (ID, Amount, Date, Type) VALUES (?, ?, ?, ?)");
         statement.setInt(1, operation.getBalanceId());
         statement.setDouble(2, operation.getMoney());
         statement.setString(3, operation.getDate().toString());
@@ -521,7 +536,8 @@ public class EZShopDBManager {
     }
 
     public boolean updateBalanceOperation(BalanceOperation operation) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE BalanceOperations SET Amount = ?, Date = '?', Type = '?' WHERE ID = ?");
+        PreparedStatement statement = db
+                .prepareStatement("UPDATE BalanceOperations SET Amount = ?, Date = ?, Type = ? WHERE ID = ?");
         statement.setInt(4, operation.getBalanceId());
         statement.setDouble(1, operation.getMoney());
         statement.setString(2, operation.getDate().toString());

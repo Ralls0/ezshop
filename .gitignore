@@ -67,3 +67,5 @@ data/*
 
 .idea/
 ezshop.iml
+./ezshop
+ezshop/
