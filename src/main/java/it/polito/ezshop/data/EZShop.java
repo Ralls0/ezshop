@@ -417,7 +417,8 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("User has not enough rights");
 
         Order myOrder = null;
-        Integer productCode;
+        ProductType orderProduct = null;
+        String productCode = "";
 
         try {
             myOrder = EZShopDBManager.getInstance().loadOrder(orderId);
@@ -429,10 +430,30 @@ public class EZShop implements EZShopInterface {
         if (!myOrder.getStatus().matches("(ORDERED|COMPLETED)"))
             return false;
 
-        // TODO: InvalidLocationException if no valid location CC: Giovanni
-        // TODO: Increment Product Quantity CC: Giovanni
-        // Integer quantity = myOrder.getQuantity()
+        productCode = myOrder.getProductCode();
+
+        try {
+            orderProduct = getProductTypeByBarCode(productCode);
+        } catch (Exception e){
+            // Can't happen...
+        }
+
+        if (orderProduct.getLocation() == null)
+            throw new InvalidLocationException("Null Location");
+        if (orderProduct.getLocation().matches(""))
+            throw new InvalidLocationException("Empty");
+
+        orderProduct.setQuantity(orderProduct.getQuantity() + myOrder.getQuantity());
         myOrder.setStatus("COMPLETED");
+
+        try {
+            EZShopDBManager.getInstance().updateProduct(orderProduct);
+            EZShopDBManager.getInstance().updateOrder(myOrder);
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 
