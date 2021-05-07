@@ -390,8 +390,7 @@ public class EZShopDBManager {
                 Integer quantity = res2.getInt("Quantity");
                 Double productDiscountRate = res2.getDouble("DiscountRate");
 
-                EZTicketEntry ticketEntry = new EZTicketEntry(productCode, productDescription, quantity, pricePerUnit, productDiscountRate);
-                sale.addTicketEntry(ticketEntry);
+                sale.addProductToSale(productCode, productDescription, pricePerUnit, productDiscountRate, quantity);
             }
             sales.add(sale);
         }
@@ -419,8 +418,7 @@ public class EZShopDBManager {
                 Integer quantity = res2.getInt("Quantity");
                 Double productDiscountRate = res2.getDouble("DiscountRate");
 
-                EZTicketEntry ticketEntry = new EZTicketEntry(productCode, productDescription, quantity, pricePerUnit, productDiscountRate);
-                sale.addTicketEntry(ticketEntry);
+                sale.addProductToSale(productCode, productDescription, pricePerUnit, productDiscountRate, quantity);
             }
 
             return sale;
