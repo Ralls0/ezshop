@@ -10,10 +10,17 @@ public class EZBalanceOperation implements BalanceOperation {
     private String type;
 
     public EZBalanceOperation(String type, double money) {
-        this.balanceId = -1; //TODO: Get from DB...
         this.type = type;
         this.money = money;
-        this.date = LocalDate.now(); //TODO: ???
+        this.date = LocalDate.now();
+    }
+
+
+    public EZBalanceOperation(Integer balanceId, LocalDate date, Double amount, String type){
+        this.balanceId = balanceId;
+        this.date = date;
+        this.money = amount;
+        this.type = type;
     }
 
     @Override
