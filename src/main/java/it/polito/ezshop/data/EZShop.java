@@ -651,6 +651,6 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
-        return accountBook.getBalance();
+        return EZAccountBook.getInstance().getBalance();
     }
 }
