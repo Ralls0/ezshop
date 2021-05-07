@@ -318,7 +318,7 @@ public class EZShopDBManager {
     }
 
     public ProductType loadProductByBarCode(String barCode) throws SQLException {
-        String sql = "SELECT * FROM Products WHERE ProductCode = " + barCode;
+        String sql = "SELECT * FROM Products WHERE ProductCode = '" + barCode + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             Integer id = res.getInt("ID");
