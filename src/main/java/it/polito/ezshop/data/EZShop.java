@@ -379,14 +379,18 @@ public class EZShop implements EZShopInterface {
 
         double orderPrice = orderToPay.getPricePerUnit() * orderToPay.getQuantity() * -1;
 
-        if (!recordBalanceUpdate(orderPrice))
-            return false;
-
         try {
-            EZShopDBManager.getInstance().updateOrderStatus(orderId, "PAYED");
+            orderToPay.setStatus("PAYED");
             orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+
+            if (!recordBalanceUpdate(orderPrice))
+                return false;
+
             balanceOperation = new EZBalanceOperation("DEBIT", orderPrice);
             balanceOperation.setBalanceId(orderBalanceOperationID);
+            orderToPay.setBalanceId(orderBalanceOperationID);
+            
+            EZShopDBManager.getInstance().updateOrder(orderToPay);
         } catch (Exception dbException) {
             dbException.printStackTrace();
             return false;
