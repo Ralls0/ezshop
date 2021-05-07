@@ -9,6 +9,7 @@ public class EZOrder implements Order {
     private String status;
     private Double pricePerUnit;
 
+
     public EZOrder(String productCode, int quantity, double pricePerUnit) {
         this.orderId = -1;
         this.balanceId = -1;
@@ -16,6 +17,15 @@ public class EZOrder implements Order {
         this.pricePerUnit = pricePerUnit;
         this.status = "ISSUED";
         this.productCode = productCode;
+    }
+
+    public EZOrder(Integer orderID, Integer balanceID, String productCode, String status, Double pricePerUnit, Integer quantity){
+        this.orderId = orderID;
+        this.balanceId = balanceID;
+        this.balanceId = balanceID;
+        this.status =  status;
+        this.pricePerUnit =  pricePerUnit;
+        this.quantity =  quantity;
     }
 
     @Override
