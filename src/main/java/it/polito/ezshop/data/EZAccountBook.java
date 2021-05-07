@@ -1,4 +1,5 @@
 package it.polito.ezshop.data;
+import java.util.LinkedList;
 import java.util.List;
 
 public class EZAccountBook {
@@ -17,14 +18,20 @@ public class EZAccountBook {
         return accountBook;
     }
 
-    public void computeBalance() {
+    public List<BalanceOperation> getBalanceOperationsList() {
         List<BalanceOperation> operations = null;
         try {
             operations = EZShopDBManager.getInstance().loadAllBalanceOperations();
         } catch (Exception dbException) {
             dbException.printStackTrace();
-            currentBalance = -0.1;
+            operations =  new LinkedList<BalanceOperation>();
         }
+
+        return operations;
+    }
+
+    public void computeBalance() {
+        List<BalanceOperation> operations = accountBook.getBalanceOperationsList();
 
         currentBalance = operations.stream().mapToDouble(bo -> bo.getMoney() * (bo.getType().matches("DEBIT") ? -1 : 1)).sum();
     }
