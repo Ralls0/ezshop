@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 public class EZShop implements EZShopInterface {
 
-    private HashMap<Integer, Order> orderMap;
+    // private HashMap<Integer, Order> orderMap;
     private EZAccountBook accountBook;
     // Users variable
     private List<User> users = new ArrayList<>();
@@ -300,12 +300,6 @@ public class EZShop implements EZShopInterface {
         return checksum == 10 - (sum % 10);
     }
 
-    private boolean initOrderMap() {
-        // TODO: Laod From DB...
-        orderMap = new HashMap<Integer, Order>();
-        return true;
-    }
-
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException,
             InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
@@ -333,7 +327,7 @@ public class EZShop implements EZShopInterface {
         newOrder.setBalanceId(-1);
         if (orderMap == null) // TODO: Restore from DB
             initOrderMap(); // TODO: What if false?
-        orderMap.put(newOrder.getOrderId(), newOrder);
+        // orderMap.put(newOrder.getOrderId(), newOrder);
         return newOrder.getOrderId(); // TODO: Return -1 if product does not exist @Giovanni
     }
 
@@ -410,8 +404,7 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
         if (orderMap == null)
-            return null;
-        // initOrderMap();
+            initOrderMap();
         // TODO: fix
         return orderMap.values().stream().collect(Collectors.toList());
     }
