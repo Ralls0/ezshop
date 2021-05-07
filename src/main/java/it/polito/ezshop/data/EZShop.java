@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 
 public class EZShop implements EZShopInterface {
 
-    // private HashMap<Integer, Order> orderMap;
-    private EZAccountBook accountBook;
     // Users variable
     private List<User> users = new ArrayList<>();
     private User authenticatedUser;
@@ -625,10 +623,8 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
-        if (accountBook == null)
-            accountBook = EZAccountBook.loadAccountBook();
-            
-        return accountBook.recordBalance(toBeAdded);
+
+        return EZAccountBook.getInstance().recordBalance(toBeAdded);
     }
 
     @Override
