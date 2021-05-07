@@ -369,7 +369,15 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
-        Order orderToPay = orderMap.get(orderId);
+        Order orderToPay = null;
+        Integer orderBalanceOperationID;
+
+        try {
+            orderToPay = EZShopDBManager.getInstance().loadOrder(orderId);
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return false;
+        }
 
         if (orderToPay == null)
             return false;
@@ -381,8 +389,14 @@ public class EZShop implements EZShopInterface {
         if (!recordBalanceUpdate(orderPrice))
             return false;
 
-        orderToPay.setStatus("PAYED"); // Sarebbe Paid...
-        orderToPay.setBalanceId(accountBook.getCurrentBalanceOperationID());
+        try {
+            EZShopDBManager.getInstance().updateOrderStatus(orderId, "PAYED");
+            //TODO : BalanceID???
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 
