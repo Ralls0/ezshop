@@ -1,19 +1,12 @@
 package it.polito.ezshop.data;
-
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 public class EZAccountBook {
-    //private HashMap<Integer, BalanceOperation> balanceOperations;
-    private Integer currentBalanceOperationID;
     private Double currentBalance;
     private static EZAccountBook accountBook = null;
 
     private EZAccountBook() {
-        balanceOperations = new HashMap<Integer, BalanceOperation>();
-        currentBalanceOperationID = 1;
         currentBalance = 0.0;
-        // TODO: Load from DB
         accountBook = this;
     }
 
@@ -25,43 +18,51 @@ public class EZAccountBook {
     }
 
     public void computeBalance() {
-        currentBalance = balanceOperations
-                            .values()
-                            .stream()
-                            .mapToDouble(bo -> bo.getMoney() * (bo.getType().matches("DEBIT") ? -1 : 1))
-                            .sum();
+        List<BalanceOperation> operations = null;
+        try {
+            operations = EZShopDBManager.getInstance().loadAllBalanceOperations();
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            currentBalance = -0.1;
+        }
+
+        currentBalance = operations.stream().mapToDouble(bo -> bo.getMoney() * (bo.getType().matches("DEBIT") ? -1 : 1)).sum();
     }
 
     public double getBalance() {
         return currentBalance;
     }
 
-    public Integer getCurrentBalanceOperationID() {
-        return currentBalanceOperationID;
-    }
-
-    public void setCurrentBalanceOperationID(Integer currentID) {
-        currentBalanceOperationID = currentID == null ? -1 : currentID;
-    }
-
-    public boolean recordBalance(Double amount) {
-        if (currentBalance + amount < 0.0)
+    public boolean recordBalance(Double money) {
+        if (currentBalance + money < 0.0)
             return false;
-
-        currentBalanceOperationID = 1; // TODO: Get from DB, return false on failure
         
-        currentBalance += amount;
-        String type = amount > 0 ? "CREDIT" : "DEBIT";
-        amount = amount > 0 ? amount : amount * -1;
+        Integer nextBalaceOperationID = null;
+        EZBalanceOperation balanceOperation = null;
 
-        EZBalanceOperation operation = new EZBalanceOperation(type, amount);
-        balanceOperations.put(currentBalanceOperationID, operation);
-        operation.setBalanceId(currentBalanceOperationID);
+        try {
+            nextBalaceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return false;
+        }
+
+        currentBalance += money;
+        String type = money > 0 ? "CREDIT" : "DEBIT";
+        money = money > 0.0 ? money : money * -1;
+
+
+        balanceOperation = new EZBalanceOperation(type, money);
+        balanceOperation.setBalanceId(nextBalaceOperationID);
+
+        try {
+            EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return false;
+        }
+
         return true;
     }
 
-    public Map<Integer, BalanceOperation> getAccountBookEntries() {
-        return balanceOperations;
-    }
-    
 }
