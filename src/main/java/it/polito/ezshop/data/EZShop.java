@@ -309,21 +309,31 @@ public class EZShop implements EZShopInterface {
         if (productCode == null)
             throw new InvalidProductCodeException("Null ProductCode");
         if (!productCode.matches("[0-9]{12,14}"))
-            throw new InvalidProductCodeException("Wrong Format");
+            throw new InvalidProductCodeException("Wrong ProductCode Lenght");
         if (!validBarCode(productCode))
             throw new InvalidProductCodeException("Failed Checksum");
 
-        Integer nextOrderId = 1; // TODO: db.getNextOrderId();
-        if (nextOrderId < 0)
-            return -1;
+        Integer nextOrderId = -1;
+        Integer nextBalanceOperationId = -1;
+        EZOrder newOrder = null;
 
-        EZOrder newOrder = new EZOrder(productCode, quantity, pricePerUnit);
-        newOrder.setOrderId(nextOrderId);
-        newOrder.setBalanceId(-1);
-        if (orderMap == null) // TODO: Restore from DB
-            initOrderMap(); // TODO: What if false?
-        // orderMap.put(newOrder.getOrderId(), newOrder);
-        return newOrder.getOrderId(); // TODO: Return -1 if product does not exist @Giovanni
+        try {
+            nextOrderId = EZShopDBManager.getInstance().getNextOrderID();
+            nextBalanceOperationId = EZShopDBManager.getInstance().getNextBalanceOperationID();
+            newOrder = new EZOrder(productCode, quantity, pricePerUnit);
+            newOrder.setOrderId(nextOrderId);
+            newOrder.setBalanceId(nextBalanceOperationId);
+            EZShopDBManager.getInstance().saveOrder(newOrder);
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return -1;
+        }
+
+        //if (nextOrderId < 0 || nextBalanceOperationId < 0)
+        //    return -1;
+        // Superfluo?
+
+        return nextOrderId;
     }
 
     @Override
