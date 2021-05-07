@@ -468,7 +468,7 @@ public class EZShop implements EZShopInterface {
         EZSaleTransaction transaction = new EZSaleTransaction(1); // TODO
         this.transactions.add(transaction);
         // TODO: aggiornare db
-        return transaction.getId();
+        return transaction.getTicketNumber();
     }
 
         // TODO: diminuisci la quantità su scaffali. ProductType quantity?
@@ -494,10 +494,8 @@ public class EZShop implements EZShopInterface {
                 )
             ) throw new UnauthorizedException();
 
-        /*
-        // TODO: controllo su admin ...
         for (EZSaleTransaction t : transactions) {
-            if (transactionId == t.getId()) {
+            if (transactionId == t.getTicketNumber()) {
                 for (ProductType p : products) {
                     if (p.getBarCode().equals(productCode)) {
                         t.addProductToSale(productCode, "", Double.valueOf(0.0), Double.valueOf(0.0), amount); // TODO: aggiungi: productDescription, pricePerUnit e discountRate = 0; dopo averlo cercato
@@ -508,8 +506,6 @@ public class EZShop implements EZShopInterface {
             }
 
         }
-
-         */
 
         return false;
     }

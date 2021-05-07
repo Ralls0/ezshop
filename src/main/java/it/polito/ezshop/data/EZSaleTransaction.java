@@ -1,8 +1,7 @@
 package it.polito.ezshop.data;
 
 import java.util.List; 
-import java.util.ArrayList; 
-import java.util.Iterator; 
+import java.util.ArrayList;
 
 public class EZSaleTransaction implements SaleTransaction {
 
@@ -19,14 +18,6 @@ public class EZSaleTransaction implements SaleTransaction {
             this.status = "open";
             this.price = -1.0;
         }
-
-    public Integer getId() {
-        return this.id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public List<TicketEntry> getProducts() {
 		return this.products;
@@ -53,13 +44,11 @@ public class EZSaleTransaction implements SaleTransaction {
         this.status = status;
     }
 
-    // TODO: ????? Cosa fa ?????
     @Override
     public Integer getTicketNumber() {
         return this.id;
     }
 
-    // TODO: Controlla anche quello sopra
     @Override
     public void setTicketNumber(Integer ticketNumber) {
         this.id = ticketNumber;
@@ -203,11 +192,5 @@ public class EZSaleTransaction implements SaleTransaction {
             return true;
         }
     }
-
-    public void addTicketEntry(EZTicketEntry ticketEntry) {
-        // TODO:
-    }
-
-
 
 }
