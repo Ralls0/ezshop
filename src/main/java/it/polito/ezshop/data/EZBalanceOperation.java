@@ -16,6 +16,13 @@ public class EZBalanceOperation implements BalanceOperation {
         this.date = LocalDate.now(); //TODO: ???
     }
 
+    public EZBalanceOperation(Integer balanceId, LocalDate date, Double money, String type) {
+        this.balanceId = balanceId;
+        this.date = date;
+        this.money = money;
+        this.type = type;
+    }
+
     @Override
     public int getBalanceId() {
         return balanceId;

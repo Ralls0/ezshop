@@ -1,6 +1,8 @@
 package it.polito.ezshop.data;
 
 import it.polito.ezshop.exceptions.*;
+
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,18 +41,18 @@ public class EZShop implements EZShopInterface {
                 && (role.equals("") || role == null || !(role.equals("Administrator") || role.equals("ShopManager"))))
             throw new InvalidRoleException();
 
-        EZUser user = new EZUser(i, username, password, role);
-        i++;
-
-        // Solve the duplicate problem
-        if (authenticatedUser == null) {
-            users.add(user);
+        Integer userID = -1;
+        try {
+            EZUser user = new EZUser(EZShopDBManager.getInstance().getNextUserID(), username, password, role);
+            EZShopDBManager.getInstance().saveUser(user);
+            userID = user.getId();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
 
-        // select user count from db
-        // update the db
-
-        return user.getId();
+        return userID;
     }
 
     @Override
@@ -122,10 +124,13 @@ public class EZShop implements EZShopInterface {
             throw new InvalidUsernameException();
         if (password.equals("") || password == null)
             throw new InvalidPasswordException();
-        for (User user : users) {
-            if (user.getUsername().equals(username) && user.getPassword().equals(password)) {
-                authenticatedUser = user;
-            }
+
+        try {
+            authenticatedUser = EZShopDBManager.getInstance().loadUser(username, password);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
         return authenticatedUser;
     }
@@ -489,6 +494,8 @@ public class EZShop implements EZShopInterface {
                 )
             ) throw new UnauthorizedException();
 
+        /*
+        // TODO: controllo su admin ...
         for (EZSaleTransaction t : transactions) {
             if (transactionId == t.getId()) {
                 for (ProductType p : products) {
@@ -501,6 +508,8 @@ public class EZShop implements EZShopInterface {
             }
 
         }
+
+         */
 
         return false;
     }
