@@ -638,10 +638,7 @@ public class EZShop implements EZShopInterface {
             if (from.isAfter(to))
                 return getCreditsAndDebits(to, from);
 
-        if (accountBook == null)
-            accountBook = EZAccountBook.loadAccountBook();
-
-        return accountBook.getAccountBookEntries().values().stream()
+        return EZAccountBook.getInstance().getBalanceOperationsList().stream()
                 .filter(bo -> from == null ? true : (bo.getDate().isAfter(from) || bo.getDate().isEqual(from)))
                 .filter(bo -> to == null ? true : (bo.getDate().isBefore(to) || bo.getDate().isEqual(to)))
                 .collect(Collectors.toList());
