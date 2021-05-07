@@ -82,7 +82,7 @@ public class EZShopDBManager {
 
     public boolean saveUser(User user) throws SQLException {
         PreparedStatement statement = db
-                .prepareStatement("INSERT INTO Users (ID, Username, Password, Role) VALUES (?, '?', '?', '?')");
+                .prepareStatement("INSERT INTO Users (ID, Username, Password, Role) VALUES (?, ?, ?, ?)");
         statement.setInt(1, user.getId());
         statement.setString(2, user.getUsername());
         statement.setString(3, user.getPassword());
@@ -95,7 +95,7 @@ public class EZShopDBManager {
     }
 
     public boolean updateUserRights(Integer id, String role) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE Users SET Role = '?' WHERE ID = ?");
+        PreparedStatement statement = db.prepareStatement("UPDATE Users SET Role = ? WHERE ID = ?");
         statement.setInt(2, id);
         statement.setString(1, role);
 
@@ -160,7 +160,7 @@ public class EZShopDBManager {
 
     public boolean saveCustomer(Customer customer) throws SQLException {
         PreparedStatement statement = db
-                .prepareStatement("INSERT INTO Customers (ID, Name, Card, Points) VALUES (?, '?', '?', ?)");
+                .prepareStatement("INSERT INTO Customers (ID, Name, Card, Points) VALUES (?, ?, ?, ?)");
         statement.setInt(1, customer.getId());
         statement.setString(2, customer.getCustomerName());
         statement.setString(3, customer.getCustomerCard());
@@ -173,7 +173,7 @@ public class EZShopDBManager {
     }
 
     public boolean updateCustomer(Integer id, String newName, String newCard) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE Customers SET Name = '?', Card = '?' WHERE ID = ?");
+        PreparedStatement statement = db.prepareStatement("UPDATE Customers SET Name = ?, Card = ? WHERE ID = ?");
         statement.setInt(3, id);
         statement.setString(1, newName);
         statement.setString(2, newCard);
@@ -322,7 +322,7 @@ public class EZShopDBManager {
 
     public boolean saveProduct(ProductType product) throws SQLException {
         PreparedStatement statement = db.prepareStatement(
-                "INSERT INTO Products (ID, ProductCode, Description, Note, Location, Quantity, PricePerUnit) VALUES (?, '?', '?', '?', '?', ?, ?)");
+                "INSERT INTO Products (ID, ProductCode, Description, Note, Location, Quantity, PricePerUnit) VALUES (?, ?, ?, ?, ?, ?, ?)");
         statement.setInt(1, product.getId());
         statement.setString(2, product.getBarCode());
         statement.setString(3, product.getProductDescription());
@@ -339,7 +339,7 @@ public class EZShopDBManager {
 
     public boolean updateProduct(ProductType product) throws SQLException {
         PreparedStatement statement = db.prepareStatement(
-                "UPDATE Products SET ProductCode = '?', Description = '?', Note = '?', Location = '?', Quantity = ?, PricePerUnit = ? WHERE ID = ?");
+                "UPDATE Products SET ProductCode = ?, Description = ?, Note = ?, Location = ?, Quantity = ?, PricePerUnit = ? WHERE ID = ?");
         statement.setInt(7, product.getId());
         statement.setString(1, product.getBarCode());
         statement.setString(2, product.getProductDescription());
@@ -450,7 +450,7 @@ public class EZShopDBManager {
         statement.close();
 
         statement = db.prepareStatement(
-                "INSERT INTO TicketsEntries (SaleID, ProductCode, ProductDescription, Quantity, DiscountRate, PricePerUnit) VALUES (?, '?', '?', ?, ?, ?)");
+                "INSERT INTO TicketsEntries (SaleID, ProductCode, ProductDescription, Quantity, DiscountRate, PricePerUnit) VALUES (?, ?, ?, ?, ?, ?)");
         for (TicketEntry entry : sale.getEntries()) {
             statement.setInt(1, sale.getTicketNumber());
             statement.setString(2, entry.getBarCode());

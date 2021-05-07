@@ -1,0 +1,13 @@
+----------------------------------------------------------------
+Fri May 07 16:57:26 CEST 2021:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): instance a816c00e-0179-4755-58c1-00000f26c828 
+on database directory /home/cocco/Documenti/2021.2/Software-Engineering/ezshop/ezshop with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@277050dc 
+Loaded from file:/home/cocco/.m2/repository/org/apache/derby/derby/10.14.2.0/derby-10.14.2.0.jar
+java.vendor=Oracle Corporation
+java.runtime.version=11.0.11+9
+user.dir=/home/cocco/Documenti/2021.2/Software-Engineering/ezshop
+os.name=Linux
+os.arch=amd64
+os.version=5.10.32-1-MANJARO
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
