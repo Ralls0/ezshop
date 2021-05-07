@@ -130,7 +130,7 @@ public class EZSaleTransaction implements SaleTransaction {
     // }
 
     // TODO: diminuisci la quantità su scaffali. ProductType quantity?
-    public boolean addProductToSale(EzProductType product, int amount) {
+    public boolean addProductToSale(EZProductType product, int amount) {
         
             for(Iterator<ProductQuantityAndDiscount> i = products.iterator(); i.hasNext();) {
                 ProductQuantityAndDiscount p = i.next();

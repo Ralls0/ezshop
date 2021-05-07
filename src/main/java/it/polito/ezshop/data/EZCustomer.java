@@ -1,13 +1,13 @@
 package it.polito.ezshop.data;
 
-public class EzCustomer implements Customer{
+public class EZCustomer implements Customer{
 
     private Integer id;
     private String name;
     private String card;
     private Integer points;
 
-    public EzCustomer(Integer id, String name, String card, Integer points) {
+    public EZCustomer(Integer id, String name, String card, Integer points) {
         this.id = id;
         this.name = name;
         this.card = card;

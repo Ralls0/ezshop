@@ -9,9 +9,10 @@ import java.util.List;
 
 public class EZShop implements EZShopInterface {
 
-    EzUser user;
-    List<EzProductType> products;
+    EZUser user;
+    List<EZProductType> products;
     List<EZSaleTransaction> transactions;
+
 
     @Override
     public void reset() {
@@ -20,7 +21,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer createUser(String username, String password, String role) throws InvalidUsernameException, InvalidPasswordException, InvalidRoleException {
-        user = new EzUser(0, username, password, role);
+        user = new EZUser(0, username, password, role);
         //  select user count from db
         //  new User...
 
@@ -186,7 +187,7 @@ public class EZShop implements EZShopInterface {
         for(EZSaleTransaction t : transactions) {
 
             if(transactionId == t.getId()) {
-                for(EzProductType p : products) {
+                for(EZProductType p : products) {
                     if(p.getBarCode().equals(productCode)) {
                         t.addProductToSale(p, amount);
                         return true;
