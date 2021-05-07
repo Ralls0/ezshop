@@ -10,7 +10,7 @@ public class EZAccountBook {
         accountBook = this;
     }
 
-    public static EZAccountBook loadAccountBook() {
+    public static EZAccountBook getInstance() {
         if (accountBook == null)
             accountBook = new EZAccountBook();
         accountBook.computeBalance();
