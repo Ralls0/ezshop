@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class EZAccountBook {
-    private HashMap<Integer, BalanceOperation> balanceOperations;
+    //private HashMap<Integer, BalanceOperation> balanceOperations;
     private Integer currentBalanceOperationID;
     private Double currentBalance;
     private static EZAccountBook accountBook = null;
