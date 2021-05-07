@@ -202,7 +202,7 @@ public class EZShopDBManager {
         
         try {
             res.next();
-            return res.getInt("ID") + 1;
+            return Integer.valueOf(res.getString(1)) + 1;
         } catch (Exception e) {
             return 1;
         }
@@ -481,11 +481,12 @@ public class EZShopDBManager {
     // BALANCE CLASS QUERIES
 
     public Integer getNextBalanceOperationID() throws SQLException {
-        String sql = "SELECT * FROM BalanceOperations";
+        String sql = "SELECT MAX(ID) FROM BalanceOperations";
         ResultSet res = db.executeSelectionQuery(sql);
+
         try {
             res.next();
-            return res.getInt("ID") + 1;
+            return Integer.valueOf(res.getString(1))+1;
         } catch (Exception e) {
             return 1;
         }
