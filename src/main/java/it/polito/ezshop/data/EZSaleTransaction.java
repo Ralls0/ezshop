@@ -7,7 +7,7 @@ import java.util.Iterator;
 public class EZSaleTransaction implements SaleTransaction {
 
     private Integer id;
-    private ArrayList<ProductQuantityAndDiscount> products;
+    private List<TicketEntry> products;
     private String paymentType;
     private String status;
     private double discountRate;
@@ -15,7 +15,7 @@ public class EZSaleTransaction implements SaleTransaction {
 
     public EZSaleTransaction (Integer id) {
             this.id = id;
-            this.products = new ArrayList<ProductQuantityAndDiscount>();
+            this.products = new ArrayList<TicketEntry>();
             this.status = "open";
             this.price = -1.0;
         }
@@ -28,11 +28,11 @@ public class EZSaleTransaction implements SaleTransaction {
         this.id = id;
     }
 
-    public ArrayList<ProductQuantityAndDiscount> getProducts() {
+    public List<TicketEntry> getProducts() {
 		return this.products;
 	}
 
-    public void setProducts(ArrayList<ProductQuantityAndDiscount> products)
+    public void setProducts(List<TicketEntry> products)
     {
 		this.products = products;
 	}
@@ -53,24 +53,26 @@ public class EZSaleTransaction implements SaleTransaction {
         this.status = status;
     }
 
+    // TODO: ????? Cosa fa ?????
     @Override
     public Integer getTicketNumber() {
-        return null;
+        return this.id;
     }
 
+    // TODO: Controlla anche quello sopra
     @Override
     public void setTicketNumber(Integer ticketNumber) {
-
+        this.id = ticketNumber;
     }
 
     @Override
     public List<TicketEntry> getEntries() {
-        return null;
+        return this.products;
     }
 
     @Override
     public void setEntries(List<TicketEntry> entries) {
-
+        this.products = entries;
     }
 
     @Override
@@ -90,11 +92,10 @@ public class EZSaleTransaction implements SaleTransaction {
         }
         else {
             double sum = 0.0;
-            for(Iterator<ProductQuantityAndDiscount> i = products.iterator(); i.hasNext();) {
-                ProductQuantityAndDiscount p = i.next();
-                sum += (p.getProduct().getPricePerUnit()*p.getQuantity())-(p.getDiscountRate()/100*p.getProduct().getPricePerUnit()*p.getQuantity()); 
+            for(TicketEntry p : products) {
+                sum += (p.getPricePerUnit()*p.getAmount())-(p.getDiscountRate()*p.getPricePerUnit()*p.getAmount()); 
             }
-            return sum-(sum*this.discountRate/100);
+            return sum-(sum*this.discountRate);
         }
     }
 
@@ -112,7 +113,6 @@ public class EZSaleTransaction implements SaleTransaction {
         }
     }
 
-    // TODO: return -1 cash is not enough
     public double receiveCashPayment(double cash) {
         double returnCash;
         if (this.price != -1.0) {
@@ -121,6 +121,9 @@ public class EZSaleTransaction implements SaleTransaction {
         else {
             returnCash = cash - this.getPrice();
         }
+
+        if(returnCash < 0) return -1;
+
         this.status = "payed";
         return returnCash;
     }
@@ -129,22 +132,22 @@ public class EZSaleTransaction implements SaleTransaction {
     //     return false;
     // }
 
-    // TODO: diminuisci la quantità su scaffali. ProductType quantity?
-    public boolean addProductToSale(EZProductType product, int amount) {
-        
-            for(Iterator<ProductQuantityAndDiscount> i = products.iterator(); i.hasNext();) {
-                ProductQuantityAndDiscount p = i.next();
-                if(product.getBarCode().equals(p.getProduct().getBarCode())) {
-                    p.setQuantity(p.getQuantity()+Integer.valueOf(amount));
+    public boolean addProductToSale(String productCode, String productDescription, Double pricePerUnit, Double discountRate, int amount) {
+
+        for(TicketEntry p : products) {
+                if(productCode.equals(p.getBarCode())) {
+                    p.setAmount(p.getAmount()+Integer.valueOf(amount));
                     return true;
                 }
             }
         try {
             this.products.add(
-                new ProductQuantityAndDiscount(
-                    amount,
-                    0.0,
-                    product 
+                new EZTicketEntry(
+                    productCode,
+                    productDescription,
+                    Integer.valueOf(amount),
+                    pricePerUnit,
+                    discountRate
                 )
             );
         }
@@ -156,23 +159,17 @@ public class EZSaleTransaction implements SaleTransaction {
         return true;
     }
 
-    // TODO: aumenta la quantità su scaffali. ProductType quantity?
     public boolean deleteProductFromSale(String productCode, int amount) {
 
-        for(Iterator<ProductQuantityAndDiscount> i = products.iterator(); i.hasNext();) {
-            ProductQuantityAndDiscount p = i.next();
-            if(productCode.equals(p.getProduct().getBarCode())) {
-                if(amount < p.getQuantity()) {
-                    p.setQuantity(p.getQuantity()-Integer.valueOf(amount));
-                    // controla che sia diminuito
-                    return true;
+        for(TicketEntry p : products) {
+            if(productCode.equals(p.getBarCode())) {
+                if(amount < p.getAmount()) {
+                    return false;
                 }
-                else if(amount == p.getQuantity()) {
+                else { 
+                    //if(Integer.valueOf(amount) == p.getAmount()) {
                     products.remove(p);
                     return true;
-                }
-                else {
-                    return false;
                 }
             }
         }
@@ -182,9 +179,8 @@ public class EZSaleTransaction implements SaleTransaction {
 
     public boolean applyDiscountRateToProduct(String productCode, double discountRate) {
         
-        for(Iterator<ProductQuantityAndDiscount> i = products.iterator(); i.hasNext();) {
-            ProductQuantityAndDiscount p = i.next();
-            if(productCode.equals(String.valueOf(p.getProduct().getId()))) {
+        for(TicketEntry p : products) {
+            if(productCode.equals(p.getBarCode())) {
                 p.setDiscountRate(discountRate);
                 return true;
             }

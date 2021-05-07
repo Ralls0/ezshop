@@ -456,34 +456,44 @@ public class EZShop implements EZShopInterface {
         return false;
     }
 
+    // TODO: Sistema
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
         // TODO: controlli ed eccezioni
-        EZSaleTransaction transaction = new EZSaleTransaction(); // TODO
+        EZSaleTransaction transaction = new EZSaleTransaction(1); // TODO
         this.transactions.add(transaction);
         // TODO: aggiornare db
         return transaction.getId();
     }
+
+        // TODO: diminuisci la quantità su scaffali. ProductType quantity?
 
     @Override
     public boolean addProductToSale(Integer transactionId, String productCode, int amount)
             throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException,
             UnauthorizedException {
 
-        if (transactionId <= 0 || transactionId == null)
+        if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (productCode == "" || productCode == null)
+        if (productCode == null || productCode == "")
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0)
             throw new InvalidQuantityException("quantity is less than 0");
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+                )
+            ) throw new UnauthorizedException();
 
-        // TODO: controllo su admin ...
         for (EZSaleTransaction t : transactions) {
-
             if (transactionId == t.getId()) {
-                for (EZProductType p : products) {
+                for (ProductType p : products) {
                     if (p.getBarCode().equals(productCode)) {
-                        t.addProductToSale(p, amount);
+                        t.addProductToSale(productCode, "", Double.valueOf(0.0), Double.valueOf(0.0), amount); // TODO: aggiungi: productDescription, pricePerUnit e discountRate = 0; dopo averlo cercato
                         return true;
                     }
                 }
@@ -499,6 +509,23 @@ public class EZShop implements EZShopInterface {
     public boolean deleteProductFromSale(Integer transactionId, String productCode, int amount)
             throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException,
             UnauthorizedException {
+        
+        if (transactionId == null || transactionId <= 0)
+            throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
+        if (productCode == null || productCode == "")
+            throw new InvalidProductCodeException("product code is empty or null");
+        if (amount < 0)
+            throw new InvalidQuantityException("quantity is less than 0");
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+            )
+        ) throw new UnauthorizedException();
+
         return false;
     }
 
@@ -506,12 +533,44 @@ public class EZShop implements EZShopInterface {
     public boolean applyDiscountRateToProduct(Integer transactionId, String productCode, double discountRate)
             throws InvalidTransactionIdException, InvalidProductCodeException, InvalidDiscountRateException,
             UnauthorizedException {
+
+        if (transactionId == null || transactionId <= 0)
+            throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
+        if (productCode == null || productCode == "")
+            throw new InvalidProductCodeException("product code is empty or null");
+        if (discountRate < 0 || discountRate >= 1.0)
+            throw new InvalidDiscountRateException("discount rate is less than 0 or if it greater than or equal to 1.00");
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+            )
+        ) throw new UnauthorizedException();
+        
         return false;
     }
 
     @Override
     public boolean applyDiscountRateToSale(Integer transactionId, double discountRate)
             throws InvalidTransactionIdException, InvalidDiscountRateException, UnauthorizedException {
+        
+        if (transactionId == null || transactionId <= 0)
+            throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
+        if (discountRate < 0 || discountRate >= 1.0)
+            throw new InvalidDiscountRateException("discount rate is less than 0 or if it greater than or equal to 1.00");
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+            )
+        ) throw new UnauthorizedException();
+        
         return false;
     }
 
