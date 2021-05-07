@@ -22,7 +22,7 @@ public class EZBalanceOperation implements BalanceOperation {
         this.money = amount;
         this.type = type;
     }
-
+    
     @Override
     public int getBalanceId() {
         return balanceId;

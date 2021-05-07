@@ -69,3 +69,4 @@ data/*
 ezshop.iml
 ./ezshop
 ezshop/
+derby.log

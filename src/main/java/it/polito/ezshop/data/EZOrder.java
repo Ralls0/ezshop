@@ -19,13 +19,13 @@ public class EZOrder implements Order {
         this.productCode = productCode;
     }
 
-    public EZOrder(Integer orderID, Integer balanceID, String productCode, String status, Double pricePerUnit, Integer quantity){
-        this.orderId = orderID;
-        this.balanceId = balanceID;
-        this.balanceId = balanceID;
-        this.status =  status;
-        this.pricePerUnit =  pricePerUnit;
-        this.quantity =  quantity;
+    public EZOrder(Integer orderId, Integer balanceId, Integer quantity, String productCode, String status, Double pricePerUnit) {
+        this.orderId = orderId;
+        this.balanceId = balanceId;
+        this.quantity = quantity;
+        this.productCode = productCode;
+        this.status = status;
+        this.pricePerUnit = pricePerUnit;
     }
 
     @Override
