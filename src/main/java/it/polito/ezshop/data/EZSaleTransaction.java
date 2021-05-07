@@ -13,8 +13,8 @@ public class EZSaleTransaction implements SaleTransaction {
     private double discountRate;
     private double price;
 
-    public EZSaleTransaction () {
-            this.id = 1; // TODO: SOSTITUIRE CON QUERY
+    public EZSaleTransaction (Integer id) {
+            this.id = id;
             this.products = new ArrayList<ProductQuantityAndDiscount>();
             this.status = "open";
             this.price = -1.0;
@@ -206,6 +206,10 @@ public class EZSaleTransaction implements SaleTransaction {
             // TODO: scrivi su db ed eventuale return false  if there was a problem in registering the data
             return true;
         }
+    }
+
+    public void addTicketEntry(EZTicketEntry ticketEntry) {
+        // TODO:
     }
 
 

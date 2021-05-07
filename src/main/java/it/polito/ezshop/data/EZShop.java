@@ -362,7 +362,7 @@ public class EZShop implements EZShopInterface {
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
         // TODO: controlli ed eccezioni
-        EZSaleTransaction transaction = new EZSaleTransaction();
+        EZSaleTransaction transaction = new EZSaleTransaction(); // Passa id
         this.transactions.add(transaction);
         // TODO: aggiornare db
         return transaction.getId();
