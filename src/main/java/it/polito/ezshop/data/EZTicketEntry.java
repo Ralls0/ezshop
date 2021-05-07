@@ -18,51 +18,51 @@ public class EZTicketEntry implements TicketEntry{
 
     @Override
     public String getBarCode() {
-        return null;
+        return this.productCode;
     }
 
     @Override
     public void setBarCode(String barCode) {
-
+        this.productCode = barCode;
     }
 
     @Override
     public String getProductDescription() {
-        return null;
+        return this.productDescription;
     }
 
     @Override
     public void setProductDescription(String productDescription) {
-
+        this.productDescription = productDescription;
     }
 
     @Override
     public int getAmount() {
-        return 0;
+        return this.quantity;
     }
 
     @Override
     public void setAmount(int amount) {
-
+        this.quantity = amount;
     }
 
     @Override
     public double getPricePerUnit() {
-        return 0;
+        return this.pricePerUnit;
     }
 
     @Override
     public void setPricePerUnit(double pricePerUnit) {
-
+        this.pricePerUnit = pricePerUnit;
     }
 
     @Override
     public double getDiscountRate() {
-        return 0;
+        return this.discountRate;
     }
 
     @Override
     public void setDiscountRate(double discountRate) {
-
+        this.discountRate = discountRate;
     }
 }

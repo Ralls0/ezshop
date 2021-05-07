@@ -10,6 +10,9 @@ import java.util.List;
 public class EZShop implements EZShopInterface {
 
     EZUser user;
+    List<EZProductType> products;
+    List<EZSaleTransaction> transactions;
+
 
     @Override
     public void reset() {
@@ -166,11 +169,35 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
-        return null;
+        // TODO: controlli ed eccezioni
+        EZSaleTransaction transaction = new EZSaleTransaction();
+        this.transactions.add(transaction);
+        // TODO: aggiornare db
+        return transaction.getId();
     }
 
     @Override
     public boolean addProductToSale(Integer transactionId, String productCode, int amount) throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+        
+        if(transactionId <= 0 || transactionId == null) throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
+        if(productCode == "" || productCode == null) throw new InvalidProductCodeException("product code is empty or null");
+        if(amount < 0) throw new InvalidQuantityException("quantity is less than 0");
+
+        // TODO: controllo su admin ...
+        for(EZSaleTransaction t : transactions) {
+
+            if(transactionId == t.getId()) {
+                for(EZProductType p : products) {
+                    if(p.getBarCode().equals(productCode)) {
+                        t.addProductToSale(p, amount);
+                        return true;
+                    }
+                }
+                throw new InvalidProductCodeException("product code is invalid");
+            }
+
+        }
+
         return false;
     }
 
