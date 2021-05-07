@@ -317,6 +317,22 @@ public class EZShopDBManager {
         return null;
     }
 
+    public ProductType loadProductByBarCode(String barCode) throws SQLException {
+        String sql = "SELECT * FROM Products WHERE ProductCode = " + barCode;
+        ResultSet res = db.executeSelectionQuery(sql);
+        if (res.next()) {
+            Integer id = res.getInt("ID");
+            String description = res.getString("Description");
+            String note = res.getString("Note");
+            String location = res.getString("Location");
+            Integer quantity = res.getInt("Quantity");
+            Double pricePerUnit = res.getDouble("PricePerUnit");
+
+            return new EZProductType(id, quantity, barCode, description, note, location, pricePerUnit);
+        }
+        return null;
+    }
+
     public boolean saveProduct(ProductType product) throws SQLException {
         PreparedStatement statement = db.prepareStatement("INSERT INTO Products (ID, ProductCode, Description, Note, Location, Quantity, PricePerUnit) VALUES (?, ?, ?, ?, ?, ?, ?)");
         statement.setInt(1, product.getId());
