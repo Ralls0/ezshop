@@ -625,7 +625,9 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException("No User Logged In");
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
-
+        if (accountBook == null)
+            accountBook = EZAccountBook.loadAccountBook();
+            
         return accountBook.recordBalance(toBeAdded);
     }
 
