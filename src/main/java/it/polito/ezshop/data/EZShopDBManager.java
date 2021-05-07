@@ -217,7 +217,6 @@ public class EZShopDBManager {
             Integer quantity = res.getInt("Quantity");
             Double pricePerUnit = res.getDouble("PricePerUnit");
 
-            //TODO: Fix
             EZOrder order = new EZOrder(orderID, balanceID, productCode, status, pricePerUnit, quantity);
             orders.add(order);
         }
@@ -235,7 +234,6 @@ public class EZShopDBManager {
             Integer quantity = res.getInt("Quantity");
             Double pricePerUnit = res.getDouble("PricePerUnit");
 
-            //TODO: fix
             return new EZOrder(id, balanceID, productCode, status, pricePerUnit, quantity);
         }
         return null;
@@ -485,11 +483,10 @@ public class EZShopDBManager {
         List<BalanceOperation> ops = new ArrayList<>();
         while (res.next()) {
             Integer id = res.getInt("ID");
-            Integer amount = res.getInt("Amount");
+            Double amount = res.getDouble("Amount");
             LocalDate date = res.getDate("Date").toLocalDate();
             String type = res.getString("Type");
 
-            //TODO: Fix
             EZBalanceOperation operation = new EZBalanceOperation(id, date, amount, type);
             ops.add(operation);
         }
@@ -501,11 +498,10 @@ public class EZShopDBManager {
         String sql = "SELECT * FROM BalanceOperations WHERE ID = "+ id;
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
-            Integer amount = res.getInt("Amount");
+            Double amount = res.getDouble("Amount");
             LocalDate date = res.getDate("Date").toLocalDate();
             String type = res.getString("Type");
 
-            //TODO fix
             return new EZBalanceOperation(id, date, amount, type);
         }
         return null;
