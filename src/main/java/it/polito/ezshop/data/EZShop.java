@@ -223,7 +223,6 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
             throw new UnauthorizedException();
-        boolean foundAndReturned = false;
         ProductType toReturn = null;
         for (ProductType product : products) {
             if (product.getBarCode().equals(barCode))
