@@ -1,6 +1,6 @@
 package it.polito.ezshop.data;
 
-public class EzProductType implements ProductType{
+public class EZProductType implements ProductType{
 
     private Integer id;
     private Integer quantity;
@@ -10,7 +10,7 @@ public class EzProductType implements ProductType{
     private String location;
     private Double pricePerUnit;
 
-    public EzProductType(Integer id, Integer quantity, String productCode, String description, String note, String location, Double pricePerUnit) {
+    public EZProductType(Integer id, Integer quantity, String productCode, String description, String note, String location, Double pricePerUnit) {
         this.id = id;
         this.quantity = quantity;
         this.productCode = productCode;
