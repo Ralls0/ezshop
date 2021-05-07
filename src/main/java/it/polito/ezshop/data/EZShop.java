@@ -363,6 +363,7 @@ public class EZShop implements EZShopInterface {
 
         Order orderToPay = null;
         Integer orderBalanceOperationID = null;
+        BalanceOperation balanceOperation = null;
 
         try {
             orderToPay = EZShopDBManager.getInstance().loadOrder(orderId);
@@ -383,7 +384,9 @@ public class EZShop implements EZShopInterface {
 
         try {
             EZShopDBManager.getInstance().updateOrderStatus(orderId, "PAYED");
-            // TODO : BalanceID???
+            orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+            balanceOperation = new EZBalanceOperation("DEBIT", orderPrice);
+            balanceOperation.setBalanceId(orderBalanceOperationID);
         } catch (Exception dbException) {
             dbException.printStackTrace();
             return false;
