@@ -388,10 +388,10 @@ public class EZShopDBManager {
         return 1;
     }
 
-    public List<SaleTransaction> loadAllSales() throws SQLException {
+    public List<EZSaleTransaction> loadAllSales() throws SQLException {
         String sql = "SELECT * FROM Sales";
         ResultSet res = db.executeSelectionQuery(sql);
-        List<SaleTransaction> sales = new ArrayList<>();
+        List<EZSaleTransaction> sales = new ArrayList<>();
         while (res.next()) {
             Integer id = res.getInt("ID");
             Double price = res.getDouble("Price");
