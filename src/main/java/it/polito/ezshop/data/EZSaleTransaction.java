@@ -121,14 +121,22 @@ public class EZSaleTransaction implements SaleTransaction {
     //     return false;
     // }
 
+    public TicketEntry getEntry(String productCode) {
+
+        for(TicketEntry p : products) {
+            if(productCode.equals(p.getBarCode()))  return p;
+        }
+        return null;
+    }
+
     public boolean addProductToSale(String productCode, String productDescription, Double pricePerUnit, Double discountRate, int amount) {
 
         for(TicketEntry p : products) {
-                if(productCode.equals(p.getBarCode())) {
-                    p.setAmount(p.getAmount()+Integer.valueOf(amount));
-                    return true;
-                }
+            if(productCode.equals(p.getBarCode())) {
+                p.setAmount(p.getAmount()+Integer.valueOf(amount));
+                return true;
             }
+        }
         try {
             this.products.add(
                 new EZTicketEntry(
