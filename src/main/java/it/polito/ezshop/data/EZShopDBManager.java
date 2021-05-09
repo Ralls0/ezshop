@@ -80,6 +80,18 @@ public class EZShopDBManager {
         return null;
     }
 
+    public boolean searchUser(String username) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE Username = '" + username + "'";
+        ResultSet res = db.executeSelectionQuery(sql);
+        return res.next();
+    }
+
+    public boolean searchUser(Integer id) throws SQLException {
+        String sql = "SELECT * FROM Users WHERE ID = " + id;
+        ResultSet res = db.executeSelectionQuery(sql);
+        return res.next();
+    }
+
     public boolean saveUser(User user) throws SQLException {
         PreparedStatement statement = db.prepareStatement("INSERT INTO Users (ID, Username, Password, Role) VALUES (?, ?, ?, ?)");
         statement.setInt(1, user.getId());
@@ -331,6 +343,24 @@ public class EZShopDBManager {
             return new EZProductType(id, quantity, barCode, description, note, location, pricePerUnit);
         }
         return null;
+    }
+
+    public boolean searchProductByBarCode(String barCode) throws SQLException {
+        String sql = "SELECT * FROM Products WHERE ProductCode = '" + barCode + "'";
+        ResultSet res = db.executeSelectionQuery(sql);
+        return res.next();
+    }
+
+    public boolean searchProductById(Integer id) throws SQLException {
+        String sql = "SELECT * FROM Products WHERE ID = " + id;
+        ResultSet res = db.executeSelectionQuery(sql);
+        return res.next();
+    }
+
+    public boolean searchProductByLocation(String location) throws SQLException {
+        String sql = "SELECT * FROM Products WHERE Location = '" + location + "'";
+        ResultSet res = db.executeSelectionQuery(sql);
+        return res.next();
     }
 
     public boolean saveProduct(ProductType product) throws SQLException {
