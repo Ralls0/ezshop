@@ -679,6 +679,7 @@ public class EZShop implements EZShopInterface {
             id = EZShopDBManager.getInstance().getNextSaleID();
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
+            return null;
         }
         
         EZSaleTransaction transaction = new EZSaleTransaction(id);
@@ -718,8 +719,10 @@ public class EZShop implements EZShopInterface {
             products = EZShopDBManager.getInstance().loadAllProducts();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
 
         for (ProductType p : products) {
@@ -734,8 +737,10 @@ public class EZShop implements EZShopInterface {
                         EZShopDBManager.getInstance().saveProduct(p);
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
+                        return false;
                     } catch (SQLException e) {
                         e.printStackTrace();
+                        return false;
                     }
                     return true;
                 }
@@ -774,8 +779,10 @@ public class EZShop implements EZShopInterface {
             products = EZShopDBManager.getInstance().loadAllProducts();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            return false;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
 
         for (ProductType p : products) {
@@ -881,8 +888,10 @@ public class EZShop implements EZShopInterface {
                 st = EZShopDBManager.getInstance().loadAllSales();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
+                return -1;
             } catch (SQLException e) {
                 e.printStackTrace();
+                return -1;
             }
 
             for(EZSaleTransaction s : st) {
@@ -914,15 +923,17 @@ public class EZShop implements EZShopInterface {
 
         if(transactionId != openTransaction.getTicketNumber() || openTransaction.getStatus().equals("closed")) return false;
 
-        openTransaction.setStatus("closed");
-
-        try {
-            EZShopDBManager.getInstance().saveSale(openTransaction);
+        if(openTransaction.endSaleTransaction()){
+            try {
+                EZShopDBManager.getInstance().saveSale(openTransaction);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
             return true;
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
         }
     
         return false;
@@ -944,6 +955,47 @@ public class EZShop implements EZShopInterface {
             )
         ) throw new UnauthorizedException();
 
+        if(saleNumber == openTransaction.getTicketNumber()) {
+            if(!openTransaction.getStatus().equals("payed")) {
+                openTransaction = null;
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+        else {
+            List<EZSaleTransaction> st = null;
+
+            try {
+                st = EZShopDBManager.getInstance().loadAllSales();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            for(EZSaleTransaction s : st) {
+                if(saleNumber == s.getTicketNumber()) {
+                    if(!s.getStatus().equals("payed")) {
+                        try {
+                            EZShopDBManager.getInstance().deleteSale(saleNumber);
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                            return false;
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                            return false;
+                        }
+                        return true;
+                    }
+                    else {
+                        return false;
+                    }
+                }
+
+            }
+        }
 
         return false;
     }
@@ -951,6 +1003,53 @@ public class EZShop implements EZShopInterface {
     @Override
     public SaleTransaction getSaleTransaction(Integer transactionId)
             throws InvalidTransactionIdException, UnauthorizedException {
+
+        if (transactionId == null || transactionId <= 0)
+        throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+            )
+        ) throw new UnauthorizedException();
+        
+        if(transactionId == openTransaction.getTicketNumber()) {
+            if(!openTransaction.getStatus().equals("open")) {
+                return openTransaction;
+            }
+            else {
+                return null;
+            }
+        }
+        else {
+            List<EZSaleTransaction> st = null;
+
+            try {
+                st = EZShopDBManager.getInstance().loadAllSales();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return null;
+            }
+
+            for(EZSaleTransaction s : st) {
+                if(transactionId == s.getTicketNumber()) {
+                    if(!s.getStatus().equals("open")) {
+                        return s;
+                    }
+                    else {
+                        return null;
+                    }
+                }
+
+            }
+        }
+
         return null;
     }
 

@@ -77,7 +77,7 @@ public class EZSaleTransaction implements SaleTransaction {
     @Override
     public double getPrice() {
         if (price != -1.0) {
-            return this.price;
+            return this.price-(this.price-this.discountRate);
         }
         else {
             double sum = 0.0;
@@ -186,7 +186,6 @@ public class EZSaleTransaction implements SaleTransaction {
         return false;
     }
 
-    // TODO: db
     public boolean endSaleTransaction() {
     /**
      * open, closed, payed  
@@ -196,7 +195,6 @@ public class EZSaleTransaction implements SaleTransaction {
         }
         else {
             this.status = "closed";
-            // TODO: scrivi su db ed eventuale return false  if there was a problem in registering the data
             return true;
         }
     }
