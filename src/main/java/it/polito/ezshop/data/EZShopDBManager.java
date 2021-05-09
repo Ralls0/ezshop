@@ -301,7 +301,7 @@ public class EZShopDBManager {
             String productCode = res.getString("ProductCode");
             String description = res.getString("Description");
             String note = res.getString("Note");
-            String location = res.getString("Location");
+            String location = res.getString("Position");
             Integer quantity = res.getInt("Quantity");
             Double pricePerUnit = res.getDouble("PricePerUnit");
 
@@ -320,7 +320,7 @@ public class EZShopDBManager {
             String productCode = res.getString("ProductCode");
             String description = res.getString("Description");
             String note = res.getString("Note");
-            String location = res.getString("Location");
+            String location = res.getString("Position");
             Integer quantity = res.getInt("Quantity");
             Double pricePerUnit = res.getDouble("PricePerUnit");
 
@@ -336,7 +336,7 @@ public class EZShopDBManager {
             Integer id = res.getInt("ID");
             String description = res.getString("Description");
             String note = res.getString("Note");
-            String location = res.getString("Location");
+            String location = res.getString("Position");
             Integer quantity = res.getInt("Quantity");
             Double pricePerUnit = res.getDouble("PricePerUnit");
 
@@ -358,13 +358,13 @@ public class EZShopDBManager {
     }
 
     public boolean searchProductByLocation(String location) throws SQLException {
-        String sql = "SELECT * FROM Products WHERE Location = '" + location + "'";
+        String sql = "SELECT * FROM Products WHERE Position = '" + location + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
     }
 
     public boolean saveProduct(ProductType product) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("INSERT INTO Products (ID, ProductCode, Description, Note, Location, Quantity, PricePerUnit) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        PreparedStatement statement = db.prepareStatement("INSERT INTO Products (ID, ProductCode, Description, Note, Position, Quantity, PricePerUnit) VALUES (?, ?, ?, ?, ?, ?, ?)");
         statement.setInt(1, product.getId());
         statement.setString(2, product.getBarCode());
         statement.setString(3, product.getProductDescription());
@@ -380,7 +380,7 @@ public class EZShopDBManager {
     }
 
     public boolean updateProduct(ProductType product) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE Products SET ProductCode = ?, Description = ?, Note = ?, Location = ?, Quantity = ?, PricePerUnit = ? WHERE ID = ?");
+        PreparedStatement statement = db.prepareStatement("UPDATE Products SET ProductCode = ?, Description = ?, Note = ?, Position = ?, Quantity = ?, PricePerUnit = ? WHERE ID = ?");
         statement.setInt(7, product.getId());
         statement.setString(1, product.getBarCode());
         statement.setString(2, product.getProductDescription());
