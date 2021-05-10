@@ -16,8 +16,8 @@ public class EZShop implements EZShopInterface {
 
     // Products variable
     private List<ProductType> products = new ArrayList<>();
-    private List<EZSaleTransaction> transactions;
     private EZSaleTransaction openTransaction = null;
+    private EZReturnTransaction openReturnTransaction = null;
     // test for the id of the user
     int i = 1;
 
@@ -1052,16 +1052,99 @@ public class EZShop implements EZShopInterface {
 
         return null;
     }
-
+    // FIXME: sistema db
     @Override
     public Integer startReturnTransaction(Integer saleNumber)
             throws /* InvalidTicketNumberException, */InvalidTransactionIdException, UnauthorizedException {
-        return null;
+
+        if (saleNumber == null || saleNumber <= 0)
+        throw new InvalidTransactionIdException("sale id less than or equal to 0 or it is null");
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+            )
+        ) throw new UnauthorizedException();
+
+        SaleTransaction saleT = null;
+        try {
+            saleT = EZShopDBManager.getInstance().loadSale(saleNumber);
+        } catch (ClassNotFoundException e1) {
+            e1.printStackTrace();
+            return -1;
+        } catch (SQLException e1) {
+            e1.printStackTrace();
+            return -1;
+        }
+
+        if(saleT!=null) {
+
+            Integer id = -1;
+
+            // try {
+            //     id = EZShopDBManager.getInstance().getNextReturnID();
+            // } catch (ClassNotFoundException | SQLException e) {
+            //     e.printStackTrace();
+            //     return -1;
+            // }
+            
+            EZReturnTransaction rTransaction = new EZReturnTransaction(saleNumber, id);
+            this.openReturnTransaction = rTransaction;
+
+            return id;
+        }
+
+        return -1;
     }
 
     @Override
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException,
             InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
+
+        if (returnId == null || returnId <= 0)
+        throw new InvalidTransactionIdException("return id less than or equal to 0 or it is null");
+        if (productCode == null || productCode == "" || validBarCode(productCode))
+            throw new InvalidProductCodeException("product code is empty or null");
+        if (amount < 0)
+            throw new InvalidQuantityException("quantity is less than 0");
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+                )
+            ) throw new UnauthorizedException();
+
+        if(returnId != openReturnTransaction.getReturnId() || openReturnTransaction.isCommit()) return false;
+
+        SaleTransaction transaction = null;
+
+        try {
+            transaction = EZShopDBManager.getInstance().loadSale(openReturnTransaction.getTransactionId());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        for(TicketEntry entry : transaction.getEntries()) {
+            if(entry.getBarCode().equals(productCode)) {
+                if(amount <= entry.getAmount()) {
+                    if(openReturnTransaction.addProductReturned((EZTicketEntry) entry)) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         return false;
     }
 
