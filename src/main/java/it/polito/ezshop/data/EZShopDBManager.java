@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EZShopDBManager {
 
@@ -442,11 +443,13 @@ public class EZShopDBManager {
         List<EZSaleTransaction> sales = new ArrayList<>();
         while (res.next()) {
             Integer id = res.getInt("ID");
+            String status = res.getString("Status");
             Double price = res.getDouble("Price");
             Double discountRate = res.getDouble("DiscountRate");
 
             EZSaleTransaction sale = new EZSaleTransaction(id);
             sale.setPrice(price);
+            sale.setStatus(status);
             sale.setDiscountRate(discountRate);
 
             sql = "SELECT * FROM TicketsEntries WHERE SaleID = " + sale.getTicketNumber();
@@ -471,10 +474,12 @@ public class EZShopDBManager {
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
             Double price = res.getDouble("Price");
+            String status = res.getString("Status");
             Double discountRate = res.getDouble("DiscountRate");
 
             EZSaleTransaction sale = new EZSaleTransaction(id);
             sale.setPrice(price);
+            sale.setStatus(status);
             sale.setDiscountRate(discountRate);
 
             sql = "SELECT * FROM TicketsEntries WHERE SaleID = " + sale.getTicketNumber();
@@ -494,12 +499,13 @@ public class EZShopDBManager {
         return null;
     }
 
-    public boolean saveSale(SaleTransaction sale) throws SQLException {
+    public boolean saveSale(EZSaleTransaction sale) throws SQLException {
         PreparedStatement statement = db
-                .prepareStatement("INSERT INTO Sales (ID, Price, DiscountRate) VALUES (?, ?, ?)");
+                .prepareStatement("INSERT INTO Sales (ID, Price, DiscountRate, Status) VALUES (?, ?, ?, ?)");
         statement.setInt(1, sale.getTicketNumber());
         statement.setDouble(2, sale.getPrice());
         statement.setDouble(3, sale.getDiscountRate());
+        statement.setString(4, sale.getStatus());
 
         statement.execute();
         statement.close();
@@ -512,6 +518,74 @@ public class EZShopDBManager {
             statement.setInt(4, entry.getAmount());
             statement.setDouble(5, entry.getDiscountRate());
             statement.setDouble(6, entry.getPricePerUnit());
+
+            statement.execute();
+        }
+        statement.close();
+
+        return true;
+    }
+
+    public boolean updateSale(EZSaleTransaction sale) throws SQLException {
+        PreparedStatement statement = db.prepareStatement("UPDATE Sales SET Price = ?, DiscountRate = ?, Status = ? WHERE ID = ?");
+        statement.setInt(4, sale.getTicketNumber());
+        statement.setDouble(1, sale.getPrice());
+        statement.setDouble(2, sale.getDiscountRate());
+        statement.setString(3, sale.getStatus());
+
+        statement.execute();
+        statement.close();
+
+        String sql = "SELECT * FROM TicketsEntries WHERE SaleID = " + sale.getTicketNumber();
+        ResultSet res = db.executeSelectionQuery(sql);
+        List<TicketEntry> dbEntries = new ArrayList<>();
+        while (res.next()) {
+            String productCode = res.getString("ProductCode");
+            String productDescription = res.getString("ProductDescription");
+            Double pricePerUnit = res.getDouble("PricePerUnit");
+            Integer quantity = res.getInt("Quantity");
+            Double productDiscountRate = res.getDouble("DiscountRate");
+
+            dbEntries.add(new EZTicketEntry(productCode, productDescription, quantity, pricePerUnit, productDiscountRate));
+        }
+
+        List<TicketEntry> ticketEntriesToInsert = sale.getEntries().stream().filter( entry -> !dbEntries.stream().map(dbEntry -> dbEntry.getBarCode()).collect(Collectors.toList()).contains(entry.getBarCode())).collect(Collectors.toList());
+        List<TicketEntry> ticketEntriesToRemove = dbEntries.stream().filter( dbEntry -> !sale.getEntries().stream().map(entry -> entry.getBarCode()).collect(Collectors.toList()).contains(dbEntry.getBarCode())).collect(Collectors.toList());
+        List<TicketEntry> ticketEntriesToUpdate = sale.getEntries().stream().filter( entry -> dbEntries.stream().map(dbEntry -> dbEntry.getBarCode()).collect(Collectors.toList()).contains(entry.getBarCode())).collect(Collectors.toList());
+
+        //  REMOVE NO LONGER PRESENT TRANSACTION ENTRIES FROM DB
+        statement = db.prepareStatement("DELETE FROM TicketsEntries WHERE SaleID = ? AND ProductCode = ?");
+        for (TicketEntry entry : ticketEntriesToRemove) {
+            statement.setInt(1, sale.getTicketNumber());
+            statement.setString(2, entry.getBarCode());
+
+            statement.execute();
+        }
+        statement.close();
+
+        //  INSERT NEW TRANSACTION ENTRIES IN DB
+        statement = db.prepareStatement("INSERT INTO TicketsEntries (SaleID, ProductCode, ProductDescription, Quantity, DiscountRate, PricePerUnit) VALUES (?, ?, ?, ?, ?, ?)");
+        for (TicketEntry entry : ticketEntriesToInsert) {
+            statement.setInt(1, sale.getTicketNumber());
+            statement.setString(2, entry.getBarCode());
+            statement.setString(3, entry.getProductDescription());
+            statement.setInt(4, entry.getAmount());
+            statement.setDouble(5, entry.getDiscountRate());
+            statement.setDouble(6, entry.getPricePerUnit());
+
+            statement.execute();
+        }
+        statement.close();
+
+        //  UPDATE TRANSACTION ENTRIES IN DB
+        statement = db.prepareStatement("UPDATE TicketsEntries SET ProductDescription = ?, Quantity = ?, DiscountRate = ?, PricePerUnit = ? WHERE SaleID = ? AND ProductCode = ?");
+        for (TicketEntry entry : ticketEntriesToUpdate) {
+            statement.setString(1, entry.getProductDescription());
+            statement.setInt(2, entry.getAmount());
+            statement.setDouble(3, entry.getDiscountRate());
+            statement.setDouble(4, entry.getPricePerUnit());
+            statement.setInt(5, sale.getTicketNumber());
+            statement.setString(6, entry.getBarCode());
 
             statement.execute();
         }
@@ -612,9 +686,6 @@ public class EZShopDBManager {
 
     public DBConnector getConnector() {
         return db;
-    }
-
-    public void updateSale(EZSaleTransaction transaction) {
     }
 
     public void saveReturn(EZReturnTransaction openReturnTransaction) {

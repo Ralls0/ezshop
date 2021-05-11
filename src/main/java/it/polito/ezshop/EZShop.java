@@ -65,6 +65,7 @@ public class EZShop {
 
             EZShopDBManager.getInstance().getConnector().execute("CREATE TABLE Sales (" +
                                                                     " ID int NOT NULL," +
+                                                                    " Status varchar(255) NOT NULL," +
                                                                     " Price double NOT NULL," +
                                                                     " DiscountRate double NOT NULL," +
                                                                     " PRIMARY KEY(ID)" +
