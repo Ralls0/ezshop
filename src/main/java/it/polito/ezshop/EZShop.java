@@ -81,6 +81,24 @@ public class EZShop {
                                                                     " DiscountRate double NOT NULL," +
                                                                     " PRIMARY KEY(ID)" +
                                                                     ")");
+
+            EZShopDBManager.getInstance().getConnector().execute("CREATE TABLE ReturnTransactions (" +
+                                                                    " ID int NOT NULL," +
+                                                                    " SaleID int NOT NULL," +
+                                                                    " Status varchar(255) NOT NULL," +
+                                                                    " PRIMARY KEY(ID)" +
+                                                                    ")");
+
+            EZShopDBManager.getInstance().getConnector().execute("CREATE TABLE ReturnTicketsEntries (" +
+                                                                    " ID int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                                                                    " ReturnID int NOT NULL," +
+                                                                    " ProductCode varchar(255) NOT NULL," +
+                                                                    " ProductDescription varchar(255) NOT NULL," +
+                                                                    " PricePerUnit double NOT NULL," +
+                                                                    " Quantity int NOT NULL," +
+                                                                    " DiscountRate double NOT NULL," +
+                                                                    " PRIMARY KEY(ID)" +
+                                                                    ")");
         } catch (SQLException e) {
             if (e.getSQLState().equals("X0Y32")) {              //      X0Y32 IS THE ERROR WHEN TABLE ALREADY EXISTS
                 System.out.println("Tables in DB already exists, skipping creation...");
