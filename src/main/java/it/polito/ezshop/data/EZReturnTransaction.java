@@ -10,6 +10,13 @@ public class EZReturnTransaction {
     private List<EZTicketEntry> products;
     private String status;
 
+    public EZReturnTransaction(Integer transactionId, Integer returnId) {
+        this.transactionId = transactionId;
+        this.returnId = returnId;
+        this.products = new ArrayList<EZTicketEntry>();
+        this.status = "open";
+    }
+
     public String getStatus() {
         return this.status;
     }
@@ -24,13 +31,6 @@ public class EZReturnTransaction {
                 sum += (p.getPricePerUnit()*p.getAmount())-(p.getDiscountRate()*p.getPricePerUnit()*p.getAmount()); 
             }
         return sum;
-    }
-
-    public EZReturnTransaction(Integer transactionId, Integer returnId) {
-        this.transactionId = transactionId;
-        this.returnId = returnId;
-        this.products = new ArrayList<EZTicketEntry>();
-        this.status = "open";
     }
 
     public List<EZTicketEntry> getProducts() {

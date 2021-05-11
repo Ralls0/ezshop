@@ -620,4 +620,12 @@ public class EZShopDBManager {
     public void saveReturn(EZReturnTransaction openReturnTransaction) {
     }
 
+    public EZReturnTransaction loadReturn(Integer returnId) {
+        return null;
+    }
+
+    public Integer getNextReturnID() {
+        return null;
+    }
+
 }

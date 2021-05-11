@@ -798,8 +798,6 @@ public class EZShop implements EZShopInterface {
         return id;
     }
 
-    // TODO: diminuisci la quantità su scaffali. ProductType quantity?
-
     @Override
     public boolean addProductToSale(Integer transactionId, String productCode, int amount)
             throws InvalidTransactionIdException, InvalidProductCodeException, InvalidQuantityException,
@@ -1135,7 +1133,6 @@ public class EZShop implements EZShopInterface {
         return null;
     }
 
-    // FIXME: sistema db
     @Override
     public Integer startReturnTransaction(Integer saleNumber)
             throws /* InvalidTicketNumberException, */InvalidTransactionIdException, UnauthorizedException {
@@ -1163,12 +1160,12 @@ public class EZShop implements EZShopInterface {
 
             Integer id = -1;
 
-            // try {
-            // id = EZShopDBManager.getInstance().getNextReturnID();
-            // } catch (ClassNotFoundException | SQLException e) {
-            // e.printStackTrace();
-            // return -1;
-            // }
+            try {
+            id = EZShopDBManager.getInstance().getNextReturnID();
+            } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+            return -1;
+            }
 
             EZReturnTransaction rTransaction = new EZReturnTransaction(saleNumber, id);
             this.openReturnTransaction = rTransaction;
@@ -1223,7 +1220,7 @@ public class EZShop implements EZShopInterface {
 
         return false;
     }
-
+// FIXME: Cambia commit=false
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit)
             throws InvalidTransactionIdException, UnauthorizedException {
@@ -1328,9 +1325,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         if (cash <= 0)
             throw new InvalidPaymentException("Cash is less than or equal to 0");
-        // FIXME: Non doveva essere chiusa per essere pagata?
-        if (openTransaction == null || ticketNumber != openTransaction.getTicketNumber())// ||
-                                                                                         // !openTransaction.getStatus().equals("closed"))
+        if (openTransaction == null || ticketNumber != openTransaction.getTicketNumber() || !openTransaction.getStatus().equals("closed"))
             return -1;
 
         return openTransaction.receiveCashPayment(cash);
@@ -1351,8 +1346,7 @@ public class EZShop implements EZShopInterface {
         if (creditCard == null || creditCard == "" || !EZSaleTransaction.validLuhnAlgorithm(creditCard))
             throw new InvalidCreditCardException("Credit card not valid");
 
-        if (openTransaction == null || ticketNumber != openTransaction.getTicketNumber())// ||
-                                                                                         // !openTransaction.getStatus().equals("closed"))
+        if (openTransaction == null || ticketNumber != openTransaction.getTicketNumber() || !openTransaction.getStatus().equals("closed"))
             return false;
 
         // FIXME: Aggiungi reggistrazione carda in the system
@@ -1373,12 +1367,19 @@ public class EZShop implements EZShopInterface {
                         || authenticatedUser.getRole().equals("Cashier"))))
             throw new UnauthorizedException();
 
-        if (openReturnTransaction == null || ticketNumber != openReturnTransaction.getReturnId() || !openReturnTransaction.getStatus().equals("open"))                                                                         
+        if (openReturnTransaction == null || returnId != openReturnTransaction.getReturnId() || !openReturnTransaction.getStatus().equals("open"))                                                                         
             return -1;
 
         EZReturnTransaction rt = null;
-// FIXME: add try/catch
-        rt = EZShopDBManager.getInstance().loadReturn(returnId);
+        try {
+            rt = EZShopDBManager.getInstance().loadReturn(returnId);
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         
         if(rt == null) return -1;
 
