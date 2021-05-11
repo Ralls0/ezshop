@@ -189,10 +189,10 @@ public class EZSaleTransaction implements SaleTransaction {
         return false;
     }
 
-    public boolean endSaleTransaction() {
-    /**
+   /**
      * open, closed, payed  
      */
+    public boolean endSaleTransaction() {
         if (this.status.equals("closed")) {
             return false;
         }
@@ -202,7 +202,6 @@ public class EZSaleTransaction implements SaleTransaction {
         }
     }
 
-    // TODO: vedi algorithom
     public static boolean validLuhnAlgorithm(String cardNo) {
         int nDigits = cardNo.length();
  
