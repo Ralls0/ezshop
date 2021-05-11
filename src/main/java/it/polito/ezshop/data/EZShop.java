@@ -1182,7 +1182,7 @@ public class EZShop implements EZShopInterface {
                 )
             ) throw new UnauthorizedException();
 
-        if(returnId != openReturnTransaction.getReturnId() || openReturnTransaction.isCommit()) return false;
+        if(returnId != openReturnTransaction.getReturnId()) return false;
 
         SaleTransaction transaction = null;
 
@@ -1213,6 +1213,88 @@ public class EZShop implements EZShopInterface {
     @Override
     public boolean endReturnTransaction(Integer returnId, boolean commit)
             throws InvalidTransactionIdException, UnauthorizedException {
+        if (returnId == null || returnId <= 0)
+        throw new InvalidTransactionIdException("return id less than or equal to 0 or it is null");
+        if (authenticatedUser == null
+            && (    authenticatedUser.getRole() == null || 
+                    authenticatedUser.getRole().equals("") || 
+                    !(  authenticatedUser.getRole().equals("Administrator") || 
+                        authenticatedUser.getRole().equals("ShopManager") ||
+                        authenticatedUser.getRole().equals("Cashier")
+                    )
+                )
+            ) throw new UnauthorizedException();
+
+        if(returnId != openReturnTransaction.getReturnId()) return false;
+            
+        EZSaleTransaction transaction = null;
+        ProductType product = null;
+
+        try {
+            transaction = EZShopDBManager.getInstance().loadSale(openReturnTransaction.getTransactionId());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        openReturnTransaction.setCommit(commit);
+
+        if(commit) {
+            
+            for(EZTicketEntry p : openReturnTransaction.getProducts()) {
+                transaction.deleteProductFromSale(p.getBarCode(), p.getAmount());
+                try {
+                    product = this.getProductTypeByBarCode(p.getBarCode());
+                    product.setQuantity(product.getQuantity()+p.getAmount());
+                    EZShopDBManager.getInstance().updateProduct(product);
+                } catch (InvalidProductCodeException e) {
+                    e.printStackTrace();
+                    return false;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    return false;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            try {
+                EZShopDBManager.getInstance().updateSale(transaction);
+                EZShopDBManager.getInstance().saveReturn(openReturnTransaction);
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                return false;
+            } catch (SQLException e) {
+                e.printStackTrace();
+                return false;
+            }
+            
+        }
+        else {
+            for(TicketEntry p : transaction.getEntries()) {
+                try {
+                    product = this.getProductTypeByBarCode(p.getBarCode());
+                    product.setQuantity(product.getQuantity()+p.getAmount());
+                    EZShopDBManager.getInstance().updateProduct(product);
+                } catch (InvalidProductCodeException e) {
+                    e.printStackTrace();
+                    return false;
+                } catch (ClassNotFoundException e) {
+                    e.printStackTrace();
+                    return false;
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            }
+            
+            //EZShopDBManager.getInstance().updateSale(transaction);
+            //EZShopDBManager.getInstance().saveReturn(openReturnTransaction);
+            this.deleteSaleTransaction(transaction.getTicketNumber());
+        }
+
         return false;
     }
 

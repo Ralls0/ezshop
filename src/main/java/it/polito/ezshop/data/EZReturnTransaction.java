@@ -7,12 +7,23 @@ public class EZReturnTransaction {
     private Integer returnId;
     private boolean isCommit;
     private Integer transactionId;
+    private String status;
+
+    public String getStatus() {
+        return this.status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     private List<EZTicketEntry> products;
 
     public EZReturnTransaction(Integer transactionId, Integer returnId) {
         this.transactionId = transactionId;
         this.returnId = returnId;
         this.products = new ArrayList<EZTicketEntry>();
+        this.status = "open";
     }
 
     public List<EZTicketEntry> getProducts() {

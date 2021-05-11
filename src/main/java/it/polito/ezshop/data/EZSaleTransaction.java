@@ -160,14 +160,16 @@ public class EZSaleTransaction implements SaleTransaction {
 
         for(TicketEntry p : products) {
             if(productCode.equals(p.getBarCode())) {
-                if(amount < p.getAmount()) {
+                if(amount > p.getAmount()) {
                     return false;
                 }
-                else { 
-                    //if(Integer.valueOf(amount) == p.getAmount()) {
-                    products.remove(p);
-                    return true;
+                if(amount < p.getAmount()){
+                    p.setAmount(p.getAmount()-amount);
                 }
+                else { 
+                    products.remove(p);
+                }
+                return true;
             }
         }
 

@@ -460,7 +460,7 @@ public class EZShopDBManager {
         return sales;
     }
 
-    public SaleTransaction loadSale(Integer id) throws SQLException {
+    public EZSaleTransaction loadSale(Integer id) throws SQLException {
         String sql = "SELECT * FROM Sales WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         if (res.next()) {
@@ -606,6 +606,12 @@ public class EZShopDBManager {
 
     public DBConnector getConnector() {
         return db;
+    }
+
+    public void updateSale(EZSaleTransaction transaction) {
+    }
+
+    public void saveReturn(EZReturnTransaction openReturnTransaction) {
     }
 
 }
