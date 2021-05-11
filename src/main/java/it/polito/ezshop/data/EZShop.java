@@ -432,7 +432,7 @@ public class EZShop implements EZShopInterface {
         int checksum = Character.getNumericValue(barCode.charAt(barCode.length() - 1));
         int offset = barCode.length() % 2;
         for (int i = 0; i < barCode.length() - 1; i++)
-            sum += Integer.valueOf(barCode.charAt(i)) * ( (i + offset) % 2 == 0 ? 3 : 1 ) ;
+            sum += Character.getNumericValue(barCode.charAt(i)) * ( (i + offset) % 2 == 0 ? 3 : 1 ) ;
         return checksum == 10 - (sum % 10);
     }
 
