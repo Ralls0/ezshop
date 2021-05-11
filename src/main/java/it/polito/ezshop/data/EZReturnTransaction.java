@@ -1,15 +1,26 @@
 package it.polito.ezshop.data;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EZReturnTransaction {
-    private Integer saleNumber;
-    private Integer id;
     private Integer returnId;
     private boolean isCommit;
     private Integer transactionId;
+    private List<EZTicketEntry> products;
 
-    public EZReturnTransaction(Integer saleNumber, Integer id) {
-        this.saleNumber = saleNumber;
-        this.id = id;
+    public EZReturnTransaction(Integer transactionId, Integer returnId) {
+        this.transactionId = transactionId;
+        this.returnId = returnId;
+        this.products = new ArrayList<EZTicketEntry>();
+    }
+
+    public List<EZTicketEntry> getProducts() {
+        return this.products;
+    }
+
+    public void setProducts(List<EZTicketEntry> products) {
+        this.products = products;
     }
 
     public boolean isCommit() {
@@ -18,24 +29,6 @@ public class EZReturnTransaction {
 
     public void setCommit(boolean commit) {
         isCommit = commit;
-    }
-
-
-
-    public Integer getSaleNumber() {
-        return saleNumber;
-    }
-
-    public void setSaleNumber(Integer saleNumber) {
-        this.saleNumber = saleNumber;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Integer getReturnId() {
@@ -56,6 +49,7 @@ public class EZReturnTransaction {
 
 
     public boolean addProductReturned(EZTicketEntry entry) {
+        this.products.add(entry);
         return true;
     }
 }

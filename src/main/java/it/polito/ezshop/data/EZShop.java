@@ -1154,7 +1154,7 @@ public class EZShop implements EZShopInterface {
             // }
             
             EZReturnTransaction rTransaction = new EZReturnTransaction(saleNumber, id);
-            // this.openReturnTransaction = rTransaction;
+            this.openReturnTransaction = rTransaction;
 
             return id;
         }
