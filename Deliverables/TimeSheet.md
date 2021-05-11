@@ -14,7 +14,7 @@ These figures will not be used to evaluate neither the project nor the team, the
 | apr 12 - 18| 29 | | | | | | | | 
 | apr 19 - 25| | 18 | | | | | | | 
 | apr 26 - 2 | | 14 | | | | | | | 
-| may 3 - 9  | | | 50 | | | | | | 
+| may 3 - 9  | | | 70 | | | | | | 
 | may 10 - 16| | | | loading... | | | | | 
 | may 17 - 23| | | | loading 19 | - | | | | 
 | may 24 - 30| | | | | loading 26 | - | | | 

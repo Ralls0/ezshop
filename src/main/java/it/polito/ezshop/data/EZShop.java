@@ -1349,7 +1349,7 @@ public class EZShop implements EZShopInterface {
         if (openTransaction == null || ticketNumber != openTransaction.getTicketNumber() || !openTransaction.getStatus().equals("closed"))
             return false;
 
-        // FIXME: Aggiungi reggistrazione carda in the system
+        // FIXME: Aggiungi card nel system
 
         openTransaction.receiveCreditCardPayment(creditCard);
 
