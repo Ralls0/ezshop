@@ -7,6 +7,7 @@ public class EZReturnTransaction {
     private Integer returnId;
     private boolean isCommit;
     private Integer transactionId;
+    private List<EZTicketEntry> products;
     private String status;
 
     public String getStatus() {
@@ -17,7 +18,13 @@ public class EZReturnTransaction {
         this.status = status;
     }
 
-    private List<EZTicketEntry> products;
+    public double getPrice() {
+        double sum = 0.0;
+            for(TicketEntry p : products) {
+                sum += (p.getPricePerUnit()*p.getAmount())-(p.getDiscountRate()*p.getPricePerUnit()*p.getAmount()); 
+            }
+        return sum;
+    }
 
     public EZReturnTransaction(Integer transactionId, Integer returnId) {
         this.transactionId = transactionId;

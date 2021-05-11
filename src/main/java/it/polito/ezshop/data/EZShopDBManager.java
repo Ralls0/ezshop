@@ -216,6 +216,12 @@ public class EZShopDBManager {
         return res.next();
     }
 
+    public boolean searchCustomerByCard(String card) throws SQLException {
+        String sql = "SELECT * FROM Customers WHERE ID = '" + card + "'";
+        ResultSet res = db.executeSelectionQuery(sql);
+        return res.next();
+    }
+
     // ORDER CLASS QUERIES
 
     public Integer getNextOrderID() throws SQLException {

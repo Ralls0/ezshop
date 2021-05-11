@@ -21,7 +21,7 @@ public class EZCustomer implements Customer{
 
     @Override
     public void setCustomerName(String customerName) {
-
+        this.name = name;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class EZCustomer implements Customer{
 
     @Override
     public void setCustomerCard(String customerCard) {
-
+        this.card = card;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class EZCustomer implements Customer{
 
     @Override
     public void setId(Integer id) {
-
+        this.id = id;
     }
 
     @Override
@@ -51,6 +51,6 @@ public class EZCustomer implements Customer{
 
     @Override
     public void setPoints(Integer points) {
-
+        this.points = points;
     }
 }
