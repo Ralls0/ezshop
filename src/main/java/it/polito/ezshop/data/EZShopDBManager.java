@@ -204,6 +204,18 @@ public class EZShopDBManager {
         return true;
     }
 
+    public boolean searchCustomerByName(String customerName) throws SQLException {
+        String sql = "SELECT * FROM Customers WHERE Name = '" + customerName + "'";
+        ResultSet res = db.executeSelectionQuery(sql);
+        return res.next();
+    }
+
+    public boolean searchCustomerById(Integer id) throws SQLException {
+        String sql = "SELECT * FROM Customers WHERE ID = " + id;
+        ResultSet res = db.executeSelectionQuery(sql);
+        return res.next();
+    }
+
     // ORDER CLASS QUERIES
 
     public Integer getNextOrderID() throws SQLException {
@@ -369,9 +381,9 @@ public class EZShopDBManager {
         statement.setString(2, product.getBarCode());
         statement.setString(3, product.getProductDescription());
         statement.setString(4, product.getNote());
-        statement.setString(4, product.getLocation());
-        statement.setInt(4, product.getQuantity());
-        statement.setDouble(4, product.getPricePerUnit());
+        statement.setString(5, product.getLocation());
+        statement.setInt(6, product.getQuantity());
+        statement.setDouble(7, product.getPricePerUnit());
 
         statement.execute();
         statement.close();

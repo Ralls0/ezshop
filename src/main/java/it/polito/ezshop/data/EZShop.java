@@ -243,9 +243,14 @@ public class EZShop implements EZShopInterface {
             e.printStackTrace();
         }
 
+        ProductType product = null;
+
         boolean barCodeAlredyExists = false;
         try {
             barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(newCode);
+            product = EZShopDBManager.getInstance().loadProduct(id);
+            if(product.getBarCode().equals(newCode))
+                barCodeAlredyExists = false;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -253,11 +258,9 @@ public class EZShop implements EZShopInterface {
         }
 
         // if the product exists and no other product has the same barCode
-        ProductType product = null;
         boolean updated = false;
         if(found && !barCodeAlredyExists){
             try {
-                product = EZShopDBManager.getInstance().loadProduct(id);
                 product.setProductDescription(newDescription);
                 product.setBarCode(newCode);
                 product.setPricePerUnit(newPrice);
@@ -324,7 +327,7 @@ public class EZShop implements EZShopInterface {
 
         ProductType product = null;
         try {
-            EZShopDBManager.getInstance().loadProductByBarCode(barCode);
+            product = EZShopDBManager.getInstance().loadProductByBarCode(barCode);
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
@@ -400,19 +403,20 @@ public class EZShop implements EZShopInterface {
             throw new InvalidLocationException();
 
         boolean positionAlredyExists = false;
+        ProductType product = null;
         try {
             positionAlredyExists = EZShopDBManager.getInstance().searchProductByLocation(newPos);
+            product = EZShopDBManager.getInstance().loadProduct(productId);
+            if(product.getLocation().equals(newPos))
+                positionAlredyExists = false;
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
 
-        ProductType product = null;
-
         boolean foundAndUpdated = false;
         try {
-            product = EZShopDBManager.getInstance().loadProduct(productId);
             if(product != null && !positionAlredyExists) {
                 foundAndUpdated = true;
                 product.setLocation(newPos);
@@ -617,7 +621,27 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        return null;
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (customerName == null || customerName.equals(""))
+            throw new InvalidCustomerNameException();
+
+        Customer customer = null;
+        boolean alredyExists = false;
+        Integer customerID = -1;
+        try {
+            alredyExists = EZShopDBManager.getInstance().searchCustomerByName(customerName);
+            if(!alredyExists){
+                customer = new EZCustomer(EZShopDBManager.getInstance().getNextCustomerID(), customerName, "", 0);
+                EZShopDBManager.getInstance().saveCustomer(customer);
+                customerID = customer.getId();
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return customerID;
     }
 
     @Override
@@ -629,18 +653,56 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return false;
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (id == null || id <= 0)
+            throw new InvalidCustomerIdException();
+
+        boolean existsAndDeleted = false;
+        try {
+            existsAndDeleted = EZShopDBManager.getInstance().searchProductById(id);
+            if(existsAndDeleted)
+                EZShopDBManager.getInstance().deleteCustomer(id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return existsAndDeleted;
     }
 
     @Override
     public Customer getCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        return null;
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+        if (id == null || id <= 0)
+            throw new InvalidCustomerIdException();
+
+        Customer customer = null;
+        try {
+            customer = EZShopDBManager.getInstance().loadCustomer(id);
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return customer;
     }
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        List<Customer> list = new ArrayList<Customer>();
-        return list;
+        if (authenticatedUser == null)
+            throw new UnauthorizedException();
+
+        List<Customer> customers = new ArrayList<Customer>();
+        try {
+            customers = EZShopDBManager.getInstance().loadAllCustomers();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return customers;
     }
 
     @Override
@@ -1092,7 +1154,7 @@ public class EZShop implements EZShopInterface {
             // }
             
             EZReturnTransaction rTransaction = new EZReturnTransaction(saleNumber, id);
-            this.openReturnTransaction = rTransaction;
+            // this.openReturnTransaction = rTransaction;
 
             return id;
         }

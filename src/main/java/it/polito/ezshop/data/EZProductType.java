@@ -27,7 +27,7 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setQuantity(Integer quantity) {
-
+        this.quantity = quantity;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setLocation(String location) {
-
+        this.location = location;
     }
 
     @Override
@@ -47,7 +47,7 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setNote(String note) {
-
+        this.note = note;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setProductDescription(String productDescription) {
-
+        this.description = productDescription;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setBarCode(String barCode) {
-
+        this.productCode = barCode;
     }
 
     @Override
@@ -77,7 +77,7 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setPricePerUnit(Double pricePerUnit) {
-
+        this.pricePerUnit = pricePerUnit;
     }
 
     @Override
@@ -87,6 +87,6 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setId(Integer id) {
-
+        this.id = id;
     }
 }
