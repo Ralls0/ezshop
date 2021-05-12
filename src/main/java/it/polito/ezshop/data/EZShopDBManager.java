@@ -526,6 +526,15 @@ public class EZShopDBManager {
         return true;
     }
 
+    public void updateSaleStatus(Integer transactionID, String status) throws SQLException {
+        PreparedStatement statement = db.prepareStatement("UPDATE Sales Status = ? WHERE ID = ?");
+        statement.setInt(2, transactionID);
+        statement.setString(1, status);
+
+        statement.execute();
+        statement.close();
+    }
+
     public boolean updateSale(EZSaleTransaction sale) throws SQLException {
         PreparedStatement statement = db.prepareStatement("UPDATE Sales SET Price = ?, DiscountRate = ?, Status = ? WHERE ID = ?");
         statement.setInt(4, sale.getTicketNumber());
@@ -745,6 +754,15 @@ public class EZShopDBManager {
 
             statement.execute();
         }
+        statement.close();
+    }
+
+    public void updateReturnStatus(Integer returnID, String status) throws SQLException {
+        PreparedStatement statement = db.prepareStatement("UPDATE ReturnTransactions Status = ? WHERE ID = ?");
+        statement.setInt(2, returnID);
+        statement.setString(1, status);
+
+        statement.execute();
         statement.close();
     }
 

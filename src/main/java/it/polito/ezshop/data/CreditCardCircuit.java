@@ -13,9 +13,7 @@ public class CreditCardCircuit {
     private final String fileName = "credit_cards.txt";
 
     private static CreditCardCircuit instance;
-    private CreditCardCircuit() {
-
-    }
+    private CreditCardCircuit() {}
 
     public static CreditCardCircuit getInstance() {
         if (instance == null) {
