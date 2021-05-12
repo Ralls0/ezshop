@@ -188,10 +188,7 @@ public class EZSaleTransaction implements SaleTransaction {
 
         return false;
     }
-
-   /**
-     * open, closed, payed  
-     */
+    
     public boolean endSaleTransaction() {
         if (this.status.equals("closed")) {
             return false;
