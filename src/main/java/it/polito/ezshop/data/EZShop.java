@@ -76,9 +76,7 @@ public class EZShop implements EZShopInterface {
         boolean deleted = false;
         try {
             deleted = EZShopDBManager.getInstance().deleteUser(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return deleted;
