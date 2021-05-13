@@ -874,7 +874,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (productCode == null || productCode.equals("") || !validBarCode(productCode))
+        if (productCode == null || !productCode.matches("[0-9]{12,14}") || !validBarCode(productCode))
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0.0)
             throw new InvalidQuantityException("quantity is less than 0");
