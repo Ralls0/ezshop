@@ -170,6 +170,19 @@ public class EZShopDBManager {
         return null;
     }
 
+    public Customer loadCustomer(String card) throws SQLException {
+        String sql = "SELECT * FROM Customers WHERE Card = '" + card + "'";
+        ResultSet res = db.executeSelectionQuery(sql);
+        if (res.next()) {
+            String name = res.getString("Name");
+            Integer id = res.getInt("ID");
+            Integer points = res.getInt("Points");
+
+            return new EZCustomer(id, name, card, points);
+        }
+        return null;
+    }
+
     public boolean saveCustomer(Customer customer) throws SQLException {
         PreparedStatement statement = db.prepareStatement("INSERT INTO Customers (ID, Name, Card, Points) VALUES (?, ?, ?, ?)");
         statement.setInt(1, customer.getId());
@@ -218,7 +231,7 @@ public class EZShopDBManager {
     }
 
     public boolean searchCustomerByCard(String card) throws SQLException {
-        String sql = "SELECT * FROM Customers WHERE ID = '" + card + "'";
+        String sql = "SELECT * FROM Customers WHERE Card = '" + card + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
     }
