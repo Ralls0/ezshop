@@ -149,13 +149,14 @@ public class EZShop implements EZShopInterface {
         if (password == null || password.equals(""))
             throw new InvalidPasswordException();
 
+
         try {
             authenticatedUser = EZShopDBManager.getInstance().loadUser(username, password);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
+        
         return authenticatedUser;
     }
 
