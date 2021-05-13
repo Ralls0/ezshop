@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class CreditCardCircuit {
 
-    private final String fileName = "credit_cards.txt";
+    private final String fileName = "./res/creditCards.txt";
 
     private static CreditCardCircuit instance;
     private CreditCardCircuit() {}
