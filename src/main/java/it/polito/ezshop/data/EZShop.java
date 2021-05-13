@@ -90,9 +90,7 @@ public class EZShop implements EZShopInterface {
         List<User> users = null;
         try {
             users = EZShopDBManager.getInstance().loadAllUsers();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return users;
