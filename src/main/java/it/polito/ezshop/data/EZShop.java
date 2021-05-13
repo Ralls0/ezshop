@@ -39,7 +39,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidUsernameException();
         if (password == null || password.equals(""))
             throw new InvalidPasswordException();
-        if (authenticatedUser == null
+        if (authenticatedUser == null // TODO: ?
                 && (role == null || role.equals("") || !(role.equals("Administrator") || role.equals("ShopManager"))))
             throw new InvalidRoleException();
 
@@ -130,8 +130,7 @@ public class EZShop implements EZShopInterface {
             throws InvalidUserIdException, InvalidRoleException, UnauthorizedException {
         if (authenticatedUser == null || !authenticatedUser.getRole().equals("Administrator"))
             throw new UnauthorizedException();
-        if (role == null || role.equals("")
-                || !(role.equals("Cashier") || role.equals("Administrator") || role.equals("ShopManager")))
+        if (role == null || !role.matches("(ShopManager|Administrator|Cashier)"))
             throw new InvalidRoleException();
         if (id == null || id <= 0)
             throw new InvalidUserIdException();
@@ -183,7 +182,7 @@ public class EZShop implements EZShopInterface {
 
         if (authenticatedUser == null)
             throw new UnauthorizedException();
-        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+        if (!authenticatedUser.getRole().equals("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
         if (description == null || description.equals(""))
             throw new InvalidProductDescriptionException();
@@ -230,7 +229,7 @@ public class EZShop implements EZShopInterface {
 
         if (authenticatedUser == null)
             throw new UnauthorizedException();
-        if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
+        if (!authenticatedUser.getRole().equals("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
         if (newDescription == null || newDescription.equals(""))
             throw new InvalidProductDescriptionException();
