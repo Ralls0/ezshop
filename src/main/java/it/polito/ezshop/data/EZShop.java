@@ -1034,30 +1034,21 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
-        if (openTransaction != null && transactionId == openTransaction.getTicketNumber()) {
+        List<EZSaleTransaction> st = null;
+
+        if (openTransaction != null && transactionId == openTransaction.getTicketNumber())
             return openTransaction.computePoints().intValue();
-        } else {
-            List<EZSaleTransaction> st = null;
 
-            try {
-                st = EZShopDBManager.getInstance().loadAllSales();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return -1;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return -1;
-            }
-
-            for (EZSaleTransaction s : st) {
-                if (transactionId == s.getTicketNumber()) {
-                    return s.computePoints().intValue();
-                }
-
-            }
+        try {
+            st = EZShopDBManager.getInstance().loadAllSales();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         }
 
-        return -1;
+        return st.stream().filter(s -> s.getTicketNumber() == transactionId).findFirst().map(s -> s.computePoints())
+                .orElse(-1);
+
     }
 
     @Override
