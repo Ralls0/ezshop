@@ -39,8 +39,9 @@ public class EZShop implements EZShopInterface {
             throw new InvalidUsernameException();
         if (password == null || password.equals(""))
             throw new InvalidPasswordException();
-        if (authenticatedUser == null // TODO: ?
-                && (role == null || role.equals("") || !(role.equals("Administrator") || role.equals("ShopManager"))))
+        if (authenticatedUser == null)
+        throw new InvalidRoleException();
+        if (!role.matches("(Administrator|ShopManager)"))
             throw new InvalidRoleException();
 
         Integer userID = -1;
