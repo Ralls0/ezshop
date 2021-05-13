@@ -123,20 +123,22 @@ public class EZShop implements EZShopInterface {
         if (id == null || id <= 0)
             throw new InvalidUserIdException();
 
-        // Search for the user and if you find it update the rights
         boolean found = false;
         boolean modified = false;
+
         try {
             found = EZShopDBManager.getInstance().searchUser(id);
+
             if (found) {
                 EZShopDBManager.getInstance().updateUserRights(id, role);
                 modified = true;
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+
+        } catch (Exception e) {
             e.printStackTrace();
+            modified = false;
         }
+
         return modified;
     }
 
