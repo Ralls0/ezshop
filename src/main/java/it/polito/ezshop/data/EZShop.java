@@ -189,7 +189,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductDescriptionException();
         if (pricePerUnit <= 0)
             throw new InvalidPricePerUnitException();
-        if (productCode == null || productCode == "" || !validBarCode(productCode))
+        if (productCode == null || productCode.equals("") || !validBarCode(productCode))
             throw new InvalidProductCodeException();
 
         Integer productID = -1;
@@ -238,7 +238,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductIdException();
         if (newPrice <= 0)
             throw new InvalidPricePerUnitException();
-        if (newCode == null || newCode == "" || !validBarCode(newCode))
+        if (newCode == null || newCode.equals("") || !validBarCode(newCode))
             throw new InvalidProductCodeException();
 
         boolean found = false;
@@ -330,7 +330,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         if (!(authenticatedUser.getRole().equals("Administrator") || authenticatedUser.getRole().equals("ShopManager")))
             throw new UnauthorizedException();
-        if (barCode == null || barCode == "" || !validBarCode(barCode))
+        if (barCode == null || barCode.equals("") || !validBarCode(barCode))
             throw new InvalidProductCodeException();
 
         ProductType product = null;
@@ -807,7 +807,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (productCode == null || productCode == "" || validBarCode(productCode))
+        if (productCode == null || productCode.equals("") || !validBarCode(productCode))
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0)
             throw new InvalidQuantityException("quantity is less than 0");
@@ -866,7 +866,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (productCode == null || productCode == "" || validBarCode(productCode))
+        if (productCode == null || productCode.equals("") || !validBarCode(productCode))
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0)
             throw new InvalidQuantityException("quantity is less than 0");
@@ -924,7 +924,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (productCode == null || productCode == "" || validBarCode(productCode))
+        if (productCode == null || productCode.equals("") || !validBarCode(productCode))
             throw new InvalidProductCodeException("product code is empty or null");
         if (discountRate < 0 || discountRate >= 1.0)
             throw new InvalidDiscountRateException("discount rate is less than 0 or greater than or equal to 1.00");
@@ -1187,7 +1187,7 @@ public class EZShop implements EZShopInterface {
 
         if (returnId == null || returnId <= 0)
             throw new InvalidTransactionIdException("return id less than or equal to 0 or it is null");
-        if (productCode == null || productCode == "" || validBarCode(productCode))
+        if (productCode == null || productCode.equals("") || !validBarCode(productCode))
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0)
             throw new InvalidQuantityException("quantity is less than 0");
@@ -1403,7 +1403,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
 
         if (creditCard == null || 
-            creditCard == "" || 
+            creditCard.equals("") || 
             !EZSaleTransaction.validLuhnAlgorithm(creditCard))
             throw new InvalidCreditCardException("Credit card not valid");
 
@@ -1488,7 +1488,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
 
         if (creditCard == null || 
-            creditCard == "" || 
+            creditCard.equals("") || 
             !EZSaleTransaction.validLuhnAlgorithm(creditCard))
             throw new InvalidCreditCardException("Credit card not valid");
 
