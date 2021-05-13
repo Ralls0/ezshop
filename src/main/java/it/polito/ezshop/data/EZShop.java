@@ -891,15 +891,11 @@ public class EZShop implements EZShopInterface {
 
         try {
             products = EZShopDBManager.getInstance().loadAllProducts();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
-        // TODO: Atomicità? Convertire in stream?
         for (ProductType p : products) {
             if (p.getBarCode().equals(productCode)) {
 
