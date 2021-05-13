@@ -735,7 +735,7 @@ public class EZShopDBManager {
     }
 
     public void saveReturn(EZReturnTransaction returnTransaction) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("INSERT INTO ReturnTransaction (ID, SaleID, Status) VALUES (?, ?, ?)");
+        PreparedStatement statement = db.prepareStatement("INSERT INTO ReturnTransactions (ID, SaleID, Status) VALUES (?, ?, ?)");
         statement.setInt(1, returnTransaction.getReturnId());
         statement.setInt(2, returnTransaction.getTransactionId());
         statement.setString(3, returnTransaction.getStatus());

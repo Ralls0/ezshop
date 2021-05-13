@@ -843,7 +843,7 @@ public class EZShop implements EZShopInterface {
                     p.setQuantity(p.getQuantity() - amount);
 
                     try {
-                        EZShopDBManager.getInstance().saveProduct(p);
+                        EZShopDBManager.getInstance().updateProduct(p);
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                         return false;
@@ -904,7 +904,7 @@ public class EZShop implements EZShopInterface {
                     p.setQuantity(p.getQuantity() + amount);
 
                     try {
-                        EZShopDBManager.getInstance().saveProduct(p);
+                        EZShopDBManager.getInstance().updateProduct(p);
                     } catch (ClassNotFoundException er) {
                         er.printStackTrace();
                     } catch (SQLException er) {
@@ -1046,9 +1046,41 @@ public class EZShop implements EZShopInterface {
                         || authenticatedUser.getRole().equals("ShopManager")
                         || authenticatedUser.getRole().equals("Cashier"))))
             throw new UnauthorizedException();
+        
+        ProductType product = null;
 
         if (openTransaction != null && saleNumber == openTransaction.getTicketNumber()) {
             if (!openTransaction.getStatus().equals("payed")) {
+                if (saleNumber == openTransaction.getTicketNumber()) {
+                    try {
+                        for(TicketEntry p : openTransaction.getEntries()) {
+                            try {
+                                product = this.getProductTypeByBarCode(p.getBarCode());
+                                product.setQuantity(product.getQuantity() + p.getAmount());
+                                EZShopDBManager.getInstance().updateProduct(product);
+                            } catch (InvalidProductCodeException e) {
+                                e.printStackTrace();
+                                return false;
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                                return false;
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                                return false;
+                            }
+                        }
+                        EZShopDBManager.getInstance().deleteSale(saleNumber);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                        return false;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                        return false;
+                    }
+                    return true;
+                }
+    
+                
                 openTransaction = null;
                 return true;
             } else {
@@ -1056,6 +1088,7 @@ public class EZShop implements EZShopInterface {
             }
         } else {
             List<EZSaleTransaction> st = null;
+            
 
             try {
                 st = EZShopDBManager.getInstance().loadAllSales();
@@ -1067,20 +1100,32 @@ public class EZShop implements EZShopInterface {
 
             for (EZSaleTransaction s : st) {
                 if (saleNumber == s.getTicketNumber()) {
-                    if (!s.getStatus().equals("payed")) {
-                        try {
-                            EZShopDBManager.getInstance().deleteSale(saleNumber);
-                        } catch (ClassNotFoundException e) {
-                            e.printStackTrace();
-                            return false;
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                            return false;
+                    try {
+                        for(TicketEntry p : s.getEntries()) {
+                            try {
+                                product = this.getProductTypeByBarCode(p.getBarCode());
+                                product.setQuantity(product.getQuantity() + p.getAmount());
+                                EZShopDBManager.getInstance().updateProduct(product);
+                            } catch (InvalidProductCodeException e) {
+                                e.printStackTrace();
+                                return false;
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                                return false;
+                            } catch (SQLException e) {
+                                e.printStackTrace();
+                                return false;
+                            }
                         }
-                        return true;
-                    } else {
+                        EZShopDBManager.getInstance().deleteSale(saleNumber);
+                    } catch (ClassNotFoundException e) {
+                        e.printStackTrace();
+                        return false;
+                    } catch (SQLException e) {
+                        e.printStackTrace();
                         return false;
                     }
+                    return true;
                 }
 
             }
