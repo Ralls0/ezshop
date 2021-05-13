@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class EZShop implements EZShopInterface {
 
     // Users variable
@@ -104,13 +103,13 @@ public class EZShop implements EZShopInterface {
             throw new InvalidUserIdException();
 
         User user = null;
+
         try {
             user = EZShopDBManager.getInstance().loadUser(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
         }
+
         return user;
     }
 
