@@ -191,7 +191,6 @@ public class EZShop implements EZShopInterface {
             e.printStackTrace();
         }
 
-
         boolean barCodeAlredyExists = false;
         try {
             barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(productCode);
@@ -896,31 +895,29 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
-        for (ProductType p : products) {
-            if (p.getBarCode().equals(productCode)) {
+        ProductType product = products.stream().filter(p -> p.getBarCode().equals(productCode)).findFirst()
+                .orElse(null);
+        Boolean branch;
 
-                if (p.getQuantity() < Integer.valueOf(amount))
-                    return false;
+        if (product == null)
+            return false;
+        if (product.getQuantity() < amount)
+            return false;
 
-                if (openTransaction.addProductToSale(productCode, p.getProductDescription(), p.getPricePerUnit(),
-                        Double.valueOf(0.0), amount)) {
-                    p.setQuantity(p.getQuantity() - amount);
+        branch = openTransaction.addProductToSale(productCode, product.getProductDescription(),
+                product.getPricePerUnit(), 0.0, amount);
 
-                    try {
-                        EZShopDBManager.getInstance().updateProduct(p);
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                        return false;
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                    return true;
-                }
-            }
+        if (!branch)
+            return false;
+
+        try {
+            EZShopDBManager.getInstance().updateProduct(product);
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return false;
         }
-        return false;
 
+        return true;
     }
 
     @Override
