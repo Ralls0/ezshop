@@ -942,6 +942,8 @@ public class EZShop implements EZShopInterface {
             return false;
 
         List<ProductType> products = null;
+        ProductType product;
+        TicketEntry ticketEntry;
 
         try {
             products = EZShopDBManager.getInstance().loadAllProducts();
@@ -950,30 +952,27 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
-        for (ProductType p : products) {
-            if (p.getBarCode().equals(productCode)) {
+        product = products.stream().filter(p -> p.getBarCode().equals(productCode)).findFirst().get();
+        if (product == null)
+            return false;
 
-                TicketEntry e = openTransaction.getEntry(productCode);
-                if (e != null) {
+        ticketEntry = openTransaction.getEntry(productCode);
+        if (ticketEntry == null)
+            return false;
+        if (ticketEntry.getAmount() < amount)
+            return false;
 
-                    if (e.getAmount() < Integer.valueOf(amount))
-                        return false;
+        openTransaction.deleteProductFromSale(productCode, amount);
+        product.setQuantity(product.getQuantity() + amount);
 
-                    openTransaction.deleteProductFromSale(productCode, amount);
-                    p.setQuantity(p.getQuantity() + amount);
-
-                    try {
-                        EZShopDBManager.getInstance().updateProduct(p);
-                    } catch (ClassNotFoundException er) {
-                        er.printStackTrace();
-                    } catch (SQLException er) {
-                        er.printStackTrace();
-                    }
-                    return true;
-                }
-            }
+        try {
+            EZShopDBManager.getInstance().updateProduct(product);
+        } catch (Exception dbException) {
+            dbException.printStackTrace();
+            return false;
         }
-        return false;
+
+        return true;
     }
 
     @Override
