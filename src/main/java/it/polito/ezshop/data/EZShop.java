@@ -982,8 +982,8 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (productCode == null || productCode.equals("") || !validBarCode(productCode))
-            throw new InvalidProductCodeException("product code is empty or null");
+        if (productCode == null || !productCode.matches("[0-9]{12,14}") || !validBarCode(productCode))
+            throw new InvalidProductCodeException("product code is invalid");
         if (discountRate < 0 || discountRate >= 1.0)
             throw new InvalidDiscountRateException("discount rate is less than 0 or greater than or equal to 1.00");
         if (authenticatedUser == null)
