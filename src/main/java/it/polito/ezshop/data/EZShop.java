@@ -47,16 +47,12 @@ public class EZShop implements EZShopInterface {
         Integer userID = -1;
         User user = null;
 
-        // Create a new user
         try {
             user = new EZUser(EZShopDBManager.getInstance().getNextUserID(), username, password, role);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return -1;
         }
-
-        // Check if the username alredy exists in the database
 
         boolean usernameAlredyExists = false;
         try {
