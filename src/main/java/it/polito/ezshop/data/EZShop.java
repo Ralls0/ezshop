@@ -149,14 +149,13 @@ public class EZShop implements EZShopInterface {
         if (password == null || password.equals(""))
             throw new InvalidPasswordException();
 
-
         try {
             authenticatedUser = EZShopDBManager.getInstance().loadUser(username, password);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-        
+
         return authenticatedUser;
     }
 
@@ -185,18 +184,14 @@ public class EZShop implements EZShopInterface {
         Integer productID = -1;
         ProductType product = null;
 
-        // Create a new product
         try {
             product = new EZProductType(EZShopDBManager.getInstance().getNextProductID(), 0, productCode, description,
                     note, "", pricePerUnit);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
-        // Search in there alredy is a product with the same barCode. If not, add the
-        // product
+
         boolean barCodeAlredyExists = false;
         try {
             barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(productCode);
@@ -204,9 +199,7 @@ public class EZShop implements EZShopInterface {
                 EZShopDBManager.getInstance().saveProduct(product);
                 productID = product.getId();
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
