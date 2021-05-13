@@ -824,6 +824,7 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
+        // TODO: Atomicità? Convertire in stream?
         for (ProductType p : products) {
             if (p.getBarCode().equals(productCode)) {
 
@@ -941,7 +942,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (discountRate < 0 || discountRate >= 1.0)
+        if (discountRate < 0.0 || discountRate >= 1.0)
             throw new InvalidDiscountRateException(
                     "discount rate is less than 0 or if it greater than or equal to 1.00");
         if (authenticatedUser == null)
@@ -1089,38 +1090,24 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().equals("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
+        List<EZSaleTransaction> st = null;
+
         if (openTransaction != null && transactionId == openTransaction.getTicketNumber()) {
-            if (!openTransaction.getStatus().equals("open")) {
+            if (!openTransaction.getStatus().equals("open")) 
                 return openTransaction;
-            } else {
-                return null;
-            }
-        } else {
-            List<EZSaleTransaction> st = null;
-
-            try {
-                st = EZShopDBManager.getInstance().loadAllSales();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return null;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return null;
-            }
-
-            for (EZSaleTransaction s : st) {
-                if (transactionId == s.getTicketNumber()) {
-                    if (!s.getStatus().equals("open")) {
-                        return s;
-                    } else {
-                        return null;
-                    }
-                }
-
-            }
+            return null;
         }
 
-        return null;
+        //TODO: Esempio catch accorpati
+        try {
+            st = EZShopDBManager.getInstance().loadAllSales();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+
+        return st.stream().filter( s -> transactionId == s.getTicketNumber()) .findFirst().orElse(null);
     }
 
     @Override
