@@ -40,7 +40,7 @@ public class EZShop implements EZShopInterface {
         if (password == null || password.equals(""))
             throw new InvalidPasswordException();
         if (authenticatedUser == null)
-        throw new InvalidRoleException();
+            throw new InvalidRoleException();
         if (!role.matches("(Administrator|ShopManager)"))
             throw new InvalidRoleException();
 
@@ -54,17 +54,14 @@ public class EZShop implements EZShopInterface {
             return -1;
         }
 
-        boolean usernameAlredyExists = false;
         try {
-            usernameAlredyExists = EZShopDBManager.getInstance().searchUser(username);
-            if (!usernameAlredyExists) {
-                EZShopDBManager.getInstance().saveUser(user);
-                userID = user.getId();
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            if (EZShopDBManager.getInstance().searchUser(username)) //TODO: rename searchUser into userExists?
+                return -1;
+            EZShopDBManager.getInstance().saveUser(user);
+            userID = user.getId();
+        } catch (Exception e) {
             e.printStackTrace();
+            userID = -1;
         }
 
         return userID;
@@ -583,7 +580,7 @@ public class EZShop implements EZShopInterface {
             // Can't happen...
         }
 
-        //FIXME: regex
+        // FIXME: regex
         if (orderProduct.getLocation() == null)
             throw new InvalidLocationException("Null Location");
         if (orderProduct.getLocation().matches(""))
@@ -656,7 +653,7 @@ public class EZShop implements EZShopInterface {
 
         if (newCustomerCard.length() != 10 && !(newCustomerCard.equals("") && newCustomerCard.matches("[0-9]*")))
             throw new InvalidCustomerCardException();
-        if(newCustomerName == null || newCustomerName.equals(""))
+        if (newCustomerName == null || newCustomerName.equals(""))
             throw new InvalidCustomerNameException();
         if (authenticatedUser == null)
             throw new UnauthorizedException();
@@ -664,7 +661,6 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         if (id == null || id <= 0)
             throw new InvalidCustomerIdException();
-
 
         Customer customer = null;
         try {
@@ -678,10 +674,11 @@ public class EZShop implements EZShopInterface {
         boolean cardAlredyExists = false;
         boolean updated = false;
         try {
-            if(!newCustomerCard.equals("")) {
+            if (!newCustomerCard.equals("")) {
                 cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(newCustomerCard);
                 if (cardAlredyExists && customer.getCustomerCard().equals(newCustomerCard)) {
-                    // I'm modifyig the customer with the same card number, so I only need to update the name
+                    // I'm modifyig the customer with the same card number, so I only need to update
+                    // the name
                     EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, customer.getCustomerCard());
                     updated = true;
                 }
@@ -755,7 +752,6 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
-
         List<Customer> customers = new ArrayList<Customer>();
         try {
             customers = EZShopDBManager.getInstance().loadAllCustomers();
@@ -775,7 +771,7 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
-        //TODO: finire
+        // TODO: finire
 
         return "1111111111";
     }
@@ -812,7 +808,7 @@ public class EZShop implements EZShopInterface {
 
         boolean updated = false;
         try {
-            if(!cardAlredyExists && customer != null) {
+            if (!cardAlredyExists && customer != null) {
                 EZShopDBManager.getInstance().updateCustomer(customerId, customer.getCustomerName(), customerCard);
                 updated = true;
             }
@@ -840,14 +836,15 @@ public class EZShop implements EZShopInterface {
         boolean updated = false;
         try {
             cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
-            if(cardAlredyExists){
+            if (cardAlredyExists) {
                 customer = EZShopDBManager.getInstance().loadCustomer(customerCard);
-                if (pointsToBeAdded > 0){
+                if (pointsToBeAdded > 0) {
                     // TODO: fix per accettare anche punti negativi
                     customer.setPoints(customer.getPoints() + pointsToBeAdded);
                     updated = true;
-                    EZShopDBManager.getInstance().updateCustomer(customer.getId(), customer.getCustomerName(), customer.getCustomerCard());
-                    //TODO: mancano i points
+                    EZShopDBManager.getInstance().updateCustomer(customer.getId(), customer.getCustomerName(),
+                            customer.getCustomerCard());
+                    // TODO: mancano i points
                 }
             }
         } catch (SQLException throwables) {
@@ -1124,14 +1121,14 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
-        
+
         ProductType product = null;
 
         if (openTransaction != null && saleNumber == openTransaction.getTicketNumber()) {
             if (!openTransaction.getStatus().equals("payed")) {
                 if (saleNumber == openTransaction.getTicketNumber()) {
                     try {
-                        for(TicketEntry p : openTransaction.getEntries()) {
+                        for (TicketEntry p : openTransaction.getEntries()) {
                             try {
                                 product = this.getProductTypeByBarCode(p.getBarCode());
                                 product.setQuantity(product.getQuantity() + p.getAmount());
@@ -1157,8 +1154,7 @@ public class EZShop implements EZShopInterface {
                     }
                     return true;
                 }
-    
-                
+
                 openTransaction = null;
                 return true;
             } else {
@@ -1166,7 +1162,6 @@ public class EZShop implements EZShopInterface {
             }
         } else {
             List<EZSaleTransaction> st = null;
-            
 
             try {
                 st = EZShopDBManager.getInstance().loadAllSales();
@@ -1179,7 +1174,7 @@ public class EZShop implements EZShopInterface {
             for (EZSaleTransaction s : st) {
                 if (saleNumber == s.getTicketNumber()) {
                     try {
-                        for(TicketEntry p : s.getEntries()) {
+                        for (TicketEntry p : s.getEntries()) {
                             try {
                                 product = this.getProductTypeByBarCode(p.getBarCode());
                                 product.setQuantity(product.getQuantity() + p.getAmount());
@@ -1226,21 +1221,20 @@ public class EZShop implements EZShopInterface {
         List<EZSaleTransaction> st = null;
 
         if (openTransaction != null && transactionId == openTransaction.getTicketNumber()) {
-            if (!openTransaction.getStatus().equals("open")) 
+            if (!openTransaction.getStatus().equals("open"))
                 return openTransaction;
             return null;
         }
 
-        //TODO: Esempio catch accorpati
+        // TODO: Esempio catch accorpati
         try {
             st = EZShopDBManager.getInstance().loadAllSales();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
 
-        return st.stream().filter( s -> transactionId == s.getTicketNumber()) .findFirst().orElse(null);
+        return st.stream().filter(s -> transactionId == s.getTicketNumber()).findFirst().orElse(null);
     }
 
     @Override
