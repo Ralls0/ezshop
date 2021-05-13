@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.lang.model.element.Name;
 
 public class EZShop implements EZShopInterface {
 
@@ -55,7 +54,7 @@ public class EZShop implements EZShopInterface {
         }
 
         try {
-            if (EZShopDBManager.getInstance().searchUser(username)) //TODO: rename searchUser into userExists?
+            if (EZShopDBManager.getInstance().searchUser(username)) // TODO: rename searchUser into userExists?
                 return -1;
             EZShopDBManager.getInstance().saveUser(user);
             userID = user.getId();
