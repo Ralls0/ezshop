@@ -1396,30 +1396,31 @@ public class EZShop implements EZShopInterface {
                 || !openTransaction.getStatus().equals("closed"))
             return false;
 
+        Integer orderBalanceOperationID = null;
+        BalanceOperation balanceOperation = null;
+        
         try {
             if (!CreditCardCircuit.getInstance().isCardPresent(creditCard))
                 return false;
             if (!CreditCardCircuit.getInstance().hasEnoughBalance(creditCard, openTransaction.getPrice()))
                 return false;
-            if (CreditCardCircuit.getInstance().pay(creditCard, openTransaction.getPrice())) {
-                openTransaction.receiveCreditCardPayment(creditCard);
-                if (EZShopDBManager.getInstance().updateSale(openTransaction)) {
-                    Integer orderBalanceOperationID = null;
-                    BalanceOperation balanceOperation = null;
-                    orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
-                    balanceOperation = new EZBalanceOperation("CREDIT", openTransaction.getPrice());
-                    balanceOperation.setBalanceId(orderBalanceOperationID);
-                    EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
-                    openTransaction = null;
-                    return true;
-                }
-            }
+            if (!CreditCardCircuit.getInstance().pay(creditCard, openTransaction.getPrice()))
+                return false;
+
+            openTransaction.receiveCreditCardPayment(creditCard);
+            if (!EZShopDBManager.getInstance().updateSale(openTransaction))
+                return false;
+
+            orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+            balanceOperation = new EZBalanceOperation("CREDIT", openTransaction.getPrice());
+            balanceOperation.setBalanceId(orderBalanceOperationID);
+            EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
+            openTransaction = null;
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-
-        return false;
     }
 
     @Override
@@ -1432,31 +1433,29 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
+        Integer orderBalanceOperationID = null;
+        BalanceOperation balanceOperation = null;
+
         if (openReturnTransaction == null || returnId != openReturnTransaction.getReturnId()
                 || !openReturnTransaction.getStatus().equals("closed"))
             return -1;
 
         double retm = openReturnTransaction.getPrice();
+        if (retm < 0.0)
+            return -1;
 
-        if (retm != -1) {
-            try {
-                EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
-                Integer orderBalanceOperationID = null;
-                BalanceOperation balanceOperation = null;
-                orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
-                balanceOperation = new EZBalanceOperation("DEBIT", openReturnTransaction.getPrice());
-                balanceOperation.setBalanceId(orderBalanceOperationID);
-                EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
-                openReturnTransaction = null;
-                return retm;
-            } catch (Exception e) {
-                e.printStackTrace();
-                return -1;
-            }
+        try {
+            EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
+            orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+            balanceOperation = new EZBalanceOperation("DEBIT", openReturnTransaction.getPrice());
+            balanceOperation.setBalanceId(orderBalanceOperationID);
+            EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
+            openReturnTransaction = null;
+            return retm;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         }
-
-        return -1;
-
     }
 
     @Override
