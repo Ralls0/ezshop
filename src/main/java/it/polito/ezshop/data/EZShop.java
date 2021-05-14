@@ -392,31 +392,26 @@ public class EZShop implements EZShopInterface {
 
         boolean positionAlredyExists = false;
         ProductType product = null;
+
+        //FIXME: Qualquadra non cosa
         try {
             positionAlredyExists = EZShopDBManager.getInstance().searchProductByLocation(newPos);
             product = EZShopDBManager.getInstance().loadProduct(productId);
+
             if (product.getLocation().equals(newPos))
                 positionAlredyExists = false;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+
+            if (product == null || positionAlredyExists)
+                return false;
+
+            product.setLocation(newPos);
+            EZShopDBManager.getInstance().updateProduct(product);
+            return true;
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
 
-        boolean foundAndUpdated = false;
-        try {
-            if (product != null && !positionAlredyExists) {
-                foundAndUpdated = true;
-                product.setLocation(newPos);
-                EZShopDBManager.getInstance().updateProduct(product);
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        return foundAndUpdated;
     }
 
     private boolean validBarCode(String barCode) {
@@ -1475,7 +1470,7 @@ public class EZShop implements EZShopInterface {
         if (openReturnTransaction == null || returnId != openReturnTransaction.getReturnId()
                 || !openReturnTransaction.getStatus().equals("closed"))
             return -1;
-            
+
         Integer orderBalanceOperationID = null;
         BalanceOperation balanceOperation = null;
         double retm = openReturnTransaction.getPrice();
@@ -1488,7 +1483,7 @@ public class EZShop implements EZShopInterface {
                 return -1;
             if (!CreditCardCircuit.getInstance().refund(creditCard, openReturnTransaction.getPrice()))
                 return -1;
-                
+
             EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
             orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
             balanceOperation = new EZBalanceOperation("DEBIT", openReturnTransaction.getPrice());
