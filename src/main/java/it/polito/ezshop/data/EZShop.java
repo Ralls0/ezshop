@@ -1235,10 +1235,7 @@ public class EZShop implements EZShopInterface {
 
         try {
             saleT = EZShopDBManager.getInstance().loadSale(saleNumber);
-        } catch (ClassNotFoundException e1) {
-            e1.printStackTrace();
-            return -1;
-        } catch (SQLException e1) {
+        } catch (Exception e1) {
             e1.printStackTrace();
             return -1;
         }
@@ -1468,10 +1465,7 @@ public class EZShop implements EZShopInterface {
                     openTransaction = null;
                     return paym;
                 }
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return -1;
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
                 return -1;
             }

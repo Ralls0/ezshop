@@ -92,7 +92,7 @@ public class CreditCardCircuit {
         if (payed) {
             FileWriter writer = new FileWriter(cardsFile);
             for (String line : newData) {
-                writer.write(line);
+                writer.write(line+"\n");
             }
             writer.close();
         }
@@ -128,7 +128,7 @@ public class CreditCardCircuit {
         if (refund) {
             FileWriter writer = new FileWriter(cardsFile);
             for (String line : newData) {
-                writer.write(line);
+                writer.write(line+"\n");
             }
             writer.close();
         }
