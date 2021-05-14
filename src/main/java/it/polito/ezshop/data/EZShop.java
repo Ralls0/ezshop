@@ -1201,6 +1201,7 @@ public class EZShop implements EZShopInterface {
         return st.stream().filter(s -> transactionId == s.getTicketNumber()).findFirst().orElse(null);
     }
 
+    // FIXME: Commento?
     @Override
     public Integer startReturnTransaction(Integer saleNumber)
             throws /* InvalidTicketNumberException, */InvalidTransactionIdException, UnauthorizedException {
@@ -1216,32 +1217,22 @@ public class EZShop implements EZShopInterface {
             return -1;
 
         EZSaleTransaction saleT = null;
+        Integer id = -1;
 
         try {
             saleT = EZShopDBManager.getInstance().loadSale(saleNumber);
-        } catch (Exception e1) {
-            e1.printStackTrace();
-            return -1;
-        }
-
-        if (saleT != null && saleT.getStatus().equals("payed")) {
-
-            Integer id = -1;
-
-            try {
-                id = EZShopDBManager.getInstance().getNextReturnID();
-            } catch (ClassNotFoundException | SQLException e) {
-                e.printStackTrace();
+            if (saleT == null || !saleT.getStatus().equals("payed")) //FIXME: Sicuri?
                 return -1;
-            }
 
+            id = EZShopDBManager.getInstance().getNextReturnID();
             EZReturnTransaction rTransaction = new EZReturnTransaction(saleNumber, id);
             this.openReturnTransaction = rTransaction;
-
             return id;
-        }
 
-        return -1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
     }
 
     @Override
