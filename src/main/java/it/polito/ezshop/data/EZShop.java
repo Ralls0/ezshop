@@ -1323,13 +1323,11 @@ public class EZShop implements EZShopInterface {
 
         try {
             transaction = EZShopDBManager.getInstance().loadSale(openReturnTransaction.getTransactionId());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+        
         openReturnTransaction.setCommit(commit);
 
         if (commit) {
