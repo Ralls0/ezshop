@@ -627,8 +627,7 @@ public class EZShop implements EZShopInterface {
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard)
             throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException,
             UnauthorizedException {
-
-        if (newCustomerCard.length() != 10 && !(newCustomerCard.equals("") && newCustomerCard.matches("[0-9]*")))
+        if (!newCustomerCard.matches("([0-9]{10}|^$)"))
             throw new InvalidCustomerCardException();
         if (newCustomerName == null || newCustomerName.equals(""))
             throw new InvalidCustomerNameException();
@@ -639,45 +638,16 @@ public class EZShop implements EZShopInterface {
         if (id == null || id <= 0)
             throw new InvalidCustomerIdException();
 
-        Customer customer = null;
         try {
-            customer = EZShopDBManager.getInstance().loadCustomer(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            if(!EZShopDBManager.getInstance().searchCustomerById(id))
+                return false;
+
+            EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, newCustomerCard);
+            return true;
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-
-        boolean cardAlredyExists = false;
-        boolean updated = false;
-        try {
-            if (!newCustomerCard.equals("")) {
-                cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(newCustomerCard);
-                if (cardAlredyExists && customer.getCustomerCard().equals(newCustomerCard)) {
-                    // I'm modifyig the customer with the same card number, so I only need to update
-                    // the name
-                    EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, customer.getCustomerCard());
-                    updated = true;
-                }
-            }
-            if (!cardAlredyExists) {
-                if (newCustomerCard != null) {
-                    if (newCustomerCard.equals("")) {
-                        EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, "");
-                    } else {
-                        EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, newCustomerCard);
-                    }
-                    updated = true;
-                }
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return updated;
-
     }
 
     @Override
