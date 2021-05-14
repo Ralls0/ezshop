@@ -1225,10 +1225,7 @@ public class EZShop implements EZShopInterface {
 
         try {
             saleT = EZShopDBManager.getInstance().loadSale(saleNumber);
-        } catch (ClassNotFoundException e1) {
-            e1.printStackTrace();
-            return -1;
-        } catch (SQLException e1) {
+        } catch (Exception e1) {
             e1.printStackTrace();
             return -1;
         }
@@ -1413,6 +1410,7 @@ public class EZShop implements EZShopInterface {
             return -1;
 
         double paym = openTransaction.receiveCashPayment(cash);
+<<<<<<< HEAD
         Integer orderBalanceOperationID = null;
         BalanceOperation balanceOperation = null;
 
@@ -1421,6 +1419,22 @@ public class EZShop implements EZShopInterface {
 
         try {
             if (EZShopDBManager.getInstance().updateSale(openTransaction))
+=======
+        if (paym != -1) {
+            try {
+                if (EZShopDBManager.getInstance().updateSale(openTransaction)) {
+                    Integer orderBalanceOperationID = null;
+                    BalanceOperation balanceOperation = null;
+                    orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+                    balanceOperation = new EZBalanceOperation("CREDIT", openTransaction.getPrice());
+                    balanceOperation.setBalanceId(orderBalanceOperationID);
+                    EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
+                    openTransaction = null;
+                    return paym;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+>>>>>>> mod
                 return -1;
 
             orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
@@ -1465,6 +1479,7 @@ public class EZShop implements EZShopInterface {
                 return false;
             if (CreditCardCircuit.getInstance().pay(creditCard, openTransaction.getPrice())) {
                 openTransaction.receiveCreditCardPayment(creditCard);
+<<<<<<< HEAD
                 if (!EZShopDBManager.getInstance().updateSale(openTransaction))
                     return false;
 
@@ -1474,6 +1489,18 @@ public class EZShop implements EZShopInterface {
                 EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
                 openTransaction = null;
                 return true;
+=======
+                if (EZShopDBManager.getInstance().updateSale(openTransaction)) {
+                    Integer orderBalanceOperationID = null;
+                    BalanceOperation balanceOperation = null;
+                    orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+                    balanceOperation = new EZBalanceOperation("CREDIT", openTransaction.getPrice());
+                    balanceOperation.setBalanceId(orderBalanceOperationID);
+                    EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
+                    openTransaction = null;
+                    return true;
+                }
+>>>>>>> mod
             }
         } catch (Exception e) {
             e.printStackTrace();
