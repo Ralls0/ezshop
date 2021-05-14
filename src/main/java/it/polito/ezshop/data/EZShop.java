@@ -1398,7 +1398,7 @@ public class EZShop implements EZShopInterface {
 
         Integer orderBalanceOperationID = null;
         BalanceOperation balanceOperation = null;
-        
+
         try {
             if (!CreditCardCircuit.getInstance().isCardPresent(creditCard))
                 return false;
@@ -1475,30 +1475,31 @@ public class EZShop implements EZShopInterface {
         if (openReturnTransaction == null || returnId != openReturnTransaction.getReturnId()
                 || !openReturnTransaction.getStatus().equals("closed"))
             return -1;
-
+            
+        Integer orderBalanceOperationID = null;
+        BalanceOperation balanceOperation = null;
         double retm = openReturnTransaction.getPrice();
 
-        if (retm != -1) {
-            try {
-                if (!CreditCardCircuit.getInstance().isCardPresent(creditCard))
-                    return -1;
-                if (CreditCardCircuit.getInstance().refund(creditCard, openReturnTransaction.getPrice())) {
-                    EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
-                    Integer orderBalanceOperationID = null;
-                    BalanceOperation balanceOperation = null;
-                    orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
-                    balanceOperation = new EZBalanceOperation("DEBIT", openReturnTransaction.getPrice());
-                    balanceOperation.setBalanceId(orderBalanceOperationID);
-                    EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
-                    openReturnTransaction = null;
-                    return retm;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        if (retm < 0.0)
+            return -1;
+
+        try {
+            if (!CreditCardCircuit.getInstance().isCardPresent(creditCard))
                 return -1;
-            }
+            if (!CreditCardCircuit.getInstance().refund(creditCard, openReturnTransaction.getPrice()))
+                return -1;
+                
+            EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
+            orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+            balanceOperation = new EZBalanceOperation("DEBIT", openReturnTransaction.getPrice());
+            balanceOperation.setBalanceId(orderBalanceOperationID);
+            EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
+            openReturnTransaction = null;
+            return retm;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
         }
-        return -1;
     }
 
     @Override
