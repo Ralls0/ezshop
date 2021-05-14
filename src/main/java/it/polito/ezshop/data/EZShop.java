@@ -1455,6 +1455,9 @@ public class EZShop implements EZShopInterface {
                 || !openTransaction.getStatus().equals("closed"))
             return false;
 
+        Integer orderBalanceOperationID = null;
+        BalanceOperation balanceOperation = null;
+
         try {
             if (!CreditCardCircuit.getInstance().isCardPresent(creditCard))
                 return false;
@@ -1462,20 +1465,18 @@ public class EZShop implements EZShopInterface {
                 return false;
             if (CreditCardCircuit.getInstance().pay(creditCard, openTransaction.getPrice())) {
                 openTransaction.receiveCreditCardPayment(creditCard);
-                if (EZShopDBManager.getInstance().updateSale(openTransaction)) {
-                    Integer orderBalanceOperationID = null;
-                    BalanceOperation balanceOperation = null;
-                    orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
-                    balanceOperation = new EZBalanceOperation("CREDIT", openTransaction.getPrice());
-                    balanceOperation.setBalanceId(orderBalanceOperationID);
-                    EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
-                    openTransaction = null;
-                    return true;
-                }
+                if (!EZShopDBManager.getInstance().updateSale(openTransaction))
+                    return false;
+
+                orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
+                balanceOperation = new EZBalanceOperation("CREDIT", openTransaction.getPrice());
+                balanceOperation.setBalanceId(orderBalanceOperationID);
+                EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
+                openTransaction = null;
+                return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
 
         return false;
