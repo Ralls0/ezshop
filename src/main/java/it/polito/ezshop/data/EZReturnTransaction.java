@@ -39,7 +39,7 @@ public class EZReturnTransaction {
             for(TicketEntry p : products) {
                 sum += (p.getPricePerUnit()*p.getAmount())-(p.getDiscountRate()*p.getPricePerUnit()*p.getAmount()); 
             }
-        return sum;
+        return sum-(sum*this.discountRate);
     }
 
     public List<EZTicketEntry> getProducts() {

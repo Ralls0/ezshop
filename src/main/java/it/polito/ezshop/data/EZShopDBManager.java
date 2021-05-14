@@ -540,7 +540,7 @@ public class EZShopDBManager {
     }
 
     public void updateSaleStatus(Integer transactionID, String status) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE Sales Status = ? WHERE ID = ?");
+        PreparedStatement statement = db.prepareStatement("UPDATE Sales SET Status = ? WHERE ID = ?");
         statement.setInt(2, transactionID);
         statement.setString(1, status);
 
@@ -771,78 +771,12 @@ public class EZShopDBManager {
     }
 
     public void updateReturnStatus(Integer returnID, String status) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE ReturnTransactions Status = ? WHERE ID = ?");
+        PreparedStatement statement = db.prepareStatement("UPDATE ReturnTransactions SET Status = ? WHERE ID = ?");
         statement.setInt(2, returnID);
         statement.setString(1, status);
 
         statement.execute();
         statement.close();
-    }
-
-    public boolean updateReturnTransaction(EZReturnTransaction returnTransaction) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE ReturnTransactions Status = ? WHERE ID = ?");
-        statement.setInt(2, returnTransaction.getReturnId());
-        statement.setString(1, returnTransaction.getStatus());
-
-        statement.execute();
-        statement.close();
-
-        String sql = "SELECT * FROM ReturnTicketsEntries WHERE ReturnID = " + returnTransaction.getReturnId();
-        ResultSet res = db.executeSelectionQuery(sql);
-        List<TicketEntry> dbEntries = new ArrayList<>();
-        while (res.next()) {
-            String productCode = res.getString("ProductCode");
-            String productDescription = res.getString("ProductDescription");
-            Double pricePerUnit = res.getDouble("PricePerUnit");
-            Integer quantity = res.getInt("Quantity");
-            Double productDiscountRate = res.getDouble("DiscountRate");
-
-            dbEntries.add(new EZTicketEntry(productCode, productDescription, quantity, pricePerUnit, productDiscountRate));
-        }
-
-        List<TicketEntry> ticketEntriesToInsert = returnTransaction.getProducts().stream().filter( entry -> !dbEntries.stream().map(dbEntry -> dbEntry.getBarCode()).collect(Collectors.toList()).contains(entry.getBarCode())).collect(Collectors.toList());
-        List<TicketEntry> ticketEntriesToRemove = dbEntries.stream().filter( dbEntry -> !returnTransaction.getProducts().stream().map(entry -> entry.getBarCode()).collect(Collectors.toList()).contains(dbEntry.getBarCode())).collect(Collectors.toList());
-        List<TicketEntry> ticketEntriesToUpdate = returnTransaction.getProducts().stream().filter( entry -> dbEntries.stream().map(dbEntry -> dbEntry.getBarCode()).collect(Collectors.toList()).contains(entry.getBarCode())).collect(Collectors.toList());
-
-        //  REMOVE NO LONGER PRESENT TRANSACTION ENTRIES FROM DB
-        statement = db.prepareStatement("DELETE FROM ReturnTicketsEntries WHERE ReturnID = ? AND ProductCode = ?");
-        for (TicketEntry entry : ticketEntriesToRemove) {
-            statement.setInt(1, returnTransaction.getReturnId());
-            statement.setString(2, entry.getBarCode());
-
-            statement.execute();
-        }
-        statement.close();
-
-        //  INSERT NEW TRANSACTION ENTRIES IN DB
-        statement = db.prepareStatement("INSERT INTO ReturnTicketsEntries (ReturnID, ProductCode, ProductDescription, Quantity, DiscountRate, PricePerUnit) VALUES (?, ?, ?, ?, ?, ?)");
-        for (TicketEntry entry : ticketEntriesToInsert) {
-            statement.setInt(1, returnTransaction.getReturnId());
-            statement.setString(2, entry.getBarCode());
-            statement.setString(3, entry.getProductDescription());
-            statement.setInt(4, entry.getAmount());
-            statement.setDouble(5, entry.getDiscountRate());
-            statement.setDouble(6, entry.getPricePerUnit());
-
-            statement.execute();
-        }
-        statement.close();
-
-        //  UPDATE TRANSACTION ENTRIES IN DB
-        statement = db.prepareStatement("UPDATE ReturnTicketsEntries SET ProductDescription = ?, Quantity = ?, DiscountRate = ?, PricePerUnit = ? WHERE ReturnID = ? AND ProductCode = ?");
-        for (TicketEntry entry : ticketEntriesToUpdate) {
-            statement.setString(1, entry.getProductDescription());
-            statement.setInt(2, entry.getAmount());
-            statement.setDouble(3, entry.getDiscountRate());
-            statement.setDouble(4, entry.getPricePerUnit());
-            statement.setInt(5, returnTransaction.getReturnId());
-            statement.setString(6, entry.getBarCode());
-
-            statement.execute();
-        }
-        statement.close();
-
-        return true;
     }
 
     public void deleteReturnTransaction(Integer id) throws SQLException {
