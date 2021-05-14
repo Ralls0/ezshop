@@ -664,7 +664,7 @@ public class EZShop implements EZShopInterface {
             existsAndDeleted = EZShopDBManager.getInstance().searchCustomerById(id);
             if (existsAndDeleted)
                 EZShopDBManager.getInstance().deleteCustomer(id);
-        } catch (SQLException throwables) {
+        } catch (SQLException throwables) { //FIXME: ???
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
