@@ -452,12 +452,11 @@ public class EZShop implements EZShopInterface {
             newOrder.setOrderId(nextOrderId);
             newOrder.setBalanceId(nextBalanceOperationId);
             EZShopDBManager.getInstance().saveOrder(newOrder);
+            return nextOrderId;
         } catch (Exception dbException) {
             dbException.printStackTrace();
             return -1;
         }
-
-        return nextOrderId;
     }
 
     @Override
@@ -562,11 +561,10 @@ public class EZShop implements EZShopInterface {
             // Can't happen...
         }
 
-        // FIXME: regex
         if (orderProduct.getLocation() == null)
             throw new InvalidLocationException("Null Location");
-        if (orderProduct.getLocation().matches(""))
-            throw new InvalidLocationException("Empty");
+        if (!orderProduct.getLocation().matches("[0-9]{1,}-[a-zA-Z]{1,}-[0-9]{1,}"))
+            throw new InvalidLocationException("Invalid Location");
 
         orderProduct.setQuantity(orderProduct.getQuantity() + myOrder.getQuantity());
         myOrder.setStatus("COMPLETED");
