@@ -627,7 +627,7 @@ public class EZShop implements EZShopInterface {
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard)
             throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException,
             UnauthorizedException {
-        if (!newCustomerCard.matches("([0-9]{10}|^$)"))
+        if (newCustomerCard == null || !newCustomerCard.matches("([0-9]{10}|^$)"))
             throw new InvalidCustomerCardException();
         if (newCustomerName == null || newCustomerName.equals(""))
             throw new InvalidCustomerNameException();
