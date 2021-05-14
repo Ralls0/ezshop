@@ -911,7 +911,7 @@ public class EZShop implements EZShopInterface {
             return false;
 
         try {
-            product.setQuantity(product.getQuantity()-amount);
+            product.setQuantity(product.getQuantity() - amount);
             EZShopDBManager.getInstance().updateProduct(product);
         } catch (Exception dbException) {
             dbException.printStackTrace();
@@ -1272,6 +1272,7 @@ public class EZShop implements EZShopInterface {
             return false;
 
         SaleTransaction transaction = null;
+        Boolean returnValue = false;
 
         try {
             transaction = EZShopDBManager.getInstance().loadSale(openReturnTransaction.getTransactionId());
@@ -1285,19 +1286,23 @@ public class EZShop implements EZShopInterface {
         if (transaction == null)
             return false;
 
-        for (TicketEntry entry : transaction.getEntries()) {
-            if (entry.getBarCode().equals(productCode)) {
-                if (amount <= entry.getAmount()) {
-                    if (openReturnTransaction.addProductReturned((EZTicketEntry) entry)) {
-                        openReturnTransaction.setDiscountRate(transaction.getDiscountRate());
-                        return true;
-                    }
-                }
-                return false;
-            }
-        }
+        /*
+         * for (TicketEntry entry : transaction.getEntries()) { if
+         * (entry.getBarCode().equals(productCode)) { if (amount <= entry.getAmount()) {
+         * if (openReturnTransaction.addProductReturned((EZTicketEntry) entry)) {
+         * openReturnTransaction.setDiscountRate(transaction.getDiscountRate()); return
+         * true; } } return false; } } For easy rollback
+         */
 
-        return false;
+        returnValue = transaction.getEntries().stream().filter(e -> e.getBarCode().equals(productCode))
+                .filter(e -> e.getAmount() > amount)
+                .anyMatch(e -> openReturnTransaction.addProductReturned((EZTicketEntry) e));
+
+        if (returnValue)
+            openReturnTransaction.setDiscountRate(transaction.getDiscountRate());
+
+        return returnValue;
+
     }
 
     @Override
@@ -1504,7 +1509,7 @@ public class EZShop implements EZShopInterface {
                     EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
                     openTransaction = null;
                     return true;
-                } 
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
