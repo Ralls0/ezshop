@@ -1064,20 +1064,16 @@ public class EZShop implements EZShopInterface {
                 || openTransaction.getStatus().equals("closed"))
             return false;
 
-        if (openTransaction.endSaleTransaction()) {
-            try {
-                EZShopDBManager.getInstance().saveSale(openTransaction);
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
-            }
-            return true;
-        }
+        if (!openTransaction.endSaleTransaction())
+            return false;
 
-        return false;
+        try {
+            EZShopDBManager.getInstance().saveSale(openTransaction);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
