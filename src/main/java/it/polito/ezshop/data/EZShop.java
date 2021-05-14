@@ -1344,7 +1344,7 @@ public class EZShop implements EZShopInterface {
             openReturnTransaction.setStatus("closed");
             EZShopDBManager.getInstance().updateSale(transaction);
             EZShopDBManager.getInstance().saveReturn(openReturnTransaction);
-            
+
             returnValue = true;
         } catch (Exception e) {
             returnValue = false;
@@ -1373,40 +1373,18 @@ public class EZShop implements EZShopInterface {
 
         try {
             transaction = EZShopDBManager.getInstance().loadSale(openReturnTransaction.getTransactionId());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
 
-        for (EZTicketEntry p : openReturnTransaction.getProducts()) {
-            transaction.addProductToSale(p.getBarCode(), p.getProductDescription(), p.getPricePerUnit(),
-                    p.getDiscountRate(), p.getAmount());
-            try {
-                product = this.getProductTypeByBarCode(p.getBarCode());
+            for (EZTicketEntry p : openReturnTransaction.getProducts()) {
+                transaction.addProductToSale(p.getBarCode(), p.getProductDescription(), p.getPricePerUnit(),
+                        p.getDiscountRate(), p.getAmount());
+                product = getProductTypeByBarCode(p.getBarCode());
                 product.setQuantity(product.getQuantity() - p.getAmount());
                 EZShopDBManager.getInstance().updateProduct(product);
-            } catch (InvalidProductCodeException e) {
-                e.printStackTrace();
-                return false;
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                return false;
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return false;
             }
-        }
 
-        try {
             EZShopDBManager.getInstance().updateSale(transaction);
             EZShopDBManager.getInstance().deleteReturnTransaction(openReturnTransaction.getReturnId());
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return false;
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
