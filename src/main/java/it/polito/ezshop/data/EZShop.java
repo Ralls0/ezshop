@@ -1241,7 +1241,7 @@ public class EZShop implements EZShopInterface {
 
         return st.stream().filter( s -> transactionId == s.getTicketNumber()) .findFirst().orElse(null);
     }
-
+// FIXME: transazione not payed
     @Override
     public Integer startReturnTransaction(Integer saleNumber)
             throws /* InvalidTicketNumberException, */InvalidTransactionIdException, UnauthorizedException {

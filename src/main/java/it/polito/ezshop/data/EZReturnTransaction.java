@@ -7,6 +7,7 @@ public class EZReturnTransaction {
     private Integer returnId;
     private boolean isCommit;
     private Integer transactionId;
+    private double discountRate;
     private List<EZTicketEntry> products;
     private String status;
 
@@ -15,6 +16,14 @@ public class EZReturnTransaction {
         this.returnId = returnId;
         this.products = new ArrayList<EZTicketEntry>();
         this.status = "open";
+    }
+
+    public double getDiscountRate() {
+        return this.discountRate;
+    }
+
+    public void setDiscountRate(double discountRate) {
+        this.discountRate = discountRate;
     }
 
     public String getStatus() {
