@@ -393,7 +393,7 @@ public class EZShop implements EZShopInterface {
         boolean positionAlredyExists = false;
         ProductType product = null;
 
-        //FIXME: Qualquadra non cosa
+        // FIXME: Qualquadra non cosa
         try {
             positionAlredyExists = EZShopDBManager.getInstance().searchProductByLocation(newPos);
             product = EZShopDBManager.getInstance().loadProduct(productId);
@@ -609,21 +609,18 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerNameException();
 
         Customer customer = null;
-        boolean alredyExists = false;
-        Integer customerID = -1;
+
         try {
-            alredyExists = EZShopDBManager.getInstance().searchCustomerByName(customerName);
-            if (!alredyExists) {
-                customer = new EZCustomer(EZShopDBManager.getInstance().getNextCustomerID(), customerName, "", 0);
-                EZShopDBManager.getInstance().saveCustomer(customer);
-                customerID = customer.getId();
-            }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            if (EZShopDBManager.getInstance().searchCustomerByName(customerName))
+                return -1;
+
+            customer = new EZCustomer(EZShopDBManager.getInstance().getNextCustomerID(), customerName, "", 0);
+            EZShopDBManager.getInstance().saveCustomer(customer);
+            return customer.getId();
+        } catch (Exception e) {
             e.printStackTrace();
+            return -1;
         }
-        return customerID;
     }
 
     @Override
