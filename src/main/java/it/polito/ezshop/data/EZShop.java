@@ -1088,88 +1088,49 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
 
         ProductType product = null;
+        List<TicketEntry> entries = null;
 
-        if (openTransaction != null && saleNumber == openTransaction.getTicketNumber()) {
-            if (!openTransaction.getStatus().equals("payed")) {
-                if (saleNumber == openTransaction.getTicketNumber()) {
-                    try {
-                        for (TicketEntry p : openTransaction.getEntries()) {
-                            try {
-                                product = this.getProductTypeByBarCode(p.getBarCode());
-                                product.setQuantity(product.getQuantity() + p.getAmount());
-                                EZShopDBManager.getInstance().updateProduct(product);
-                            } catch (InvalidProductCodeException e) {
-                                e.printStackTrace();
-                                return false;
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                                return false;
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                                return false;
-                            }
-                        }
-                        EZShopDBManager.getInstance().deleteSale(saleNumber);
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                        return false;
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                    return true;
+        try {
+            if (openTransaction != null && saleNumber == openTransaction.getTicketNumber()) {
+                if (openTransaction.getStatus().equals("payed"))
+                    return false;
+
+                if (saleNumber != openTransaction.getTicketNumber())
+                    return false;
+
+                for (TicketEntry e : openTransaction.getEntries()) {
+                    product = getProductTypeByBarCode(e.getBarCode());
+                    product.setQuantity(product.getQuantity() + e.getAmount());
+                    EZShopDBManager.getInstance().updateProduct(product);
+                    EZShopDBManager.getInstance().deleteSale(saleNumber);
                 }
 
                 openTransaction = null;
                 return true;
+
             } else {
-                return false;
-            }
-        } else {
-            List<EZSaleTransaction> st = null;
-
-            try {
+                List<EZSaleTransaction> st = null;
                 st = EZShopDBManager.getInstance().loadAllSales();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
 
-            for (EZSaleTransaction s : st) {
-                if (saleNumber == s.getTicketNumber()) {
-                    try {
-                        for (TicketEntry p : s.getEntries()) {
-                            try {
-                                product = this.getProductTypeByBarCode(p.getBarCode());
-                                product.setQuantity(product.getQuantity() + p.getAmount());
-                                EZShopDBManager.getInstance().updateProduct(product);
-                            } catch (InvalidProductCodeException e) {
-                                e.printStackTrace();
-                                return false;
-                            } catch (ClassNotFoundException e) {
-                                e.printStackTrace();
-                                return false;
-                            } catch (SQLException e) {
-                                e.printStackTrace();
-                                return false;
-                            }
-                        }
-                        EZShopDBManager.getInstance().deleteSale(saleNumber);
-                    } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
-                        return false;
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                        return false;
-                    }
-                    return true;
+                entries = st.stream().filter(s -> s.getTicketNumber() == saleNumber).map(s -> s.getEntries())
+                        .findFirst().orElse(null);
+
+                if (entries == null)
+                    return false;
+
+                for (TicketEntry e : entries) {
+                    product = getProductTypeByBarCode(e.getBarCode());
+                    product.setQuantity(product.getQuantity() + e.getAmount());
+                    EZShopDBManager.getInstance().updateProduct(product);
                 }
 
+                EZShopDBManager.getInstance().deleteSale(saleNumber);
+                return true;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-
-        return false;
     }
 
     @Override
@@ -1221,7 +1182,7 @@ public class EZShop implements EZShopInterface {
 
         try {
             saleT = EZShopDBManager.getInstance().loadSale(saleNumber);
-            if (saleT == null || !saleT.getStatus().equals("payed")) //FIXME: Sicuri?
+            if (saleT == null || !saleT.getStatus().equals("payed")) // FIXME: Sicuri?
                 return -1;
 
             id = EZShopDBManager.getInstance().getNextReturnID();
