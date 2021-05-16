@@ -6,6 +6,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class EZShop implements EZShopInterface {
@@ -14,15 +15,9 @@ public class EZShop implements EZShopInterface {
     private List<User> users = new ArrayList<>();
     private User authenticatedUser;
 
-    // Products variable
-    private List<ProductType> products = new ArrayList<>();
+    // Transaction variable
     private EZSaleTransaction openTransaction = null;
     private EZReturnTransaction openReturnTransaction = null;
-    // test for the id of the user
-    int i = 1;
-
-    // test for the id of the product
-    int j = 1;
 
     @Override
     public void reset() {
@@ -35,8 +30,6 @@ public class EZShop implements EZShopInterface {
             throw new InvalidUsernameException();
         if (password == null || password.equals(""))
             throw new InvalidPasswordException();
-        if (authenticatedUser == null)
-            throw new InvalidRoleException();
         if (!role.matches("(Administrator|ShopManager)"))
             throw new InvalidRoleException();
 
@@ -51,7 +44,7 @@ public class EZShop implements EZShopInterface {
         }
 
         try {
-            if (EZShopDBManager.getInstance().searchUser(username)) // TODO: rename searchUser into userExists?
+            if (EZShopDBManager.getInstance().userExists(username))
                 return -1;
             EZShopDBManager.getInstance().saveUser(user);
             userID = user.getId();
@@ -125,8 +118,7 @@ public class EZShop implements EZShopInterface {
         boolean modified = false;
 
         try {
-            found = EZShopDBManager.getInstance().searchUser(id);
-
+            found = EZShopDBManager.getInstance().userExists(id);
             if (found) {
                 EZShopDBManager.getInstance().updateUserRights(id, role);
                 modified = true;
@@ -168,9 +160,7 @@ public class EZShop implements EZShopInterface {
             throws InvalidProductDescriptionException, InvalidProductCodeException, InvalidPricePerUnitException,
             UnauthorizedException {
 
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
         if (description == null || description.equals(""))
             throw new InvalidProductDescriptionException();
@@ -187,6 +177,7 @@ public class EZShop implements EZShopInterface {
                     note, "", pricePerUnit);
         } catch (Exception e) {
             e.printStackTrace();
+            return -1;
         }
 
         boolean barCodeAlredyExists = false;
@@ -208,9 +199,7 @@ public class EZShop implements EZShopInterface {
             throws InvalidProductIdException, InvalidProductDescriptionException, InvalidProductCodeException,
             InvalidPricePerUnitException, UnauthorizedException {
 
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
         if (newDescription == null || newDescription.equals(""))
             throw new InvalidProductDescriptionException();
@@ -222,52 +211,37 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductCodeException();
 
         boolean found = false;
+        boolean barCodeAlredyExists = false;
+        ProductType product = null;
+        boolean updated = false;
         try {
             found = EZShopDBManager.getInstance().searchProductById(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        ProductType product = null;
-
-        boolean barCodeAlredyExists = false;
-        try {
             barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(newCode);
-            product = EZShopDBManager.getInstance().loadProduct(id);
-            if (product.getBarCode().equals(newCode))
-                barCodeAlredyExists = false;
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+            if(found){
+                product = EZShopDBManager.getInstance().loadProduct(id);
+                if (product.getBarCode().equals(newCode)) {
+                    barCodeAlredyExists = false;
+                }
+                if(!barCodeAlredyExists){
+                    product.setProductDescription(newDescription);
+                    product.setBarCode(newCode);
+                    product.setPricePerUnit(newPrice);
+                    product.setNote(newNote);
+                    EZShopDBManager.getInstance().updateProduct(product);
+                    updated = true;
+                }
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
 
-        // if the product exists and no other product has the same barCode
-        boolean updated = false;
-        if (found && !barCodeAlredyExists) {
-            try {
-                product.setProductDescription(newDescription);
-                product.setBarCode(newCode);
-                product.setPricePerUnit(newPrice);
-                product.setNote(newNote);
-                EZShopDBManager.getInstance().updateProduct(product);
-                updated = true;
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
         return updated;
     }
 
     @Override
     public boolean deleteProductType(Integer id) throws InvalidProductIdException, UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
         if (id == null || id <= 0)
             throw new InvalidProductIdException();
@@ -275,10 +249,9 @@ public class EZShop implements EZShopInterface {
         boolean deleted = false;
         try {
             deleted = EZShopDBManager.getInstance().deleteProduct(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
 
         return deleted;
@@ -286,18 +259,15 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getAllProductTypes() throws UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         List<ProductType> products = null;
         try {
             products = EZShopDBManager.getInstance().loadAllProducts();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
         return products;
     }
@@ -305,9 +275,7 @@ public class EZShop implements EZShopInterface {
     @Override
     public ProductType getProductTypeByBarCode(String barCode)
             throws InvalidProductCodeException, UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
         if (barCode == null || barCode.equals("") || !validBarCode(barCode))
             throw new InvalidProductCodeException();
@@ -315,9 +283,7 @@ public class EZShop implements EZShopInterface {
         ProductType product = null;
         try {
             product = EZShopDBManager.getInstance().loadProductByBarCode(barCode);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return product;
@@ -325,9 +291,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public List<ProductType> getProductTypesByDescription(String description) throws UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
 
         List<ProductType> toReturn = new ArrayList<>();
@@ -347,9 +311,7 @@ public class EZShop implements EZShopInterface {
     public boolean updateQuantity(Integer productId, int toBeAdded)
             throws InvalidProductIdException, UnauthorizedException {
 
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
 
         if (productId == null || productId <= 0)
@@ -360,7 +322,6 @@ public class EZShop implements EZShopInterface {
         try {
             product = EZShopDBManager.getInstance().loadProduct(productId);
             if (product != null) {
-                // if the location is not empty it means that the product has a location
                 if (!product.getLocation().equals("")) {
                     if (product.getQuantity() + toBeAdded > 0) {
                         product.setQuantity(product.getQuantity() + toBeAdded);
@@ -369,10 +330,9 @@ public class EZShop implements EZShopInterface {
                     }
                 }
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
 
         return updated;
@@ -381,9 +341,8 @@ public class EZShop implements EZShopInterface {
     @Override
     public boolean updatePosition(Integer productId, String newPos)
             throws InvalidProductIdException, InvalidLocationException, UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
         if (productId == null || productId <= 0)
             throw new InvalidProductIdException();
@@ -393,13 +352,14 @@ public class EZShop implements EZShopInterface {
         boolean positionAlredyExists = false;
         ProductType product = null;
 
-        // FIXME: Qualquadra non cosa
+        // FIXME: Qualquadra non cosa ----- Mi sembra corretto
         try {
             positionAlredyExists = EZShopDBManager.getInstance().searchProductByLocation(newPos);
             product = EZShopDBManager.getInstance().loadProduct(productId);
 
-            if (product.getLocation().equals(newPos))
+            if (product.getLocation().equals(newPos)) {
                 positionAlredyExists = false;
+            }
 
             if (product == null || positionAlredyExists)
                 return false;
@@ -601,9 +561,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer defineCustomer(String customerName) throws InvalidCustomerNameException, UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
         if (customerName == null || customerName.equals(""))
             throw new InvalidCustomerNameException();
@@ -638,11 +596,12 @@ public class EZShop implements EZShopInterface {
         if (id == null || id <= 0)
             throw new InvalidCustomerIdException();
 
+        Customer customer = null;
         try {
             if(!EZShopDBManager.getInstance().searchCustomerById(id))
                 return false;
-
-            EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, newCustomerCard);
+            customer = EZShopDBManager.getInstance().loadCustomer(id);
+            EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, newCustomerCard, customer.getPoints());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -652,9 +611,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean deleteCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
         if (id == null || id <= 0)
             throw new InvalidCustomerIdException();
@@ -664,19 +621,16 @@ public class EZShop implements EZShopInterface {
             existsAndDeleted = EZShopDBManager.getInstance().searchCustomerById(id);
             if (existsAndDeleted)
                 EZShopDBManager.getInstance().deleteCustomer(id);
-        } catch (SQLException throwables) { //FIXME: ???
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
         return existsAndDeleted;
     }
 
     @Override
     public Customer getCustomer(Integer id) throws InvalidCustomerIdException, UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
         if (id == null || id <= 0)
             throw new InvalidCustomerIdException();
@@ -684,51 +638,55 @@ public class EZShop implements EZShopInterface {
         Customer customer = null;
         try {
             customer = EZShopDBManager.getInstance().loadCustomer(id);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
         return customer;
     }
 
     @Override
     public List<Customer> getAllCustomers() throws UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         List<Customer> customers = new ArrayList<Customer>();
         try {
             customers = EZShopDBManager.getInstance().loadAllCustomers();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
-
         return customers;
     }
 
     @Override
     public String createCard() throws UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
-        // TODO: finire
-
-        return "1111111111";
+        boolean newCard = false;
+        Long long_random;
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        long_random = random.nextLong(1_000_000_000, 10_000_000_000L);
+        while(!newCard){
+            try {
+                if(long_random >= 0 && !EZShopDBManager.getInstance().searchCustomerByCard(long_random.toString())){
+                    newCard = true;
+                } else{
+                    long_random = random.nextLong(1_000_000_000, 10_000_000_000L);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return long_random.toString();
     }
 
     @Override
     public boolean attachCardToCustomer(String customerCard, Integer customerId)
             throws InvalidCustomerIdException, InvalidCustomerCardException, UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
         if (customerId == null || customerId <= 0)
             throw new InvalidCustomerIdException();
@@ -736,46 +694,28 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerCardException();
 
         boolean cardAlredyExists = false;
-        try {
-            cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
         Customer customer = null;
-        try {
-            customer = EZShopDBManager.getInstance().loadCustomer(customerId);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-
         boolean updated = false;
         try {
+            cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
+            customer = EZShopDBManager.getInstance().loadCustomer(customerId);
             if (!cardAlredyExists && customer != null) {
-                EZShopDBManager.getInstance().updateCustomer(customerId, customer.getCustomerName(), customerCard);
+                EZShopDBManager.getInstance().updateCustomer(customerId, customer.getCustomerName(), customerCard, customer.getPoints());
                 updated = true;
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-
         return updated;
     }
 
     @Override
     public boolean modifyPointsOnCard(String customerCard, int pointsToBeAdded)
             throws InvalidCustomerCardException, UnauthorizedException {
-        if (authenticatedUser == null)
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
-            throw new UnauthorizedException();
-        if (customerCard.length() != 10 && !(customerCard.equals("") && customerCard.matches("[0-9]*")))
+        if (customerCard.length() != 10 && !(customerCard.equals("") && customerCard.matches("[0-9]{10}")))
             throw new InvalidCustomerCardException();
 
         Customer customer = null;
@@ -785,19 +725,16 @@ public class EZShop implements EZShopInterface {
             cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
             if (cardAlredyExists) {
                 customer = EZShopDBManager.getInstance().loadCustomer(customerCard);
-                if (pointsToBeAdded > 0) {
-                    // TODO: fix per accettare anche punti negativi
+                if (customer.getPoints() + pointsToBeAdded > 0) {
                     customer.setPoints(customer.getPoints() + pointsToBeAdded);
-                    updated = true;
                     EZShopDBManager.getInstance().updateCustomer(customer.getId(), customer.getCustomerName(),
-                            customer.getCustomerCard());
-                    // TODO: mancano i points
+                            customer.getCustomerCard(), customer.getPoints());
+                    updated = true;
                 }
             }
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
         return updated;
     }

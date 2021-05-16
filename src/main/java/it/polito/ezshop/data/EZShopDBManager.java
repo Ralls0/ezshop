@@ -81,13 +81,13 @@ public class EZShopDBManager {
         return null;
     }
 
-    public boolean searchUser(String username) throws SQLException {
+    public boolean userExists(String username) throws SQLException {
         String sql = "SELECT * FROM Users WHERE Username = '" + username + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
     }
 
-    public boolean searchUser(Integer id) throws SQLException {
+    public boolean userExists(Integer id) throws SQLException {
         String sql = "SELECT * FROM Users WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
