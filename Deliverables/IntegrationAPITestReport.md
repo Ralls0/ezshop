@@ -42,9 +42,9 @@ Version: 1.0
 @startuml
 !theme spacelab
 top to bottom direction
+
 class GUI {}
 class EZShop {}
-class BalanceOperation {}
 class CreditCardCircuit {}
 class DBConnector {}
 class EZAccountBook {}
@@ -61,21 +61,29 @@ class EZReturnTransaction {}
 class EZSaleTransaction {}
 
 GUI-->EZShop
-EZShop-->EZUser
-EZShop-->EZShopDBManager
-EZShop-->BalanceOperation
+
 EZShop-->CreditCardCircuit
-EZShop-->DBConnector
 EZShop-->EZAccountBook
 EZShop-->EZBalanceOperation
-EZShop-->EZShopInterface
-EZShop-->EZTicketEntry
-EZShop-->EZLoyaltyCard
 EZShop-->EZCustomer
+EZShop-->DBConnector
+EZShop-->EZLoyaltyCard
 EZShop-->EZOrder
 EZShop-->EZProductType
 EZShop-->EZReturnTransaction
 EZShop-->EZSaleTransaction
+EZShop-->EZShopDBManager
+EZShop-->EZTicketEntry
+EZShop-->EZUser
+
+EZAccountBook-->EZShopDBManager
+EZAccountBook-->EZBalanceOperation
+
+EZReturnTransaction-->EZTicketEntry
+EZSaleTransaction-->EZTicketEntry
+
+EZShopDBManager-->tutti?
+
 @enduml
 ```
 
@@ -85,6 +93,7 @@ EZShop-->EZSaleTransaction
     (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)>
     <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
     <One step will  correspond to API testing>
+    For our tests we have chosen a bottom up approach
 
 # Tests
 
