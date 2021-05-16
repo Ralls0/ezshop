@@ -29,7 +29,7 @@ public class CreditCardCircuit {
         boolean cardFounded = false;
         while (scanner.hasNextLine() && !cardFounded) {
             String line = scanner.nextLine();
-            if (!line.startsWith("#")) {
+            if (!line.isEmpty() && !line.startsWith("#")) {
                 String[] lineFields = line.split(";");
                 if (lineFields[0].equals(cardNumber)) {
                     cardFounded = true;
@@ -42,13 +42,15 @@ public class CreditCardCircuit {
     }
 
     public synchronized boolean hasEnoughBalance(String cardNumber, Double minBalance) throws FileNotFoundException {
+        if (minBalance < 0) return false;
+
         File cardsFile = new File(fileName);
         Scanner scanner = new Scanner(cardsFile);
 
         boolean enoughBalance = false, cardFounded = false;
         while (scanner.hasNextLine() && !cardFounded) {
             String line = scanner.nextLine();
-            if (!line.startsWith("#")) {
+            if (!line.isEmpty() && !line.startsWith("#")) {
                 String[] lineFields = line.split(";");
                 if (lineFields[0].equals(cardNumber)) {
                     cardFounded = true;
@@ -74,7 +76,7 @@ public class CreditCardCircuit {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (!line.startsWith("#")) {
+            if (!line.isEmpty() && !line.startsWith("#")) {
                 String[] lineFields = line.split(";");
                 if (lineFields[0].equals(cardNumber)) {
                     Double balance = Double.parseDouble(lineFields[1]);
@@ -92,7 +94,7 @@ public class CreditCardCircuit {
         if (payed) {
             FileWriter writer = new FileWriter(cardsFile);
             for (String line : newData) {
-                writer.write(line);
+                writer.write(line + "\n");
             }
             writer.close();
         }
@@ -111,7 +113,7 @@ public class CreditCardCircuit {
 
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
-            if (!line.startsWith("#")) {
+            if (!line.isEmpty() && !line.startsWith("#")) {
                 String[] lineFields = line.split(";");
                 if (lineFields[0].equals(cardNumber)) {
                     Double balance = Double.parseDouble(lineFields[1]);
@@ -128,7 +130,7 @@ public class CreditCardCircuit {
         if (refund) {
             FileWriter writer = new FileWriter(cardsFile);
             for (String line : newData) {
-                writer.write(line);
+                writer.write(line + "\n");
             }
             writer.close();
         }

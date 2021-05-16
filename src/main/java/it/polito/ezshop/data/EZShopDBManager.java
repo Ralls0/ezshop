@@ -196,11 +196,12 @@ public class EZShopDBManager {
         return true;
     }
 
-    public boolean updateCustomer(Integer id, String newName, String newCard) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE Customers SET Name = ?, Card = ? WHERE ID = ?");
-        statement.setInt(3, id);
+    public boolean updateCustomer(Integer id, String newName, String newCard, Integer points) throws SQLException {
+        PreparedStatement statement = db.prepareStatement("UPDATE Customers SET Name = ?, Card = ?, Points = ? WHERE ID = ?");
+        statement.setInt(4, id);
         statement.setString(1, newName);
         statement.setString(2, newCard);
+        statement.setInt(3, points);
 
         statement.execute();
         statement.close();
