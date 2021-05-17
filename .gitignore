@@ -69,3 +69,4 @@ data/*
 ezshop.iml
 /ezshop/
 derby.log
+src/test/java/it/polito/ezshop/acceptanceTests/TestEZAccountBook.java
