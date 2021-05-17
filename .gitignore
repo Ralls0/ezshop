@@ -67,6 +67,5 @@ data/*
 
 .idea/
 ezshop.iml
-./ezshop
-ezshop/
+/ezshop/
 derby.log
