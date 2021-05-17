@@ -9,13 +9,15 @@ public class EZBalanceOperation implements BalanceOperation {
     private Double money;
     private String type;
 
-    public EZBalanceOperation(String type, double money) {
+    public EZBalanceOperation(double money) {
+        String type = money > 0.0 ? "CREDIT" : "DEBIT";
         this.type = type;
         this.money = money;
         this.date = LocalDate.now();
     }
 
 
+    // ONLY FOR DB USE!
     public EZBalanceOperation(Integer balanceId, LocalDate date, Double amount, String type){
         this.balanceId = balanceId;
         this.date = date;
@@ -52,6 +54,11 @@ public class EZBalanceOperation implements BalanceOperation {
 
     @Override
     public void setMoney(double money) {
+        if (money < 0.0) {
+            money *= -1;
+            setType("DEBIT");
+        } else setType("CREDIT");
+
         this.money = money;
     }
 
