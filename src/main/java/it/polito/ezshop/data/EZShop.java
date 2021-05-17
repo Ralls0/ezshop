@@ -472,7 +472,7 @@ public class EZShop implements EZShopInterface {
             if (!recordBalanceUpdate(orderPrice))
                 return false;
 
-            balanceOperation = new EZBalanceOperation("DEBIT", orderPrice);
+            balanceOperation = new EZBalanceOperation(orderPrice);
             balanceOperation.setBalanceId(orderBalanceOperationID);
             orderToPay.setBalanceId(orderBalanceOperationID);
 
@@ -1079,7 +1079,7 @@ public class EZShop implements EZShopInterface {
 
         try {
             saleT = EZShopDBManager.getInstance().loadSale(saleNumber);
-            if (saleT == null || !saleT.getStatus().equals("payed")) // FIXME: Sicuri?
+            if (saleT == null || !saleT.getStatus().equals("payed"))
                 return -1;
 
             id = EZShopDBManager.getInstance().getNextReturnID();
@@ -1262,7 +1262,7 @@ public class EZShop implements EZShopInterface {
                 return -1;
 
             orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
-            balanceOperation = new EZBalanceOperation("CREDIT", openTransaction.getPrice());
+            balanceOperation = new EZBalanceOperation(openTransaction.getPrice());
             balanceOperation.setBalanceId(orderBalanceOperationID);
             EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
             openTransaction = null;
@@ -1309,7 +1309,7 @@ public class EZShop implements EZShopInterface {
                 return false;
 
             orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
-            balanceOperation = new EZBalanceOperation("CREDIT", openTransaction.getPrice());
+            balanceOperation = new EZBalanceOperation(openTransaction.getPrice());
             balanceOperation.setBalanceId(orderBalanceOperationID);
             EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
             openTransaction = null;
@@ -1344,7 +1344,7 @@ public class EZShop implements EZShopInterface {
         try {
             EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
             orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
-            balanceOperation = new EZBalanceOperation("DEBIT", openReturnTransaction.getPrice());
+            balanceOperation = new EZBalanceOperation(openReturnTransaction.getPrice() * -1);
             balanceOperation.setBalanceId(orderBalanceOperationID);
             EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
             openReturnTransaction = null;
@@ -1388,7 +1388,7 @@ public class EZShop implements EZShopInterface {
 
             EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
             orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
-            balanceOperation = new EZBalanceOperation("DEBIT", openReturnTransaction.getPrice());
+            balanceOperation = new EZBalanceOperation(openReturnTransaction.getPrice() * -1);
             balanceOperation.setBalanceId(orderBalanceOperationID);
             EZShopDBManager.getInstance().saveBalanceOperation(balanceOperation);
             openReturnTransaction = null;
