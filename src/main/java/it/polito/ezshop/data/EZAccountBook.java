@@ -41,8 +41,6 @@ public class EZAccountBook {
     }
 
     public boolean recordBalance(Double money) {
-        String type = "CREDIT";
-
         if (currentBalance + money < 0.0)
             return false;
         
@@ -57,14 +55,7 @@ public class EZAccountBook {
         }
 
         currentBalance += money;
-
-        if (money < 0.0){
-            type = "DEBIT";
-            money *= -1;
-        }
-
-
-        balanceOperation = new EZBalanceOperation(type, money);
+        balanceOperation = new EZBalanceOperation(money);
         balanceOperation.setBalanceId(nextBalaceOperationID);
 
         try {
