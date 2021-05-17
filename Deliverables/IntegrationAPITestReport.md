@@ -82,7 +82,7 @@ EZAccountBook-->EZBalanceOperation
 EZReturnTransaction-->EZTicketEntry
 EZSaleTransaction-->EZTicketEntry
 
-EZShopDBManager-->tutti?
+EZShopDBManager-->tutti
 
 @enduml
 ```
