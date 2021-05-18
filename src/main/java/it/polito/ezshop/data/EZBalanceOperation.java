@@ -12,7 +12,7 @@ public class EZBalanceOperation implements BalanceOperation {
     public EZBalanceOperation(double money) {
         String type = money > 0.0 ? "CREDIT" : "DEBIT";
         this.type = type;
-        this.money = money;
+        this.money = money > 0.0 ? money : money * -1;
         this.date = LocalDate.now();
     }
 
