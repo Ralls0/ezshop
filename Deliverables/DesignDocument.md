@@ -79,14 +79,11 @@ class CreditCardCircuit {
 
 }
 
-class Credit {
-
-}
-
 class Customer {
     Integer id
     String name
-    LoyaltyCard card
+    String card
+    Integer points
 
     + boolean attachCard(String customerCard)
     + void setName()
@@ -101,16 +98,6 @@ class DatabaseConnector {
     + boolean executeQuery(String query)
     + ResultSet selectData(String query)
     + boolean closeConnection()
-}
-
-class Debit {
-
-}
-
-class LoyaltyCard {
-    String id
-    int points
-    
 }
 
 class Order {
@@ -130,7 +117,7 @@ class ProductType{
     double pricePerUnit
     String note
     int quantity
-    Position position
+    String position
 
     + boolean updateQuantity(int toBeAdded) 
     + boolean updatePosition(String newPos) 
@@ -138,16 +125,12 @@ class ProductType{
 
 }
 
-class ProductQuantityAndDiscount {
+class TicketEntry {
+    String productCode
+    String productDescription
     Integer quantity
-    double discountRate
-    ProductType product
-}
-
-class Position {
-    String aisleID
-    String rackID
-    String levelID
+    Double pricePerUnit
+    Double discountRate
 }
 
 class ReturnTransaction {
@@ -167,7 +150,7 @@ class ReturnTransaction {
 
 class SaleTransaction {
     Integer id 
-    List<ProductQuantityAndDiscount> products
+    List<TicketEntry> products
     double cost
     String paymentType
     String status
@@ -297,32 +280,24 @@ class User {
 
 }
 
+SaleTransaction -- Balance
 
 AccountBook -up Shop
 AccountBook --up "*" BalanceOperation
 
 CreditCardCircuit "0..*"-- Shop
 
-Credit "0..*"--|> BalanceOperation
-
 Customer "0..*"-- Shop
 
-Debit "0..*"--|> BalanceOperation
-
-LoyaltyCard "0..1" -- Customer
-
 Order "*" --up  ProductType
-Order --|> Debit
+Order --  Balance
 
-ProductType --up "0..1" Position
-ProductQuantityAndDiscount --down SaleTransaction
-ProductQuantityAndDiscount --down ProductType
+TicketEntry --down SaleTransaction
+TicketEntry --down ProductType
 
 ReturnTransaction "*" --up SaleTransaction
 ReturnTransaction "*" --up ProductType
-ReturnTransaction --|> Debit
-
-SaleTransaction --|> Credit
+ReturnTransaction -- Balance
 
 ShopDBManager --left AccountBook
 ShopDBManager --up Shop
@@ -348,15 +323,11 @@ N4 .. ProductType
 | Account Book              |       |       | **X** |       |       | **X** | **X** |
 | BalanceOperation          |       |       | **X** |       |       | **X** | **X** |
 | Return Transaction        |       |       |       |       | **X** | **X** |       |
-| Credit                    |       |       |       |       |       | **X** |       |
 | CreditCardCircuit         |       |       |       |       |       | **X** |       |
 | DatabaseConnector         | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
-| Debit                     |       |       | **X** |       |       | **X** |       |
 | Customer                  |       |       |       | **X** | **X** |       |       |
-| LoyaltyCard               |       |       |       | **X** | **X** |       |       |
 | Order                     |       |       | **X** |       |       |       |       |
-| Position                  |       | **X** | **X** |       |       |       |       |
-| ProdctQuantityAndDiscount |       | **X** | **X** |       | **X** |       |       |
+| TicketEntry               |       | **X** | **X** |       | **X** |       |       |
 | ProductType               |       | **X** | **X** |       | **X** |       |       |
 | Sale Transaction          |       |       |       |       | **X** | **X** |       |
 | Shop                      | **X** | **X** | **X** | **X** | **X** | **X** | **X** |
