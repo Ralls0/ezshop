@@ -1,4 +1,4 @@
-package it.polito.ezshop.acceptanceTests;
+package it.polito.ezshop;
 
 import it.polito.ezshop.data.EZProductType;
 import org.junit.After;
