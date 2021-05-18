@@ -118,7 +118,7 @@ _**No boundaries**_
 
 **Combination of predicates**:
 
-| Valid / Invalid | Description of the test case | JUnit test case |
+| pricePerUnit | Valid / Invalid | Description of the test case | JUnit test case |
 | ---------- | --------------- | ---------------------------- | --------------- |
 | _**any value**_ | valid | setPricePerUnit(10.25) -> getPricePerUnit() == 10.25|TestEZTicketEntry.setPricePerUnit()|
 
@@ -143,8 +143,7 @@ _**No boundaries**_
 
 **Combination of predicates**:
 
-| | discountRate | -inf, 0, +inf |
-| Valid / Invalid | Description of the test case | JUnit test case |
+| discountRate | Valid / Invalid | Description of the test case | JUnit test case |
 | ---------- | --------------- | ---------------------------- | --------------- |
 | _**any value**_ | valid | setDiscountRate(10.25) -> getDiscountRate() == 10.25|TestEZTicketEntry.setDiscountRate()|
 
