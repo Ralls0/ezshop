@@ -224,12 +224,12 @@ public class EZShop implements EZShopInterface {
         try {
             found = EZShopDBManager.getInstance().searchProductById(id);
             barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(newCode);
-            if(found){
+            if (found) {
                 product = EZShopDBManager.getInstance().loadProduct(id);
                 if (product.getBarCode().equals(newCode)) {
                     barCodeAlredyExists = false;
                 }
-                if(!barCodeAlredyExists){
+                if (!barCodeAlredyExists) {
                     product.setProductDescription(newDescription);
                     product.setBarCode(newCode);
                     product.setPricePerUnit(newPrice);
@@ -354,7 +354,7 @@ public class EZShop implements EZShopInterface {
         if (productId == null || productId <= 0)
             throw new InvalidProductIdException();
         if (newPos == null)
-                newPos = "";
+            newPos = "";
         if (!newPos.matches("([0-9]{1,}-[a-zA-Z]{1,}-[0-9]{1,}|^$)"))
             throw new InvalidLocationException();
 
@@ -381,29 +381,25 @@ public class EZShop implements EZShopInterface {
 
     }
 
-/*
     private boolean validBarCode(String barCode) {
         int sum = 0;
         int checksum = Character.getNumericValue(barCode.charAt(barCode.length() - 1));
         int offset = barCode.length() % 2;
         for (int i = 0; i < barCode.length() - 1; i++)
             sum += Character.getNumericValue(barCode.charAt(i)) * ((i + offset) % 2 == 0 ? 3 : 1);
+        if (sum % 10 == 0)
+            return checksum == 0;
         return checksum == 10 - (sum % 10);
     }
-*/
 
-private boolean validBarCode(String barCode) {
-    int sum = 0;
-    int len = barCode.length();
-    char tempChar = barCode.charAt(len-1);
-    int checksum = Character.getNumericValue(tempChar);
-    for (int i = len-2; i > -1 ; i--) {
-        tempChar = barCode.charAt(i);
-        checksum += Character.getNumericValue(tempChar) * ( i % 2 == 0 ? 3 : 1);
-    }
-    sum = sum % 10;
-    return sum == 0 ? checksum == 0 : checksum == (10-sum);
-}
+    /*
+     * private boolean validBarCode(String barCode) { int sum = 0; int len =
+     * barCode.length(); char tempChar = barCode.charAt(len-1); int checksum =
+     * Character.getNumericValue(tempChar); for (int i = len-2; i > -1 ; i--) {
+     * tempChar = barCode.charAt(i); checksum += Character.getNumericValue(tempChar)
+     * * ( i % 2 == 0 ? 3 : 1); } sum = sum % 10; return sum == 0 ? checksum == 0 :
+     * checksum == (10-sum); }
+     */
 
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException,
@@ -618,7 +614,7 @@ private boolean validBarCode(String barCode) {
 
         Customer customer = null;
         try {
-            if(!EZShopDBManager.getInstance().searchCustomerById(id))
+            if (!EZShopDBManager.getInstance().searchCustomerById(id))
                 return false;
             customer = EZShopDBManager.getInstance().loadCustomer(id);
             EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, newCustomerCard, customer.getPoints());
@@ -689,11 +685,11 @@ private boolean validBarCode(String barCode) {
         Long long_random;
         ThreadLocalRandom random = ThreadLocalRandom.current();
         long_random = random.nextLong(1_000_000_000, 10_000_000_000L);
-        while(!newCard){
+        while (!newCard) {
             try {
-                if(long_random >= 0 && !EZShopDBManager.getInstance().searchCustomerByCard(long_random.toString())){
+                if (long_random >= 0 && !EZShopDBManager.getInstance().searchCustomerByCard(long_random.toString())) {
                     newCard = true;
-                } else{
+                } else {
                     long_random = random.nextLong(1_000_000_000, 10_000_000_000L);
                 }
             } catch (Exception e) {
@@ -720,7 +716,8 @@ private boolean validBarCode(String barCode) {
             cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
             customer = EZShopDBManager.getInstance().loadCustomer(customerId);
             if (!cardAlredyExists && customer != null) {
-                EZShopDBManager.getInstance().updateCustomer(customerId, customer.getCustomerName(), customerCard, customer.getPoints());
+                EZShopDBManager.getInstance().updateCustomer(customerId, customer.getCustomerName(), customerCard,
+                        customer.getPoints());
                 updated = true;
             }
         } catch (Exception e) {
@@ -1143,17 +1140,27 @@ private boolean validBarCode(String barCode) {
         if (transaction == null)
             return false;
 
-        /*
-         * for (TicketEntry entry : transaction.getEntries()) { if
-         * (entry.getBarCode().equals(productCode)) { if (amount <= entry.getAmount()) {
-         * if (openReturnTransaction.addProductReturned((EZTicketEntry) entry)) {
-         * openReturnTransaction.setDiscountRate(transaction.getDiscountRate()); return
-         * true; } } return false; } } For easy rollback
-         */
+        for (TicketEntry entry : transaction.getEntries()) {
+            if (entry.getBarCode().equals(productCode)) {
+                if (amount <= entry.getAmount()) {
+                    EZTicketEntry e = new EZTicketEntry(entry.getBarCode(),
+                    entry.getProductDescription(),
+                    amount,
+                    entry.getPricePerUnit(),
+                    entry.getDiscountRate());
+                    if (openReturnTransaction.addProductReturned(e)) {
+                        openReturnTransaction.setDiscountRate(transaction.getDiscountRate());
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
 
-        returnValue = transaction.getEntries().stream().filter(e -> e.getBarCode().equals(productCode))
-                .filter(e -> e.getAmount() > amount)
-                .anyMatch(e -> openReturnTransaction.addProductReturned((EZTicketEntry) e));
+        // returnValue = transaction.getEntries().stream().filter(e ->
+        // e.getBarCode().equals(productCode))
+        // .filter(e -> e.getAmount() > amount)
+        // .anyMatch(e -> openReturnTransaction.addProductReturned((EZTicketEntry) e));
 
         if (returnValue)
             openReturnTransaction.setDiscountRate(transaction.getDiscountRate());
@@ -1277,9 +1284,7 @@ private boolean validBarCode(String barCode) {
             return -1;
 
         try {
-            if (EZShopDBManager.getInstance().updateSale(openTransaction))
-                return -1;
-
+            EZShopDBManager.getInstance().updateSale(openTransaction);
             orderBalanceOperationID = EZShopDBManager.getInstance().getNextBalanceOperationID();
             balanceOperation = new EZBalanceOperation(openTransaction.getPrice());
             balanceOperation.setBalanceId(orderBalanceOperationID);
@@ -1289,9 +1294,8 @@ private boolean validBarCode(String barCode) {
 
         } catch (Exception e) {
             e.printStackTrace();
+            return -1;
         }
-
-        return -1;
     }
 
     @Override
