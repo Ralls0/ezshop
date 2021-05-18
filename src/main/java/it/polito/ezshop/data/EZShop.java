@@ -491,8 +491,6 @@ private boolean validBarCode(String barCode) {
             balanceOperation.setBalanceId(orderBalanceOperationID);
             orderToPay.setBalanceId(orderBalanceOperationID);
 
-            // TODO: balance
-
             EZShopDBManager.getInstance().updateOrder(orderToPay);
         } catch (Exception dbException) {
             dbException.printStackTrace();
@@ -1074,7 +1072,6 @@ private boolean validBarCode(String barCode) {
         return st.stream().filter(s -> transactionId == s.getTicketNumber()).findFirst().orElse(null);
     }
 
-    // FIXME: Commento?
     @Override
     public Integer startReturnTransaction(Integer saleNumber)
             throws /* InvalidTicketNumberException, */InvalidTransactionIdException, UnauthorizedException {
