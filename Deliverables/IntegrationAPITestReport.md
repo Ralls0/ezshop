@@ -50,7 +50,6 @@ class DBConnector {}
 class EZAccountBook {}
 class EZBalanceOperation {}
 class EZShopDBManager {}
-class EZShopInterface {}
 class EZTicketEntry {}
 class EZUser {}
 class EZLoyaltyCard {}

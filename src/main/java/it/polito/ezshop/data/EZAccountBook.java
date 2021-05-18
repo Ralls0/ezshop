@@ -30,13 +30,14 @@ public class EZAccountBook {
         return operations;
     }
 
-    public void computeBalance() {
+    private void computeBalance() {
         List<BalanceOperation> operations = accountBook.getBalanceOperationsList();
 
         currentBalance = operations.stream().mapToDouble(bo -> bo.getMoney() * (bo.getType().matches("DEBIT") ? -1 : 1)).sum();
     }
 
     public double getBalance() {
+        this.computeBalance();
         return currentBalance;
     }
 

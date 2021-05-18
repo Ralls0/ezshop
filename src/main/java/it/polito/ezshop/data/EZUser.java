@@ -20,7 +20,8 @@ public class EZUser implements User{
 
     @Override
     public void setId(Integer id) {
-        this.id = id;
+        if(id > 0)
+            this.id = id;
     }
 
     @Override
