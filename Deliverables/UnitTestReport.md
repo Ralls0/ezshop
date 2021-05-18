@@ -147,9 +147,7 @@ _**No boundaries**_
 | ---------- | --------------- | ---------------------------- | --------------- |
 | _**any value**_ | valid | setDiscountRate(10.25) -> getDiscountRate() == 10.25|TestEZTicketEntry.setDiscountRate()|
 
-## EZOrder
-
-### setBalanceID(Integer balanceId)
+### **Class EZOrder - method setBalanceID**
 
 **Criteria**
 
@@ -171,7 +169,7 @@ _**No boundaries**_
 | :--: | :-------------: | :-------------------------------: | :------------------: | :--------------: |
 |  \*  |   \*Valid\*\*   | Sets balanceID equal to parameter |     T1(42) -> 42     | testSetBalanceId |
 
-### setProductCode(String productCode)
+### **Class EZOrder - method setProductCode**
 
 **Criteria**
 
@@ -193,7 +191,7 @@ _**No boundaries**_
 | :--: | :-------------: | :---------------------------------: | :--------------------------: | :----------------: |
 |  \*  |   \*Valid\*\*   | Sets productCode equal to parameter |      T1("Any") -> "Any"      | testSetProductCode |
 
-### setPricePerUnit(double pricePerUnit)
+### **Class EZOrder - method setPricePerUnit**
 
 **Criteria**
 
@@ -215,7 +213,7 @@ _**No boundaries**_
 | :--: | :-------------: | :----------------------------------: | :--------------------------: | :-----------------: |
 |  \*  |   \*Valid\*\*   | Sets pricePerUnit equal to parameter |     T1(420.69) -> 420.69     | testSetPricePerUnit |
 
-### setQuantity(int quantity)
+### **Class EZOrder - method setQuantity**
 
 **Criteria**
 
@@ -237,7 +235,7 @@ _**No boundaries**_
 | :--: | :-------------: | :------------------------------: | :--------------------: | :-------------: |
 |  \*  |   \*Valid\*\*   | Sets quantity equal to parameter |      T1(20) -> 20      | testSetQuantity |
 
-### setStatus(String status)
+### **Class EZOrder - method setStatus**
 
 **Criteria**
 
@@ -259,7 +257,7 @@ _**No boundaries**_
 | :--: | :-------------: | :----------------------------: | :--------------------------: | :-------------: |
 |  \*  |   \*Valid\*\*   | Sets status equal to parameter |      T1("Any") -> "Any"      |  testSetStatus  |
 
-### setOrderId(Integer orderId)
+### **Class EZOrder - method setOrderId**
 
 **Criteria**
 
@@ -281,9 +279,7 @@ _**No boundaries**_
 | :--: | :-------------: | :-----------------------------: | :----------------------------: | :-------------: |
 |  \*  |   \*Valid\*\*   | Sets orderId equal to parameter |          T1(20) -> 20          | testSetOrderID  |
 
-## EZBalanceOperation
-
-### setBalanceID(int balanceId)
+### **Class EZBalanceOperation - method setBalanceID**
 
 **Criteria**
 
@@ -305,7 +301,7 @@ _**No boundaries**_
 | :--: | :-------------: | :-------------------------------: | :-----------------: | :--------------: |
 |  \*  |   \*Valid\*\*   | Sets balanceID equal to parameter |    T1(42) -> 42     | testSetBalanceId |
 
-### setDate(LocalDate date)
+### **Class EZBalanceOperation - method setDate**
 
 **Criteria**
 
@@ -327,7 +323,7 @@ _**No boundaries**_
 | :--: | :-------------: | :--------------------------: | :--------------------: | :-------------: |
 |  \*  |   \*Valid\*\*   | Sets date equal to parameter |  T1(Date d) -> Date d  |   testSetDate   |
 
-### setMoney(double money)
+### **Class EZBalanceOperation - method setMoney**
 
 **Criteria**
 
@@ -356,7 +352,7 @@ _**No boundaries**_
 |     \[0\]     |   \*Valid\*\*   |   Sets money equal to parameter and type to "CREDIT"    |   T2b(0) -> (0, CREDIT) testSetMoney   |
 |   (0, inf]    |   \*Valid\*\*   | Sets money equal to parameter \* -1 and type to "DEBIT" | T3b(-200) -> (200, DEBIT) testSetMoney |
 
-### setType(String type)
+### **Class EZBalanceOperation - method setType**
 
 **Criteria**
 
@@ -378,9 +374,7 @@ _**No boundaries**_
 | :--: | :-------------: | :-------------------------: | :------------------------: | :-------------: |
 |  \*  |   \*Valid\*\*   | Sets typeequal to parameter |    T1("Test") -> "Test"    |   testSetType   |
 
-## EZUser
-
-## setId(int balanceId)
+### **Class EZUser - method setId**
 
 **Criteria**
 
@@ -410,7 +404,6 @@ _**No boundaries**_
 |  \*  |     Invalid     | Sets userID equal to parameter passed | T2(0) -> old_value  |      setId      |
 |  \*  |     Invalid     | Sets userID equal to parameter passed | T3(-1) -> old_value |      setId      |
 
-## setUsername(String username)
 
 **Criteria**
 
@@ -432,9 +425,7 @@ _**No boundaries**_
 | :--: | :-------------: | :------------------------------: | :------------------------------: | :-------------: |
 |  \*  |    **Valid**    | Sets username equal to parameter |    T4("Giovanni") -> Giovanni    |   setUsername   |
 
-###
-
-## setPassword(String password)
+### **Class EZUser - method setPassword**
 
 **Criteria**
 
@@ -456,9 +447,7 @@ _**No boundaries**_
 | :--: | :-------------: | :------------------------------: | :------------------------------: | :-------------: |
 |  \*  |    **Valid**    | Sets password equal to parameter |       T5("12345") -> 12345       |   setPassword   |
 
-###
-
-## setRole(Stirng role)
+### **Class EZUser - method setRole**
 
 **Criteria**
 
@@ -480,9 +469,7 @@ _**No boundaries**_
 | :--: | :-------------: | :--------------------------: | :----------------------: | :-------------: |
 |  \*  |    **Valid**    | Sets role equal to parameter | T6("Cashier") -> Cashier |     setRole     |
 
-## EZProductType
-
-### setQuantity(Integer quantity)
+### **Class EZProductType - method setQuantity**
 
 **Criteria**
 
@@ -504,7 +491,7 @@ _**No boundaries**_
 | :--: | :-------------: | :------------------------: | :------------------------------: | :-------------: |
 |  \*  |    **Valid**    | Sets quantity to parameter |           T1(10) -> 10           |   setQuantity   |
 
-### setLocation(String location)
+### **Class EZProductType - method setLocation**
 
 **Criteria**
 
@@ -526,7 +513,7 @@ _**No boundaries**_
 | :--: | :-------------: | :------------------------: | :------------------------------: | :-------------: |
 |  \*  |    **Valid**    | Sets location to parameter |       T1("1-a-1") -> 1-a-1       |   setLocation   |
 
-### setNote(String note)
+### **Class EZProductType - method setNote**
 
 **Criteria**
 
@@ -548,7 +535,7 @@ _**No boundaries**_
 | :--: | :-------------: | :--------------------: | :---------------------: | :-------------: |
 |  \*  |    **Valid**    | Sets note to parameter | T1("Prova") -> "Prova"  |     setNote     |
 
-### setProductDescription(String productDescription)
+### **Class EZProductType - method setProductDescription**
 
 **Criteria**
 
@@ -570,7 +557,7 @@ _**No boundaries**_
 | :--: | :-------------: | :---------------------------: | :------------------------------------------: | :-------------------: |
 |  \*  |    **Valid**    | Sets description to parameter | T1("Prova descrizione") -> Prova descrizione | setProductDescription |
 
-### setBarCode(String barCode)
+### **Class EZProductType - method setBarCode**
 
 **Criteria**
 
@@ -592,7 +579,7 @@ _**No boundaries**_
 | :--: | :-------------: | :-----------------------: | :----------------------------------: | :-------------: |
 |  \*  |    **Valid**    | Sets barCode to parameter | T1("9999999999999") -> 9999999999999 |   setBarCode    |
 
-### setPricePerUnit(Double pricePerUnit)
+### **Class EZProductType - method setPricePerUnit**
 
 **Criteria**
 
@@ -614,7 +601,7 @@ _**No boundaries**_
 | :--: | :-------------: | :----------------------------: | :--------------------------------------: | :-------------: |
 |  \*  |    **Valid**    | Sets pricePerUnit to parameter |            T1(10.25) -> 10.25            | setPricePerUnit |
 
-### setId(Integer id)
+### **Class EZProductType - method setId**
 
 **Criteria**
 
@@ -644,9 +631,7 @@ _**No boundaries**_
 |  \*  |   **Invalid**   | Sets productID equal to parameter passed |  T8(0) -> old_value  |      SetId      |
 |  \*  |   **Invalid**   | Sets productID equal to parameter passed | T9(-22) -> old_value |      SetId      |
 
-## EZCustomer
-
-### setCustomerName(String customerName)
+### **Class EZCustomer - method setCustomerName**
 
 **Criteria**
 
@@ -668,9 +653,7 @@ _**No boundaries**_
 | :--: | :-------------: | :--------------------------: | :------------------------------: | :--------------------: |
 |  \*  |    **Valid**    | Sets name equal to parameter | T1("Mario Rossi") -> Mario Rossi | TestCustomerNameSetter |
 
-###
-
-### setCustomerCard(String customerCard)
+### **Class EZCustomer - method setCustomerCard**
 
 **Criteria**
 
@@ -692,7 +675,7 @@ _**No boundaries**_
 | :--: | :-------------: | :-----------------------------------: | :----------------------------: | :--------------------: |
 |  \*  |    **Valid**    | Sets customer card equal to parameter | T2("1234567890") -> 1234567890 | TestCustomerCardSetter |
 
-### setId(Integer id)
+### **Class EZCustomer - method setId**
 
 **Criteria**
 
@@ -722,7 +705,7 @@ _**No boundaries**_
 |  \*  |   **Invalid**   | Sets CustomerID equal to parameter passed |  T4(0) -> old_value  |    testSetId    |
 |  \*  |   **Invalid**   | Sets CustomerID equal to parameter passed | T5(-42) -> old_value |    testSetId    |
 
-### setPoints(Integer points)
+### **Class EZCustomer - method setPoints**
 
 **Criteria**
 
@@ -745,8 +728,6 @@ _**No boundaries**_
 |  \*  |    **Valid**    | Sets customer card equal to parameter |       T2(42) -> 42       |  TestSetPoints  |
 
 ### **Class *CreditCardCircuit* - method *isCardPresent***
-
-
 
 **Criteria for method *isCardPresent*:**
 
@@ -776,8 +757,8 @@ _**No boundaries**_
 
 | File contains cardNumber | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|
-| True             | Valid     | T1("4992739871645621"; True);  ||
-| False           | Invalid         | T2("1992739871645621"; False); |                 |
+| True             | Valid     | T1("4992739871645621"; True);  |testCardPresentInFile|
+| False           | Invalid         | T2("1992739871645621"; False); | testCardNotPresentInFile                |
 
 
 
@@ -823,10 +804,10 @@ _**No boundaries**_
 
 | Sign of minBalance | File contains cardNumber | cardBalance | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|-------|
-| < 0                | *                        | *             | Invalid         |T1("4992739871645621", -1; False);||
-| >= 0               | False                    |               | Invalid         | T2("1992739871645621", 5; False); |                 |
-| >= 0               | True                     | < minBalance  | Invalid         |T3("4992739871645621", 100; False);||
-| >= 0               | True                     | >= minBalance | Valid           |T4("4992739871645621", 5; True);||
+| < 0                | *                        | *             | Invalid         |T1("4992739871645621", -1; False);|testNegativeMinBalance|
+| >= 0               | False                    |               | Invalid         | T2("1992739871645621", 5; False); |         testCardNotPresentDuringHasEnoughBalance        |
+| >= 0               | True                     | < minBalance  | Invalid         |T3("4992739871645621", 100; False);|testCardBalanceInsufficientDuringHasEnoughBalance|
+| >= 0               | True                     | >= minBalance | Valid           |T4("4992739871645621", 5; True);|testCardBalanceSufficientDuringHasEnoughBalance|
 
 
 
@@ -872,10 +853,10 @@ _**No boundaries**_
 
 | Sign of amount | File contains cardNumber | cardBalance | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|-------|
-| < 0                | *                        | *             | Invalid         |T1("4992739871645621", -1; False);||
-| >= 0               | False                    |               | Invalid         | T2("1992739871645621", 5; False); |                 |
-| >= 0               | True                     | < amount | Invalid         |T3("4992739871645621", 100; False);||
-| >= 0               | True                     | >= amount | Valid           |T4("4992739871645621", 5; True);||
+| < 0                | *                        | *             | Invalid         |T1("4992739871645621", -1; False);|testNegativePayAmount|
+| >= 0               | False                    |               | Invalid         | T2("1992739871645621", 5; False); |    testCardNotPresentDuringPay             |
+| >= 0               | True                     | < amount | Invalid         |T3("4992739871645621", 100; False);|testCardBalanceInsufficientDuringPay|
+| >= 0               | True                     | >= amount | Valid           |T4("4992739871645621", 5; True);|testCardBalanceSufficientDuringPay|
 
 
  ### **Class *CreditCardCircuit* - method *refund***
@@ -916,9 +897,9 @@ _**No boundaries**_
 
 | Sign of amount | File contains cardNumber | Valid / Invalid | Description of the test case | JUnit test case |
 |-------|-------|-------|-------|-------|
-| < 0                | *                        | Invalid         |T1("4992739871645621", -10; False);||
-| >= 0               | False                    | Invalid         | T2("1992739871645621", 10; False); |                 |
-| >= 0               | True                     | Valid           |T3("4992739871645621", 5; True);||
+| < 0                | *                        | Invalid         |T1("4992739871645621", -10; False);|testNegativeRefundAmount|
+| >= 0               | False                    | Invalid         | T2("1992739871645621", 10; False); |       testCardNotPresentDuringRefund          |
+| >= 0               | True                     | Valid           |T3("4992739871645621", 5; True);|testRefundSuccess|
 
 # White Box Unit Tests
 
