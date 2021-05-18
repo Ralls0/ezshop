@@ -624,6 +624,12 @@ public class EZShopDBManager {
         statement.execute();
         statement.close();
 
+        statement = db.prepareStatement("DELETE FROM TicketsEntries WHERE SaleID = ?");
+        statement.setInt(1, id);
+
+        statement.execute();
+        statement.close();
+
         return true;
     }
 
@@ -784,6 +790,50 @@ public class EZShopDBManager {
         PreparedStatement statement = db.prepareStatement("DELETE FROM ReturnTransactions WHERE ID = ?");
         statement.setInt(1, id);
 
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM ReturnTicketsEntries WHERE ReturnID = ?");
+        statement.setInt(1, id);
+
+        statement.execute();
+        statement.close();
+    }
+
+    public void resetDB() throws SQLException {
+        PreparedStatement statement = db.prepareStatement("DELETE FROM Users");
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM Customers");
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM Products");
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM BalanceOperations");
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM Orders");
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM Sales");
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM TicketsEntries");
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM ReturnTransactions");
+        statement.execute();
+        statement.close();
+
+        statement = db.prepareStatement("DELETE FROM ReturnTicketsEntries");
         statement.execute();
         statement.close();
     }
