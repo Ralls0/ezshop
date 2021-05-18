@@ -47,9 +47,15 @@ public class TestEZCustomer {
 
     @Test
     public void testSetId(){
-        Integer id = 42;
-        customer.setId(id);
-        assertEquals(id, customer.getId());
+        Integer id1 = 42;
+        Integer id2 = 0;
+        Integer id3 = -42;
+        customer.setId(id1);
+        assertEquals(id1, customer.getId());
+        customer.setId(id2);
+        assertEquals(id1, customer.getId());
+        customer.setId(id3);
+        assertEquals(id1, customer.getId());
     }
 
     @Test

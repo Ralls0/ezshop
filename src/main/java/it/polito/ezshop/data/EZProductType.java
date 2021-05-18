@@ -87,6 +87,7 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setId(Integer id) {
-        this.id = id;
+        if(id > 0)
+            this.id = id;
     }
 }

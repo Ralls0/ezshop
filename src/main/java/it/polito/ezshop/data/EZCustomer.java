@@ -41,7 +41,8 @@ public class EZCustomer implements Customer{
 
     @Override
     public void setId(Integer id) {
-        this.id = id;
+        if(id > 0)
+            this.id = id;
     }
 
     @Override

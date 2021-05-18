@@ -22,9 +22,15 @@ public class TestEZUser {
 
     @Test
     public void setId() {
-        Integer id = 1;
-        user.setId(id);
-        assertEquals(id, user.getId());
+        Integer id1 = 1;
+        Integer id2 = -1;
+        Integer id3 = 0;
+        user.setId(id1);
+        assertEquals(id1, user.getId());
+        user.setId(id2);
+        assertEquals(id1, user.getId());
+        user.setId(id3);
+        assertEquals(id1, user.getId());
     }
 
     @Test

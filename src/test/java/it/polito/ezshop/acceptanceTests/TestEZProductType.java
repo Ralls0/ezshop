@@ -65,8 +65,14 @@ public class TestEZProductType {
 
     @Test
     public void setId() {
-        Integer id = 22;
-        product.setId(id);
-        assertEquals(id, product.getId());
+        Integer id1 = 22;
+        Integer id2 = 0;
+        Integer id3 = -22;
+        product.setId(id1);
+        assertEquals(id1, product.getId());
+        product.setId(id2);
+        assertEquals(id1, product.getId());
+        product.setId(id3);
+        assertEquals(id1, product.getId());
     }
 }
