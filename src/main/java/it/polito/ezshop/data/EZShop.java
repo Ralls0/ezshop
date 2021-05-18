@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 public class EZShop implements EZShopInterface {
 
     // Users variable
-    private List<User> users = new ArrayList<>();
     private User authenticatedUser;
 
     // Transaction variable
@@ -21,6 +20,14 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public void reset() {
+        try {
+            EZShopDBManager.getInstance().resetDB();
+            logout();
+            openTransaction = null;
+            openReturnTransaction = null;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
