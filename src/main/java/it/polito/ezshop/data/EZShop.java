@@ -374,6 +374,7 @@ public class EZShop implements EZShopInterface {
 
     }
 
+/*
     private boolean validBarCode(String barCode) {
         int sum = 0;
         int checksum = Character.getNumericValue(barCode.charAt(barCode.length() - 1));
@@ -382,6 +383,20 @@ public class EZShop implements EZShopInterface {
             sum += Character.getNumericValue(barCode.charAt(i)) * ((i + offset) % 2 == 0 ? 3 : 1);
         return checksum == 10 - (sum % 10);
     }
+*/
+
+private boolean validBarCode(String barCode) {
+    int sum = 0;
+    int len = barCode.length();
+    char tempChar = barCode.charAt(len-1);
+    int checksum = Character.getNumericValue(tempChar);
+    for (int i = len-2; i > -1 ; i--) {
+        tempChar = barCode.charAt(i);
+        checksum += Character.getNumericValue(tempChar) * ( i % 2 == 0 ? 3 : 1);
+    }
+    sum = sum % 10;
+    return sum == 0 ? checksum == 0 : checksum == (10-sum);
+}
 
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException,
