@@ -346,13 +346,14 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         if (productId == null || productId <= 0)
             throw new InvalidProductIdException();
-        if (!newPos.matches("[0-9]{1,}-[a-zA-Z]{1,}-[0-9]{1,}"))
+        if (newPos == null)
+                newPos = "";
+        if (!newPos.matches("([0-9]{1,}-[a-zA-Z]{1,}-[0-9]{1,}|^$)"))
             throw new InvalidLocationException();
 
         boolean positionAlredyExists = false;
         ProductType product = null;
 
-        // FIXME: Qualquadra non cosa ----- Mi sembra corretto
         try {
             positionAlredyExists = EZShopDBManager.getInstance().searchProductByLocation(newPos);
             product = EZShopDBManager.getInstance().loadProduct(productId);
