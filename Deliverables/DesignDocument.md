@@ -280,9 +280,9 @@ class User {
 
 }
 
-SaleTransaction -- Balance
+SaleTransaction -- BalanceOperation
 
-AccountBook -up Shop
+AccountBook -- Shop
 AccountBook --up "*" BalanceOperation
 
 CreditCardCircuit "0..*"-- Shop
@@ -290,18 +290,18 @@ CreditCardCircuit "0..*"-- Shop
 Customer "0..*"-- Shop
 
 Order "*" --up  ProductType
-Order --  Balance
+Order --  BalanceOperation
 
 TicketEntry --down SaleTransaction
 TicketEntry --down ProductType
 
-ReturnTransaction "*" --up SaleTransaction
-ReturnTransaction "*" --up ProductType
-ReturnTransaction -- Balance
+ReturnTransaction "*" --right SaleTransaction
+ReturnTransaction "*" --left ProductType
+ReturnTransaction -- BalanceOperation
 
-ShopDBManager --left AccountBook
-ShopDBManager --up Shop
-ShopDBManager -- DatabaseConnector
+ShopDBManager --up AccountBook
+ShopDBManager --right Shop
+ShopDBManager --left DatabaseConnector
 
 User "0..*" -- Shop
 
