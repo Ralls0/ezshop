@@ -392,15 +392,6 @@ public class EZShop implements EZShopInterface {
         return checksum == 10 - (sum % 10);
     }
 
-    /*
-     * private boolean validBarCode(String barCode) { int sum = 0; int len =
-     * barCode.length(); char tempChar = barCode.charAt(len-1); int checksum =
-     * Character.getNumericValue(tempChar); for (int i = len-2; i > -1 ; i--) {
-     * tempChar = barCode.charAt(i); checksum += Character.getNumericValue(tempChar)
-     * * ( i % 2 == 0 ? 3 : 1); } sum = sum % 10; return sum == 0 ? checksum == 0 :
-     * checksum == (10-sum); }
-     */
-
     @Override
     public Integer issueOrder(String productCode, int quantity, double pricePerUnit) throws InvalidProductCodeException,
             InvalidQuantityException, InvalidPricePerUnitException, UnauthorizedException {
@@ -1156,11 +1147,6 @@ public class EZShop implements EZShopInterface {
                 return false;
             }
         }
-
-        // returnValue = transaction.getEntries().stream().filter(e ->
-        // e.getBarCode().equals(productCode))
-        // .filter(e -> e.getAmount() > amount)
-        // .anyMatch(e -> openReturnTransaction.addProductReturned((EZTicketEntry) e));
 
         if (returnValue)
             openReturnTransaction.setDiscountRate(transaction.getDiscountRate());
