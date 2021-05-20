@@ -76,8 +76,8 @@ public class EZSaleTransaction implements SaleTransaction {
 
     @Override
     public double getPrice() {
-        if (price != -1.0) {
-            return this.price-(this.price-this.discountRate);
+        if (this.price != -1.0) {
+            return this.price-(this.price*this.discountRate);
         }
         else {
             double sum = 0.0;
@@ -94,7 +94,7 @@ public class EZSaleTransaction implements SaleTransaction {
     }
 
     public Integer computePoints() {
-        if (price != -1.0) {
+        if (this.price != -1.0) {
             return Integer.valueOf((int)(this.price / 10));
         }
         else {

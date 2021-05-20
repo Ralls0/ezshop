@@ -42,14 +42,14 @@ public class TestEZReturnTransaction {
 
     @Test
     public void setProducts() {
-        List<EZTicketEntry>  transactionId = new ArrayList<EZTicketEntry>();
+        List<EZTicketEntry>  ticketEntries = new ArrayList<EZTicketEntry>();
         EZTicketEntry ticketEntry = new EZTicketEntry("3000000000076", "ProductDescription", 4, 12.0, 0.0);
-        transactionId.add(ticketEntry);
+        ticketEntries.add(ticketEntry);
         ticketEntry = new EZTicketEntry("3000000000083", "ProductDescription2", 1, 2.0, 0.1);
-        transactionId.add(ticketEntry);
+        ticketEntries.add(ticketEntry);
 
-        returnTransaction.setProducts(transactionId);
-        assertEquals(transactionId, returnTransaction.getProducts());
+        returnTransaction.setProducts(ticketEntries);
+        assertEquals(ticketEntries, returnTransaction.getProducts());
     }
 
     @Test
