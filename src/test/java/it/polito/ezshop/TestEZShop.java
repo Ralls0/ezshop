@@ -119,4 +119,76 @@ public class TestEZShop {
         }
         assertTrue("AddProductToSale mismatch", !resultAddProductToSale);
     }
+
+    @Test
+    public void testDeleteProductFromSale() {
+
+        // start saleTransaction
+        try {
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Create Product
+        String productCode = "3000000000076";
+        
+        try {
+            ezShop.createProductType("Product test", productCode, 12.0, "None");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // Create SaleTransaction
+        Integer transactionId = -1;
+
+        try {
+            transactionId = ezShop.startSaleTransaction();
+        } catch (UnauthorizedException e) {
+            e.printStackTrace();
+        }
+        assertTrue("StartSaleTransaction mismatch", transactionId >= 0);
+
+        final Integer tempId = transactionId;
+
+        try {
+            ezShop.addProductToSale(tempId, productCode, 12);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, ()->{ezShop.deleteProductFromSale(tempId, productCode, 12);});
+        
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+        
+        // test InvalidTransactionIdException 
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, ()->{ezShop.deleteProductFromSale(null, productCode, 12);});
+        
+        // test InvalidProductCodeException
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, ()->{ezShop.deleteProductFromSale(tempId, null, 12);});
+        
+        // test transactionId not valid
+        boolean resulDteleteProductFromSale = true;
+        try {
+            resulDteleteProductFromSale = ezShop.deleteProductFromSale(10, productCode, 12);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("DeleteProduct mismatch", !resulDteleteProductFromSale);
+        
+        resulDteleteProductFromSale = false;
+        try {
+            resulDteleteProductFromSale = ezShop.deleteProductFromSale(tempId, productCode, 12);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("DeleteProduct mismatch", !resulDteleteProductFromSale);
+    }
 }
