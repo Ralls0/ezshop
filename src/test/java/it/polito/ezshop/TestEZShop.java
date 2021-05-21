@@ -34,9 +34,135 @@ public class TestEZShop {
     }
 
     @Test
+    public void testCreateUser() {
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidUsernameException.class, () -> {
+            ezShop.createUser("",
+                    "password", "Administrator");
+        });
+
+        // ------------------------------------------------------------- //
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidUsernameException.class, () -> {
+            ezShop.createUser(null,
+                    "password", "Administrator");
+        });
+
+        // ------------------------------------------------------------- //
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidPasswordException.class, () -> {
+            ezShop.createUser("Giovanni",
+                    "", "Administrator");
+        });
+
+        // ------------------------------------------------------------- //
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidPasswordException.class, () -> {
+            ezShop.createUser("Giovanni",
+                    null, "Administrator");
+        });
+
+        // ------------------------------------------------------------- //
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidRoleException.class, () -> {
+            ezShop.createUser("Giovanni",
+                    "password", "Cashier");
+        });
+
+        // ------------------------------------------------------------- //
+
+        Integer id = -1;
+        try {
+            id = ezShop.createUser("Giovanni", "password", "Administrator");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertTrue(id == 1);
+
+        // ------------------------------------------------------------- //
+
+        try {
+            id = ezShop.createUser("Giovanni", "password", "Administrator");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue(id == -1);
+
+    }
+
+    @Test
+    public void testDeleteUser() {
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.deleteUser(1);
+        });
+
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidUserIdException.class, () -> {
+            ezShop.deleteUser(-1);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidUserIdException.class, () -> {
+            ezShop.deleteUser(null);
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.logout();
+            ezShop.login("Anna", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.deleteUser(0);
+        });
+
+        // ------------------------------------------------------------- //
+
+
+
+    }
+
+    @Test
+    public void testGetAllUsers() {
+    }
+
+    @Test
+    public void testGetUser() {
+    }
+
+    @Test
+    public void testUpdateUserRights() {
+    }
+
+    @Test
+    public void testLogin() {
+    }
+
+    @Test
+    public void testLogout() {
+    }
+
+    @Test
     public void testStartSaleTransaction() {
 
-        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, ()->{ezShop.startSaleTransaction();});
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.startSaleTransaction();
+        });
 
         try {
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -66,7 +192,7 @@ public class TestEZShop {
 
         // Create Product
         String productCode = "3000000000076";
-        
+
         try {
             ezShop.createProductType("Product test", productCode, 12.0, "None");
         } catch (Exception e) {
@@ -87,7 +213,9 @@ public class TestEZShop {
 
         // test UnauthorizedException
         ezShop.logout();
-        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, ()->{ezShop.addProductToSale(tempId, productCode, 12);});
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.addProductToSale(tempId, productCode, 12);
+        });
 
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
@@ -95,11 +223,15 @@ public class TestEZShop {
             e1.printStackTrace();
         }
 
-        // test InvalidTransactionIdException 
-        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, ()->{ezShop.addProductToSale(null, productCode, 12);});
-        
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.addProductToSale(null, productCode, 12);
+        });
+
         // test InvalidProductCodeException
-        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, ()->{ezShop.addProductToSale(tempId, null, 12);});
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.addProductToSale(tempId, null, 12);
+        });
 
         // test transactionId not valid
         boolean resultAddProductToSale = true;
@@ -109,7 +241,7 @@ public class TestEZShop {
             e.printStackTrace();
         }
         assertTrue("AddProductToSale mismatch", !resultAddProductToSale);
-        
+
         // test transactionId valid
         resultAddProductToSale = false;
         try {
@@ -133,7 +265,7 @@ public class TestEZShop {
 
         // Create Product
         String productCode = "3000000000076";
-        
+
         try {
             ezShop.createProductType("Product test", productCode, 12.0, "None");
         } catch (Exception e) {
@@ -157,23 +289,29 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         // test UnauthorizedException
         ezShop.logout();
-        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, ()->{ezShop.deleteProductFromSale(tempId, productCode, 12);});
-        
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.deleteProductFromSale(tempId, productCode, 12);
+        });
+
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-        
-        // test InvalidTransactionIdException 
-        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, ()->{ezShop.deleteProductFromSale(null, productCode, 12);});
-        
+
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.deleteProductFromSale(null, productCode, 12);
+        });
+
         // test InvalidProductCodeException
-        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, ()->{ezShop.deleteProductFromSale(tempId, null, 12);});
-        
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.deleteProductFromSale(tempId, null, 12);
+        });
+
         // test transactionId not valid
         boolean resulDteleteProductFromSale = true;
         try {
@@ -182,7 +320,7 @@ public class TestEZShop {
             e.printStackTrace();
         }
         assertTrue("DeleteProduct mismatch", !resulDteleteProductFromSale);
-        
+
         resulDteleteProductFromSale = false;
         try {
             resulDteleteProductFromSale = ezShop.deleteProductFromSale(tempId, productCode, 12);
@@ -191,4 +329,5 @@ public class TestEZShop {
         }
         assertTrue("DeleteProduct mismatch", !resulDteleteProductFromSale);
     }
+
 }
