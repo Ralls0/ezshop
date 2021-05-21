@@ -341,6 +341,63 @@ public class TestEZShop {
 
     @Test
     public void createProductType() {
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidPricePerUnitException.class, () -> {
+            ezShop.createProductType("descrizione", "3000000000083", -9.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductDescriptionException.class, () -> {
+            ezShop.createProductType("", "3000000000083", 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductDescriptionException.class, () -> {
+            ezShop.createProductType(null, "3000000000083", 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.createProductType("descrizione", "", 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.createProductType("descrizione", null, 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.createProductType("descrizione", "3000000000087", 10.5, "nota");
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.login("Anna", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+        });
+
+        // ------------------------------------------------------------- //
+
+        Integer productId = -1;
+        try {
+            ezShop.login("Giovanni", "password");
+            productId = ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+            assertTrue(productId > 0);
+            productId = ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+            assertEquals(-1, (int) productId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
