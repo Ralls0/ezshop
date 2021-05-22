@@ -16,7 +16,7 @@ These figures will not be used to evaluate neither the project nor the team, the
 | apr 26 - 2 | | 14 | | | | | | | 
 | may 3 - 9  | | | 70 | | | | | | 
 | may 10 - 16| | | | 63.5 | | | | | 
-| may 17 - 23| | | 20 | 61 | | | | | 
+| may 17 - 23| | | | 20 | 61 | | | | 
 | may 24 - 30| | | | | loading 26 | - | | | 
 | jun 31 - 6 | | | | | | | | | 
 | jun 7 - 13 | | | | | | | | | 
