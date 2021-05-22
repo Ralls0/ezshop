@@ -6,6 +6,7 @@ import it.polito.ezshop.data.EZShopDBManager;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.EZUser;
 import it.polito.ezshop.data.Order;
+import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 
@@ -1135,13 +1136,83 @@ public class TestEZShop {
             ezShop.createProductType("Test Integration", validCode, positivePPU, "Test");
             validOrderID = ezShop.issueOrder(validCode, one, positivePPU);
             ezShop.recordBalanceUpdate(balanceToAdd);
-            
+
             assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(negativeOrderID));
             assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(zero));
             assertTrue(ezShop.payOrder(validOrderID));
 
             remainder = balanceToAdd - one * positivePPU;
             assertEquals(remainder, ezShop.computeBalance(), 0.01);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testRecordOrderArrival() {
+        Integer orderID;
+        Integer negativeOrderID = -1;
+        Integer zeroOrderID = 0;
+        Integer quantity = 1;
+        Integer productID;
+
+        String emptyLocation = "";
+        String nullLocation = null;
+        String invalidLocation = "6-6-6";
+        String validLocation = "0-A-0";
+        String validCode = "300000000001";
+
+        Double positivePPU = 420.69;
+        Double balanceToAdd = Double.MAX_VALUE;
+
+        ProductType product;
+
+        createw("ShopManager", "Password", "ShopManager");
+        loginw("ShopManager", "Password");
+        createw("Cashier", "Password", "Cashier");
+        ezShop.logout();
+
+        /* User */
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, quantity, positivePPU));
+        loginw("Cashier", "Password");
+
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, quantity, positivePPU));
+
+        assertTrue(ezShop.logout());
+        loginw("ShopManager", "Password");
+
+        try {
+            productID = ezShop.createProductType("Test Integration", validCode, positivePPU, "Test");
+            orderID = ezShop.issueOrder(validCode, quantity, positivePPU);
+            ezShop.recordBalanceUpdate(balanceToAdd);
+
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.recordOrderArrival(negativeOrderID));
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.recordOrderArrival(zeroOrderID));
+            
+            product = EZShopDBManager.getInstance().loadProduct(productID);
+
+            
+            product.setLocation(emptyLocation);
+            EZShopDBManager.getInstance().updateProduct(product);
+            assertThrows(InvalidLocationException.class, () -> ezShop.recordOrderArrival(orderID));
+
+            product.setLocation(nullLocation);
+            EZShopDBManager.getInstance().updateProduct(product);
+            assertThrows(InvalidLocationException.class, () -> ezShop.recordOrderArrival(orderID));
+
+            product.setLocation(invalidLocation);
+            EZShopDBManager.getInstance().updateProduct(product);
+            assertThrows(InvalidLocationException.class, () -> ezShop.recordOrderArrival(orderID));
+
+            product.setLocation(validLocation);
+            EZShopDBManager.getInstance().updateProduct(product);
+            
+            assertTrue(ezShop.recordOrderArrival(orderID) == false);
+            ezShop.payOrder(orderID);
+            assertTrue(ezShop.recordOrderArrival(orderID));
+            product = EZShopDBManager.getInstance().loadProduct(productID);
+            assertEquals(product.getQuantity(), quantity);
         } catch (Exception e) {
             e.printStackTrace();
             assertTrue(false);
