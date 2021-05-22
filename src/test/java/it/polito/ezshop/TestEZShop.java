@@ -983,8 +983,8 @@ public class TestEZShop {
         assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU));
         loginw("Cashier", "Password");
 
-        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU)); 
-                                                                                                         
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU));
+
         assertTrue(ezShop.logout());
         loginw("ShopManager", "Password");
 
@@ -1009,7 +1009,7 @@ public class TestEZShop {
         try {
             result = ezShop.issueOrder(validCode, one, positivePPU);
             assertTrue(result == -1); // Product does not exists
-            
+
             ezShop.createProductType("Descr", validCode, positivePPU, "Integration Test");
             result = ezShop.issueOrder(validCode, one, positivePPU);
             assertTrue(result > 0);
@@ -1038,6 +1038,7 @@ public class TestEZShop {
         Double negativePPU = -positivePPU;
         Double zeroPPU = 0.0;
         Double balanceToAdd = Double.MAX_VALUE;
+        Double remainder;
 
         createw("ShopManager", "Password", "ShopManager");
         loginw("ShopManager", "Password");
@@ -1048,8 +1049,8 @@ public class TestEZShop {
         assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU));
         loginw("Cashier", "Password");
 
-        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU)); 
-                                                                                                         
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU));
+
         assertTrue(ezShop.logout());
         loginw("ShopManager", "Password");
 
@@ -1072,12 +1073,60 @@ public class TestEZShop {
         try {
             result = ezShop.issueOrder(validCode, one, positivePPU);
             assertTrue(result == -1); // Product does not exists
-            
+
             ezShop.createProductType("Descr", validCode, positivePPU, "Integration Test");
             result = ezShop.issueOrder(validCode, one, positivePPU);
             assertTrue(result > 0);
             ezShop.recordBalanceUpdate(balanceToAdd);
             assertTrue(ezShop.payOrder(result));
+
+            remainder = balanceToAdd - one * positivePPU;
+            assertEquals(remainder, ezShop.computeBalance(), 0.01);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void payOrderTest() {
+
+        Integer negativeOrderID = -10;
+        Integer validOrderID;
+        Integer one = 1;
+        Integer zero = 0;
+
+        String validCode = "300000000001";
+
+        Double positivePPU = 420.69;
+        Double balanceToAdd = Double.MAX_VALUE;
+        Double remainder;
+
+        createw("ShopManager", "Password", "ShopManager");
+        loginw("ShopManager", "Password");
+        createw("Cashier", "Password", "Cashier");
+        ezShop.logout();
+
+        /* User */
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU));
+        loginw("Cashier", "Password");
+
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU));
+
+        assertTrue(ezShop.logout());
+        loginw("ShopManager", "Password");
+
+        try {
+            ezShop.createProductType("Test Integration", validCode, positivePPU, "Test");
+            validOrderID = ezShop.issueOrder(validCode, one, positivePPU);
+            ezShop.recordBalanceUpdate(balanceToAdd);
+            
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(negativeOrderID));
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(zero));
+            assertTrue(ezShop.payOrder(validOrderID));
+
+            remainder = balanceToAdd - one * positivePPU;
+            assertEquals(remainder, ezShop.computeBalance(), 0.01);
         } catch (Exception e) {
             e.printStackTrace();
             assertTrue(false);
