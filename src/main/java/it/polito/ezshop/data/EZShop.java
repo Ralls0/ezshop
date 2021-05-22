@@ -512,26 +512,21 @@ public class EZShop implements EZShopInterface {
 
         try {
             myOrder = EZShopDBManager.getInstance().loadOrder(orderId);
+            productCode = myOrder.getProductCode();
+            orderProduct = getProductTypeByBarCode(productCode);
         } catch (Exception dbException) {
             dbException.printStackTrace();
             return false;
-        }
-
-        if (!myOrder.getStatus().matches("(ORDERED|COMPLETED)"))
-            return false;
-
-        productCode = myOrder.getProductCode();
-
-        try {
-            orderProduct = getProductTypeByBarCode(productCode);
-        } catch (Exception e) {
-            // Can't happen...
         }
 
         if (orderProduct.getLocation() == null)
             throw new InvalidLocationException("Null Location");
         if (!orderProduct.getLocation().matches("[0-9]{1,}-[a-zA-Z]{1,}-[0-9]{1,}"))
             throw new InvalidLocationException("Invalid Location");
+        if (myOrder.getStatus().matches("(ORDERED|ISSUED)"))
+            return false;
+        if (myOrder.getStatus().matches("COMPLETED"))
+            return true;
 
         orderProduct.setQuantity(orderProduct.getQuantity() + myOrder.getQuantity());
         myOrder.setStatus("COMPLETED");
