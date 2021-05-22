@@ -384,12 +384,9 @@ public class EZShop implements EZShopInterface {
     private boolean validBarCode(String barCode) {
         int sum = 0;
         int checksum = Character.getNumericValue(barCode.charAt(barCode.length() - 1));
-        int offset = barCode.length() % 2;
-        for (int i = 0; i < barCode.length() - 1; i++)
-            sum += Character.getNumericValue(barCode.charAt(i)) * ((i + offset) % 2 == 0 ? 3 : 1);
-        if (sum % 10 == 0)
-            return checksum == 0;
-        return checksum == 10 - (sum % 10);
+        for (int i = barCode.length() - 2; i > -1; i--)
+            sum += Character.getNumericValue(barCode.charAt(i)) * (i % 2 == 0 ? 3 : 1);
+        return checksum == ((10 - sum % 10) % 10);
     }
 
     @Override
@@ -1137,11 +1134,8 @@ public class EZShop implements EZShopInterface {
         for (TicketEntry entry : transaction.getEntries()) {
             if (entry.getBarCode().equals(productCode)) {
                 if (amount <= entry.getAmount()) {
-                    EZTicketEntry e = new EZTicketEntry(entry.getBarCode(),
-                    entry.getProductDescription(),
-                    amount,
-                    entry.getPricePerUnit(),
-                    entry.getDiscountRate());
+                    EZTicketEntry e = new EZTicketEntry(entry.getBarCode(), entry.getProductDescription(), amount,
+                            entry.getPricePerUnit(), entry.getDiscountRate());
                     if (openReturnTransaction.addProductReturned(e)) {
                         openReturnTransaction.setDiscountRate(transaction.getDiscountRate());
                         return true;
