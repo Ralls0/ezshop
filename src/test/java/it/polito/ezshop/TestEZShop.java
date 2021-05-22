@@ -1,5 +1,6 @@
 package it.polito.ezshop;
 
+import it.polito.ezshop.data.BalanceOperation;
 import it.polito.ezshop.data.EZOrder;
 import it.polito.ezshop.data.EZProductType;
 import it.polito.ezshop.data.EZShopDBManager;
@@ -947,7 +948,7 @@ public class TestEZShop {
             ezShop.createUser(username, passw, role);
         } catch (Exception e) {
             e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -956,7 +957,7 @@ public class TestEZShop {
             ezShop.login(username, passw);
         } catch (Exception e) {
             e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -1031,7 +1032,7 @@ public class TestEZShop {
             assertTrue(order.getStatus().equals("ISSUED"));
         } catch (Exception e) {
             e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -1100,7 +1101,7 @@ public class TestEZShop {
             assertEquals(remainder, ezShop.computeBalance(), 0.01);
         } catch (Exception e) {
             e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -1145,7 +1146,7 @@ public class TestEZShop {
             assertEquals(remainder, ezShop.computeBalance(), 0.01);
         } catch (Exception e) {
             e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
@@ -1214,12 +1215,12 @@ public class TestEZShop {
             assertEquals(product.getQuantity(), quantity);
         } catch (Exception e) {
             e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
     @Test
-    public void testRecordBalanceUpdate() {
+    public void testRecordBalanceUpdateAndComputeBalance() {
 
         Double positiveBalance = 100.0;
         Double negativeBalance = -positiveBalance;
@@ -1257,9 +1258,84 @@ public class TestEZShop {
             assertEquals(expectedBalance.doubleValue(), ezShop.computeBalance(), 0.001);
         } catch (Exception e) {
             e.printStackTrace();
-            assertTrue(false);
+            fail();
         }
     }
 
+
+    private boolean isDebit(BalanceOperation bo){
+        return bo.getType().equals("DEBIT");
+    }
+
+    private boolean isCredit(BalanceOperation bo){
+        return bo.getType().equals("CREDIT");
+    }
+
+
+    @Test
+    public void testGetDebtisAndCreditsAndComputeBalance() {
+        /*
+         * Premessa: le API non hanno un modo per impostare esplicitamente la data,
+         * quindi non so come eseguire i test sui range
+         */
+
+        Double positiveBalance = 100.0;
+        Double negativeBalance = -positiveBalance;
+        Double expectedBalance = 0.0;
+
+        Long debits;
+        Long credits;
+
+        List<BalanceOperation> debitsAndCredits = null;
+
+        createw("ShopManager", "Password", "ShopManager");
+        loginw("ShopManager", "Password");
+        createw("Cashier", "Password", "Cashier");
+        assertTrue(ezShop.logout());
+
+        /* User */
+        assertThrows(UnauthorizedException.class, () -> ezShop.getCreditsAndDebits(null, null));
+        loginw("Cashier", "Password");
+
+        assertThrows(UnauthorizedException.class, () -> ezShop.getCreditsAndDebits(null, null));
+
+        assertTrue(ezShop.logout());
+        loginw("ShopManager", "Password");
+
+        try {
+            ezShop.recordBalanceUpdate(negativeBalance);
+            debitsAndCredits = ezShop.getCreditsAndDebits(null, null);
+            assertEquals(0, debitsAndCredits.size());
+            assertEquals(expectedBalance, ezShop.computeBalance(), 0.001);
+
+            ezShop.recordBalanceUpdate(positiveBalance);
+            ezShop.recordBalanceUpdate(positiveBalance);
+            ezShop.recordBalanceUpdate(positiveBalance);
+            ezShop.recordBalanceUpdate(negativeBalance);
+            expectedBalance = 3 * positiveBalance + negativeBalance;
+            debitsAndCredits = ezShop.getCreditsAndDebits(null, null);
+            debits = debitsAndCredits.stream().filter(this::isDebit).count();
+            credits = debitsAndCredits.stream().filter(this::isCredit).count();
+
+            assertEquals(4, debitsAndCredits.size());
+            assertEquals(expectedBalance, ezShop.computeBalance(), 0.001);
+            assertEquals(3, credits.longValue());
+            assertEquals(1, debits.longValue());
+
+            ezShop.recordBalanceUpdate(positiveBalance);
+            ezShop.recordBalanceUpdate(negativeBalance);
+            debitsAndCredits = ezShop.getCreditsAndDebits(null, null);
+            debits = debitsAndCredits.stream().filter(this::isDebit).count();
+            credits = debitsAndCredits.stream().filter(this::isCredit).count();
+
+            assertEquals(6, debitsAndCredits.size());
+            assertEquals(expectedBalance, ezShop.computeBalance(), 0.001);
+            assertEquals(4, credits.longValue());
+            assertEquals(2, debits.longValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
 
 }
