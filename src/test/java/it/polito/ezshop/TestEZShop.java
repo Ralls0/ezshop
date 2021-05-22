@@ -980,11 +980,11 @@ public class TestEZShop {
         ezShop.logout();
 
         /* User */
-        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU)); // null usr
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU));
         loginw("Cashier", "Password");
 
-        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU)); // not enough
-                                                                                                         // rights
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU)); 
+                                                                                                         
         assertTrue(ezShop.logout());
         loginw("ShopManager", "Password");
 
@@ -1008,11 +1008,76 @@ public class TestEZShop {
 
         try {
             result = ezShop.issueOrder(validCode, one, positivePPU);
-            assertTrue(result == -1);
+            assertTrue(result == -1); // Product does not exists
             
             ezShop.createProductType("Descr", validCode, positivePPU, "Integration Test");
             result = ezShop.issueOrder(validCode, one, positivePPU);
             assertTrue(result > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testPayOrderFor() {
+        String empty = "";
+        String nullCode = null;
+        String shortCode = "12345";
+        String longCode = "123456890123456";
+        String alnumCode = "1234567ab0123";
+        String invalidCode = "300000000007";
+        String validCode = "300000000001";
+
+        Integer minusOne = -1;
+        Integer one = 1;
+        Integer zero = 0;
+        Integer result;
+
+        Double positivePPU = 420.69;
+        Double negativePPU = -positivePPU;
+        Double zeroPPU = 0.0;
+        Double balanceToAdd = Double.MAX_VALUE;
+
+        createw("ShopManager", "Password", "ShopManager");
+        loginw("ShopManager", "Password");
+        createw("Cashier", "Password", "Cashier");
+        ezShop.logout();
+
+        /* User */
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU));
+        loginw("Cashier", "Password");
+
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU)); 
+                                                                                                         
+        assertTrue(ezShop.logout());
+        loginw("ShopManager", "Password");
+
+        /* Product Code */
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(shortCode, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(longCode, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(invalidCode, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(alnumCode, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(empty, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(nullCode, one, positivePPU));
+
+        /* Quantity */
+        assertThrows(InvalidQuantityException.class, () -> ezShop.issueOrder(validCode, minusOne, positivePPU));
+        assertThrows(InvalidQuantityException.class, () -> ezShop.issueOrder(validCode, zero, positivePPU));
+
+        /* Price per Unit */
+        assertThrows(InvalidPricePerUnitException.class, () -> ezShop.issueOrder(validCode, one, negativePPU));
+        assertThrows(InvalidPricePerUnitException.class, () -> ezShop.issueOrder(validCode, one, zeroPPU));
+
+        try {
+            result = ezShop.issueOrder(validCode, one, positivePPU);
+            assertTrue(result == -1); // Product does not exists
+            
+            ezShop.createProductType("Descr", validCode, positivePPU, "Integration Test");
+            result = ezShop.issueOrder(validCode, one, positivePPU);
+            assertTrue(result > 0);
+            ezShop.recordBalanceUpdate(balanceToAdd);
+            assertTrue(ezShop.payOrder(result));
         } catch (Exception e) {
             e.printStackTrace();
             assertTrue(false);
