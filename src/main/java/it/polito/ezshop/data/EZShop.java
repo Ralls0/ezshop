@@ -415,6 +415,9 @@ public class EZShop implements EZShopInterface {
         EZOrder newOrder = null;
 
         try {
+            if (!EZShopDBManager.getInstance().searchProductByBarCode(productCode))
+                return -1;
+
             nextOrderId = EZShopDBManager.getInstance().getNextOrderID();
             nextBalanceOperationId = EZShopDBManager.getInstance().getNextBalanceOperationID();
             newOrder = new EZOrder(productCode, quantity, pricePerUnit);
