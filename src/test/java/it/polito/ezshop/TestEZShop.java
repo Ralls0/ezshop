@@ -1,6 +1,7 @@
 package it.polito.ezshop;
 
 import it.polito.ezshop.data.EZShopInterface;
+import it.polito.ezshop.data.EZUser;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 
@@ -20,6 +21,7 @@ public class TestEZShop {
     @Before
     public void setUp() {
         ezShop = new it.polito.ezshop.data.EZShop();
+        ezShop.reset();
     }
 
     @After
@@ -32,36 +34,31 @@ public class TestEZShop {
     public void testCreateUser() {
 
         assertThrows(it.polito.ezshop.exceptions.InvalidUsernameException.class, () -> {
-            ezShop.createUser("",
-                    "password", "Administrator");
+            ezShop.createUser("", "password", "Administrator");
         });
 
         // ------------------------------------------------------------- //
 
         assertThrows(it.polito.ezshop.exceptions.InvalidUsernameException.class, () -> {
-            ezShop.createUser(null,
-                    "password", "Administrator");
+            ezShop.createUser(null, "password", "Administrator");
         });
 
         // ------------------------------------------------------------- //
 
         assertThrows(it.polito.ezshop.exceptions.InvalidPasswordException.class, () -> {
-            ezShop.createUser("Giovanni",
-                    "", "Administrator");
+            ezShop.createUser("Giovanni", "", "Administrator");
         });
 
         // ------------------------------------------------------------- //
 
         assertThrows(it.polito.ezshop.exceptions.InvalidPasswordException.class, () -> {
-            ezShop.createUser("Giovanni",
-                    null, "Administrator");
+            ezShop.createUser("Giovanni", null, "Administrator");
         });
 
         // ------------------------------------------------------------- //
 
         assertThrows(it.polito.ezshop.exceptions.InvalidRoleException.class, () -> {
-            ezShop.createUser("Giovanni",
-                    "password", "Cashier");
+            ezShop.createUser("Giovanni", "password", "Cashier");
         });
 
         // ------------------------------------------------------------- //
@@ -92,7 +89,6 @@ public class TestEZShop {
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.deleteUser(1);
         });
-
 
         // ------------------------------------------------------------- //
 
@@ -165,7 +161,6 @@ public class TestEZShop {
         });
 
         // ------------------------------------------------------------- //
-
 
         List<User> users = null;
 
@@ -255,7 +250,6 @@ public class TestEZShop {
             ezShop.updateUserRights(1, "Ruolo");
         });
 
-
         // ------------------------------------------------------------- //
 
         try {
@@ -290,29 +284,25 @@ public class TestEZShop {
     @Test
     public void testLogin() {
         assertThrows(it.polito.ezshop.exceptions.InvalidUsernameException.class, () -> {
-            ezShop.login("",
-                    "password");
+            ezShop.login("", "password");
         });
 
         // ------------------------------------------------------------- //
 
         assertThrows(it.polito.ezshop.exceptions.InvalidUsernameException.class, () -> {
-            ezShop.login(null,
-                    "password");
+            ezShop.login(null, "password");
         });
 
         // ------------------------------------------------------------- //
 
         assertThrows(it.polito.ezshop.exceptions.InvalidPasswordException.class, () -> {
-            ezShop.login("Giovanni",
-                    "");
+            ezShop.login("Giovanni", "");
         });
 
         // ------------------------------------------------------------- //
 
         assertThrows(it.polito.ezshop.exceptions.InvalidPasswordException.class, () -> {
-            ezShop.createUser("Giovanni",
-                    null, "Administrator");
+            ezShop.createUser("Giovanni", null, "Administrator");
         });
 
         // ------------------------------------------------------------- //
@@ -328,7 +318,6 @@ public class TestEZShop {
 
         assertNotNull(user);
 
-
     }
 
     @Test
@@ -337,7 +326,6 @@ public class TestEZShop {
         logged_out = ezShop.logout();
         assertTrue(logged_out);
     }
-
 
     @Test
     public void createProductType() {
@@ -460,7 +448,6 @@ public class TestEZShop {
     public void modifyPointsOnCard() {
     }
 
-
     @Test
     public void testStartSaleTransaction() {
 
@@ -504,8 +491,6 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
 
         // Create SaleTransaction
         Integer transactionId = -1;
@@ -698,12 +683,12 @@ public class TestEZShop {
         assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
             ezShop.applyDiscountRateToProduct(tempId, null, 0.1);
         });
-        
+
         // test InvalidDiscountRateException
         assertThrows(it.polito.ezshop.exceptions.InvalidDiscountRateException.class, () -> {
             ezShop.applyDiscountRateToProduct(tempId, productCode, -1.0);
         });
-        
+
         // test InvalidDiscountRateException
         assertThrows(it.polito.ezshop.exceptions.InvalidDiscountRateException.class, () -> {
             ezShop.applyDiscountRateToProduct(tempId, productCode, 1.0);
@@ -867,7 +852,6 @@ public class TestEZShop {
             ezShop.computePointsForSale(null);
         });
 
-
         // test transactionId not valid
         int resultOp = 1;
         try {
@@ -953,5 +937,85 @@ public class TestEZShop {
 
     }
 
-}
+    private void createw(String username, String passw, String role) {
+        try {
+            ezShop.createUser(username, passw, role);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
 
+    private void loginw(String username, String passw) {
+        try {
+            ezShop.login(username, passw);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+    @Test
+    public void testIssueOrder() {
+        String empty = "";
+        String nullCode = null;
+        String shortCode = "12345";
+        String longCode = "123456890123456";
+        String alnumCode = "1234567ab0123";
+        String invalidCode = "300000000007";
+        String validCode = "300000000001";
+
+        Integer minusOne = -1;
+        Integer one = 1;
+        Integer zero = 0;
+        Integer result;
+
+        Double positivePPU = 420.69;
+        Double negativePPU = -positivePPU;
+        Double zeroPPU = 0.0;
+
+        createw("ShopManager", "Password", "ShopManager");
+        loginw("ShopManager", "Password");
+        createw("Cashier", "Password", "Cashier");
+        ezShop.logout();
+
+        /* User */
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU)); // null usr
+        loginw("Cashier", "Password");
+
+        assertThrows(UnauthorizedException.class, () -> ezShop.issueOrder(validCode, one, positivePPU)); // not enough
+                                                                                                         // rights
+        assertTrue(ezShop.logout());
+        loginw("ShopManager", "Password");
+
+        /* Product Code */
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(shortCode, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(longCode, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(invalidCode, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(alnumCode, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(empty, one, positivePPU));
+        assertThrows(InvalidProductCodeException.class, () -> ezShop.issueOrder(nullCode, one, positivePPU));
+
+        /* Quantity */
+        assertThrows(InvalidQuantityException.class, () -> ezShop.issueOrder(validCode, minusOne, positivePPU));
+        assertThrows(InvalidQuantityException.class, () -> ezShop.issueOrder(validCode, zero, positivePPU));
+
+        /* Price per Unit */
+        assertThrows(InvalidPricePerUnitException.class, () -> ezShop.issueOrder(validCode, one, negativePPU));
+        assertThrows(InvalidPricePerUnitException.class, () -> ezShop.issueOrder(validCode, one, zeroPPU));
+
+        /* Function Body */
+
+        try {
+            result = ezShop.issueOrder(validCode, one, positivePPU);
+            assertTrue(result == -1);
+            
+            ezShop.createProductType("Descr", validCode, positivePPU, "Integration Test");
+            result = ezShop.issueOrder(validCode, one, positivePPU);
+            assertTrue(result > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+}
