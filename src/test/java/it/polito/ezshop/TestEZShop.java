@@ -1189,10 +1189,9 @@ public class TestEZShop {
 
             assertThrows(InvalidOrderIdException.class, () -> ezShop.recordOrderArrival(negativeOrderID));
             assertThrows(InvalidOrderIdException.class, () -> ezShop.recordOrderArrival(zeroOrderID));
-            
+
             product = EZShopDBManager.getInstance().loadProduct(productID);
 
-            
             product.setLocation(emptyLocation);
             EZShopDBManager.getInstance().updateProduct(product);
             assertThrows(InvalidLocationException.class, () -> ezShop.recordOrderArrival(orderID));
@@ -1207,7 +1206,7 @@ public class TestEZShop {
 
             product.setLocation(validLocation);
             EZShopDBManager.getInstance().updateProduct(product);
-            
+
             assertTrue(ezShop.recordOrderArrival(orderID) == false);
             ezShop.payOrder(orderID);
             assertTrue(ezShop.recordOrderArrival(orderID));
@@ -1218,4 +1217,49 @@ public class TestEZShop {
             assertTrue(false);
         }
     }
+
+    @Test
+    public void testRecordBalanceUpdate() {
+
+        Double positiveBalance = 100.0;
+        Double negativeBalance = -positiveBalance;
+        Double expectedBalance = 0.0;
+
+        createw("ShopManager", "Password", "ShopManager");
+        loginw("ShopManager", "Password");
+        createw("Cashier", "Password", "Cashier");
+        assertTrue(ezShop.logout());
+
+        /* User */
+        assertThrows(UnauthorizedException.class, () -> ezShop.recordBalanceUpdate(positiveBalance));
+        loginw("Cashier", "Password");
+
+        assertThrows(UnauthorizedException.class, () -> ezShop.recordBalanceUpdate(positiveBalance));
+
+        assertTrue(ezShop.logout());
+        loginw("ShopManager", "Password");
+
+        try {
+            assertTrue(ezShop.recordBalanceUpdate(negativeBalance) == false);
+            assertEquals(expectedBalance.doubleValue(), ezShop.computeBalance(), 0.001);
+
+            assertTrue(ezShop.recordBalanceUpdate(positiveBalance));
+            assertTrue(ezShop.recordBalanceUpdate(negativeBalance));
+            assertEquals(expectedBalance.doubleValue(), ezShop.computeBalance(), 0.001);
+
+            assertTrue(ezShop.recordBalanceUpdate(positiveBalance));
+            assertTrue(ezShop.recordBalanceUpdate(positiveBalance));
+            assertTrue(ezShop.recordBalanceUpdate(positiveBalance));
+            expectedBalance = 3 * positiveBalance;
+            assertEquals(expectedBalance.doubleValue(), ezShop.computeBalance(), 0.001);
+            expectedBalance += negativeBalance;
+            assertTrue(ezShop.recordBalanceUpdate(negativeBalance));
+            assertEquals(expectedBalance.doubleValue(), ezShop.computeBalance(), 0.001);
+        } catch (Exception e) {
+            e.printStackTrace();
+            assertTrue(false);
+        }
+    }
+
+
 }
