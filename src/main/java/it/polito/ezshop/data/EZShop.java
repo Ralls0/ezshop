@@ -384,9 +384,12 @@ public class EZShop implements EZShopInterface {
     private boolean validBarCode(String barCode) {
         int sum = 0;
         int checksum = Character.getNumericValue(barCode.charAt(barCode.length() - 1));
-        for (int i = barCode.length() - 2; i > -1; i--)
-            sum += Character.getNumericValue(barCode.charAt(i)) * (i % 2 == 0 ? 3 : 1);
-        return checksum == ((10 - sum % 10) % 10);
+        int offset = barCode.length() % 2;
+        for (int i = 0; i < barCode.length() - 1; i++)
+            sum += Character.getNumericValue(barCode.charAt(i)) * ((i + offset) % 2 == 0 ? 3 : 1);
+        if (sum % 10 == 0)
+            return checksum == 0;
+        return checksum == 10 - (sum % 10);
     }
 
     @Override
@@ -992,11 +995,6 @@ public class EZShop implements EZShopInterface {
 
         try {
             if (openTransaction != null && saleNumber == openTransaction.getTicketNumber()) {
-                if (openTransaction.getStatus().equals("payed"))
-                    return false;
-
-                if (saleNumber != openTransaction.getTicketNumber())
-                    return false;
 
                 for (TicketEntry e : openTransaction.getEntries()) {
                     product = getProductTypeByBarCode(e.getBarCode());

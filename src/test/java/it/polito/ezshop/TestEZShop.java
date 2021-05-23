@@ -8,6 +8,7 @@ import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.EZUser;
 import it.polito.ezshop.data.Order;
 import it.polito.ezshop.data.ProductType;
+import it.polito.ezshop.data.SaleTransaction;
 import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 
@@ -453,7 +454,7 @@ public class TestEZShop {
     @Test
     public void modifyPointsOnCard() {
     }
-
+// FIXME: Start Marco test
     @Test
     public void testStartSaleTransaction() {
 
@@ -479,31 +480,21 @@ public class TestEZShop {
     @Test
     public void testAddProductToSale() {
 
-        // start saleTransaction
-        try {
-            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
-            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create Product
         String productCode = "3000000000076";
         Integer productId = -1;
+        Integer transactionId = -1;
+        
         try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
             productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
             ezShop.updatePosition(productId, "0-a-0");
             ezShop.updateQuantity(productId, 20);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create SaleTransaction
-        Integer transactionId = -1;
-
-        try {
+            // Create SaleTransaction
             transactionId = ezShop.startSaleTransaction();
-        } catch (UnauthorizedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -553,31 +544,21 @@ public class TestEZShop {
     @Test
     public void testDeleteProductFromSale() {
 
-        // start saleTransaction
-        try {
-            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
-            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create Product
         String productCode = "3000000000076";
         Integer productId = -1;
+        Integer transactionId = -1;
+        
         try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
             productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
             ezShop.updatePosition(productId, "0-a-0");
             ezShop.updateQuantity(productId, 20);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create SaleTransaction
-        Integer transactionId = -1;
-
-        try {
+            // Create SaleTransaction
             transactionId = ezShop.startSaleTransaction();
-        } catch (UnauthorizedException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -632,41 +613,27 @@ public class TestEZShop {
     @Test
     public void testApplyDiscountRateToProduct() {
 
-        // start saleTransaction
-        try {
-            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
-            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create Product
         String productCode = "3000000000076";
         Integer productId = -1;
+        Integer transactionId = -1;
+        
         try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
             productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
             ezShop.updatePosition(productId, "0-a-0");
             ezShop.updateQuantity(productId, 20);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create SaleTransaction
-        Integer transactionId = -1;
-
-        try {
+            // Create SaleTransaction
             transactionId = ezShop.startSaleTransaction();
-        } catch (UnauthorizedException e) {
+            // Add product to sale
+            ezShop.addProductToSale(transactionId, productCode, 12);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         final Integer tempId = transactionId;
-
-        try {
-            ezShop.addProductToSale(tempId, productCode, 12);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         // test UnauthorizedException
         ezShop.logout();
@@ -721,41 +688,27 @@ public class TestEZShop {
     @Test
     public void testapplyDiscountRateToSale() {
 
-        // start saleTransaction
-        try {
-            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
-            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create Product
         String productCode = "3000000000076";
         Integer productId = -1;
+        Integer transactionId = -1;
+        
         try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
             productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
             ezShop.updatePosition(productId, "0-a-0");
             ezShop.updateQuantity(productId, 20);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create SaleTransaction
-        Integer transactionId = -1;
-
-        try {
+            // Create SaleTransaction
             transactionId = ezShop.startSaleTransaction();
-        } catch (UnauthorizedException e) {
+            // Add product to sale
+            ezShop.addProductToSale(transactionId, productCode, 12);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         final Integer tempId = transactionId;
-
-        try {
-            ezShop.addProductToSale(tempId, productCode, 12);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         // test UnauthorizedException
         ezShop.logout();
@@ -805,41 +758,27 @@ public class TestEZShop {
     @Test
     public void testComputePointsForSale() {
 
-        // start saleTransaction
-        try {
-            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
-            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create Product
         String productCode = "3000000000076";
         Integer productId = -1;
+        Integer transactionId = -1;
+        
         try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
             productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
             ezShop.updatePosition(productId, "0-a-0");
             ezShop.updateQuantity(productId, 20);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create SaleTransaction
-        Integer transactionId = -1;
-
-        try {
+            // Create SaleTransaction
             transactionId = ezShop.startSaleTransaction();
-        } catch (UnauthorizedException e) {
+            // Add product to sale
+            ezShop.addProductToSale(transactionId, productCode, 12);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         final Integer tempId = transactionId;
-
-        try {
-            ezShop.addProductToSale(tempId, productCode, 12);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         // test UnauthorizedException
         ezShop.logout();
@@ -879,41 +818,27 @@ public class TestEZShop {
     @Test
     public void testEndSaleTransaction() {
 
-        // start saleTransaction
-        try {
-            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
-            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create Product
         String productCode = "3000000000076";
         Integer productId = -1;
+        Integer transactionId = -1;
+        
         try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
             productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
             ezShop.updatePosition(productId, "0-a-0");
             ezShop.updateQuantity(productId, 20);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // Create SaleTransaction
-        Integer transactionId = -1;
-
-        try {
+            // Create SaleTransaction
             transactionId = ezShop.startSaleTransaction();
-        } catch (UnauthorizedException e) {
+            // Add product to sale
+            ezShop.addProductToSale(transactionId, productCode, 12);
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         final Integer tempId = transactionId;
-
-        try {
-            ezShop.addProductToSale(tempId, productCode, 12);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         // test UnauthorizedException
         ezShop.logout();
@@ -942,6 +867,284 @@ public class TestEZShop {
         assertTrue("endSaleTransaction mismatch", resultOp);
 
     }
+
+    @Test
+    public void testDeleteSaleTransaction() {
+
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            // Add product to sale
+            ezShop.addProductToSale(transactionId, productCode, 12);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final Integer tempId = transactionId;
+
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.deleteSaleTransaction(tempId);
+        });
+
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.deleteSaleTransaction(null);
+        });
+
+        // test transactionId not valid
+        boolean resultOp = true;
+        try {
+            resultOp = ezShop.deleteSaleTransaction(10);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("DeleteSaleTransaction mismatch", !resultOp);
+
+        resultOp = false;
+        try {
+            resultOp = ezShop.deleteSaleTransaction(tempId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("DeleteSaleTransaction mismatch", resultOp);
+
+    }
+
+    @Test
+    public void testGetSaleTransactio() {
+
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            // Add product to sale
+            ezShop.addProductToSale(transactionId, productCode, 12);
+            // End Sale transaction
+            ezShop.endSaleTransaction(transactionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final Integer tempId = transactionId;
+
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.getSaleTransaction(tempId);
+        });
+
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.getSaleTransaction(null);
+        });
+
+        // test transactionId not valid
+        SaleTransaction resultOp = null;
+        try {
+            resultOp = ezShop.getSaleTransaction(Integer.valueOf(10));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("getSaleTransaction mismatch", resultOp == null);
+
+        try {
+            resultOp = ezShop.getSaleTransaction(tempId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("getSaleTransaction mismatch", resultOp != null);
+    }
+
+    @Test
+    public void testStartReturnTransaction() {
+
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            ezShop.addProductToSale(transactionId, productCode, 12);
+            ezShop.endSaleTransaction(transactionId);
+            // Pay transaction
+            ezShop.receiveCashPayment(transactionId, 1000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final Integer tempId = transactionId;
+
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.startReturnTransaction(tempId);
+        });
+
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.startReturnTransaction(null);
+        });
+
+        // test transactionId valid
+        Integer resultOp = -1;
+        try {
+            resultOp = ezShop.startReturnTransaction(tempId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("<> mismatch", resultOp != -1);
+    }
+
+    @Test
+    public void testReturnProduct() {
+
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        Integer returnId = -1;
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            ezShop.addProductToSale(transactionId, productCode, 12);
+            ezShop.endSaleTransaction(transactionId);
+            // Pay transaction
+            ezShop.receiveCashPayment(transactionId, 1000);
+            // Start Return product
+            returnId = ezShop.startReturnTransaction(transactionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        final Integer tempId = transactionId;
+        final Integer tempRId = returnId;
+    
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.returnProduct(tempRId, productCode, 12);
+        });
+    
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.returnProduct(null, productCode, 12);
+        });
+    
+        // test InvalidProductCodeException
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.returnProduct(tempRId, null, 12);
+        });
+    
+        // test InvalidQuantityException
+        assertThrows(it.polito.ezshop.exceptions.InvalidQuantityException.class, () -> {
+            ezShop.returnProduct(tempRId, productCode, -1);
+        });
+    
+        // test returnId not valid
+        boolean resultOp = true;
+        try {
+            resultOp = ezShop.returnProduct(Integer.valueOf(10), productCode, 12);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("returnProduct mismatch", !resultOp);
+        try {
+            resultOp = ezShop.returnProduct(Integer.valueOf(10), productCode, 15);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("returnProduct mismatch", !resultOp);
+        resultOp = false;
+        try {
+            resultOp = ezShop.returnProduct(tempRId, productCode, 12);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("returnProduct mismatch", resultOp);
+    }
+
+    @Test
+    public void testEndReturnTransaction() {
+
+    }
+
+    @Test
+    public void testDeleteReturnTransaction() {
+
+    }
+
+    @Test
+    public void testReceiveCashPayment() {
+
+    }
+
+    @Test
+    public void testReceiveCreditCardPayment() {
+
+    }
+
+    //FIXME: End Marco test
 
     private void createw(String username, String passw, String role) {
         try {
