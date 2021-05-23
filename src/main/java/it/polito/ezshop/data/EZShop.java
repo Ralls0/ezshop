@@ -594,9 +594,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerCardException();
         if (newCustomerName == null || newCustomerName.equals(""))
             throw new InvalidCustomerNameException();
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
         if (id == null || id <= 0)
             throw new InvalidCustomerIdException();
@@ -721,7 +719,7 @@ public class EZShop implements EZShopInterface {
             throws InvalidCustomerCardException, UnauthorizedException {
         if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
-        if (customerCard.length() != 10 && !(customerCard.equals("") && customerCard.matches("[0-9]{10}")))
+        if (!customerCard.matches("[0-9]{10}"))
             throw new InvalidCustomerCardException();
 
         Customer customer = null;
