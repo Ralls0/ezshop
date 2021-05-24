@@ -1026,7 +1026,26 @@ public class TestEZShop {
 
         });
 
-        // Todo: finire
+        // ------------------------------------------------------------- //
+
+        boolean cardAttached = false;
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.defineCustomer("Carlo");
+            ezShop.defineCustomer("Giulio");
+            cardAttached = ezShop.attachCardToCustomer("2222222222", 1);
+            assertTrue(cardAttached);
+            cardAttached = ezShop.attachCardToCustomer("2222222222", 1);
+            assertFalse(cardAttached);
+            cardAttached = ezShop.attachCardToCustomer("2222222222", 2);
+            assertFalse(cardAttached);
+            cardAttached = ezShop.attachCardToCustomer("3333333333", 5);
+            assertFalse(cardAttached);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -1049,7 +1068,27 @@ public class TestEZShop {
 
         });
 
-        // Todo: finire
+        // ------------------------------------------------------------- //
+
+        boolean pointsUpdated = false;
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.defineCustomer("Carlo");
+            ezShop.defineCustomer("Giulio");
+            ezShop.attachCardToCustomer("2222222222", 1);
+            pointsUpdated = ezShop.modifyPointsOnCard("2222222222", 10);
+            assertTrue(pointsUpdated);
+            pointsUpdated = ezShop.modifyPointsOnCard("2222222223", 10);
+            assertFalse(pointsUpdated);
+            pointsUpdated = ezShop.modifyPointsOnCard("2222222222", -5);
+            assertTrue(pointsUpdated);
+            pointsUpdated = ezShop.modifyPointsOnCard("2222222222", -10);
+            assertFalse(pointsUpdated);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
