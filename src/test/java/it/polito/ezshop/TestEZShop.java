@@ -820,8 +820,20 @@ public class TestEZShop {
             ezShop.defineCustomer("");
         });
 
-        // Todo: finire
+        // ------------------------------------------------------------- //
 
+        Integer customerId = -1;
+        try {
+            ezShop.login("Giovanni", "password");
+            customerId = ezShop.defineCustomer("Vincenzo");
+            assertTrue(customerId > 0);
+            customerId = ezShop.defineCustomer("Giulio");
+            assertTrue(customerId > 0);
+            customerId = ezShop.defineCustomer("Vincenzo");
+            assertEquals(-1, (int) customerId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
