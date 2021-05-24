@@ -880,8 +880,19 @@ public class TestEZShop {
             ezShop.modifyCustomer(1, "Carlo", "11111111");
         });
 
-        // Todo: finire
+        // ------------------------------------------------------------- //
 
+        boolean modified = false;
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.defineCustomer("Vincenzo");
+            modified = ezShop.modifyCustomer(1, "Marco", "2222222222");
+            assertTrue(modified);
+            modified = ezShop.modifyCustomer(5, "Marco", "2222222222");
+            assertFalse(modified);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -906,7 +917,19 @@ public class TestEZShop {
             ezShop.deleteCustomer(-10);
         });
 
-        // Todo: finire
+        // ------------------------------------------------------------- //
+
+        boolean deleted = false;
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.defineCustomer("Vincenzo");
+            deleted = ezShop.deleteCustomer(5);
+            assertFalse(deleted);
+            deleted = ezShop.deleteCustomer(1);
+            assertTrue(deleted);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
