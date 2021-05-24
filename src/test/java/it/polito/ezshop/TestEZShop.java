@@ -1,6 +1,7 @@
 package it.polito.ezshop;
 
 import it.polito.ezshop.data.BalanceOperation;
+import it.polito.ezshop.data.EZShop;
 import it.polito.ezshop.data.EZShopDBManager;
 import it.polito.ezshop.data.EZShopInterface;
 import it.polito.ezshop.data.Order;
@@ -15,6 +16,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class TestEZShop {
@@ -402,11 +404,11 @@ public class TestEZShop {
         }
 
         assertThrows(it.polito.ezshop.exceptions.InvalidPricePerUnitException.class, () -> {
-            ezShop.updateProduct(1,"descrizione", "3000000000083", -9.5, "nota");
+            ezShop.updateProduct(1, "descrizione", "3000000000083", -9.5, "nota");
         });
 
         assertThrows(it.polito.ezshop.exceptions.InvalidProductDescriptionException.class, () -> {
-            ezShop.updateProduct(1,"", "3000000000083", 10.5, "nota");
+            ezShop.updateProduct(1, "", "3000000000083", 10.5, "nota");
         });
 
         assertThrows(it.polito.ezshop.exceptions.InvalidProductDescriptionException.class, () -> {
@@ -414,23 +416,23 @@ public class TestEZShop {
         });
 
         assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
-            ezShop.updateProduct(1,"descrizione", "", 10.5, "nota");
+            ezShop.updateProduct(1, "descrizione", "", 10.5, "nota");
         });
 
         assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
-            ezShop.updateProduct(1,"descrizione", null, 10.5, "nota");
+            ezShop.updateProduct(1, "descrizione", null, 10.5, "nota");
         });
 
         assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
-            ezShop.updateProduct(1,"descrizione", "3000000000087", 10.5, "nota");
+            ezShop.updateProduct(1, "descrizione", "3000000000087", 10.5, "nota");
         });
 
         assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
-            ezShop.updateProduct(null,"descrizione", "3000000000083", 10.5, "nota");
+            ezShop.updateProduct(null, "descrizione", "3000000000083", 10.5, "nota");
         });
 
         assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
-            ezShop.updateProduct(-2,"descrizione", "3000000000083", 10.5, "nota");
+            ezShop.updateProduct(-2, "descrizione", "3000000000083", 10.5, "nota");
         });
 
         // ------------------------------------------------------------- //
@@ -493,11 +495,9 @@ public class TestEZShop {
             e.printStackTrace();
         }
 
-
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.getAllProductTypes();
         });
-
 
         // ------------------------------------------------------------- //
 
@@ -588,7 +588,6 @@ public class TestEZShop {
             e.printStackTrace();
         }
 
-
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.getProductTypesByDescription("descrizione");
         });
@@ -621,11 +620,9 @@ public class TestEZShop {
             e.printStackTrace();
         }
 
-
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.updateQuantity(1, 10);
         });
-
 
         // ------------------------------------------------------------- //
 
@@ -642,7 +639,7 @@ public class TestEZShop {
         // ------------------------------------------------------------- //
 
         try {
-            ezShop.login("Giovanni","password");
+            ezShop.login("Giovanni", "password");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -671,11 +668,9 @@ public class TestEZShop {
             e.printStackTrace();
         }
 
-
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.updatePosition(1, "1-a-1");
         });
-
 
         // ------------------------------------------------------------- //
 
@@ -692,7 +687,7 @@ public class TestEZShop {
         // ------------------------------------------------------------- //
 
         try {
-            ezShop.login("Giovanni","password");
+            ezShop.login("Giovanni", "password");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -723,7 +718,6 @@ public class TestEZShop {
             ezShop.updatePosition(1, "1ccc-ab2-3123");
         });
 
-
         // Todo: finire
 
     }
@@ -739,11 +733,9 @@ public class TestEZShop {
             e.printStackTrace();
         }
 
-
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.defineCustomer("Marco");
         });
-
 
         // ------------------------------------------------------------- //
 
@@ -777,11 +769,9 @@ public class TestEZShop {
             e.printStackTrace();
         }
 
-
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.modifyCustomer(1, "Carlo", "1111111111");
         });
-
 
         // ------------------------------------------------------------- //
 
@@ -932,14 +922,12 @@ public class TestEZShop {
             ezShop.modifyPointsOnCard("11111111", 1);
 
         });
-        
+
         // Todo: finire
 
     }
 
-
-
-// FIXME: Start Marco test
+    // FIXME: Start Marco test
     @Test
     public void testStartSaleTransaction() {
 
@@ -968,7 +956,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1032,7 +1020,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1101,7 +1089,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1176,7 +1164,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1246,7 +1234,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1306,7 +1294,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1359,7 +1347,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1420,7 +1408,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1481,7 +1469,7 @@ public class TestEZShop {
         String productCode = "3000000000076";
         Integer productId = -1;
         Integer transactionId = -1;
-        
+
         try {
             // start saleTransaction
             ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
@@ -1555,37 +1543,37 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         final Integer tempId = transactionId;
         final Integer tempRId = returnId;
-    
+
         // test UnauthorizedException
         ezShop.logout();
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.returnProduct(tempRId, productCode, 12);
         });
-    
+
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-    
+
         // test InvalidTransactionIdException
         assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
             ezShop.returnProduct(null, productCode, 12);
         });
-    
+
         // test InvalidProductCodeException
         assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
             ezShop.returnProduct(tempRId, null, 12);
         });
-    
+
         // test InvalidQuantityException
         assertThrows(it.polito.ezshop.exceptions.InvalidQuantityException.class, () -> {
             ezShop.returnProduct(tempRId, productCode, -1);
         });
-    
+
         // test returnId not valid
         boolean resultOp = true;
         try {
@@ -1782,7 +1770,7 @@ public class TestEZShop {
 
     }
 
-    //FIXME: End Marco test
+    // FIXME: End Marco test
 
     private void createw(String username, String passw, String role) {
         try {
@@ -2061,7 +2049,7 @@ public class TestEZShop {
     }
 
     @Test
-    public void testRecordBalanceUpdateAndComputeBalance() {
+    public void testRecordBUAndCB() {
 
         Double positiveBalance = 100.0;
         Double negativeBalance = -positiveBalance;
@@ -2103,18 +2091,16 @@ public class TestEZShop {
         }
     }
 
-
-    private boolean isDebit(BalanceOperation bo){
+    private boolean isDebit(BalanceOperation bo) {
         return bo.getType().equals("DEBIT");
     }
 
-    private boolean isCredit(BalanceOperation bo){
+    private boolean isCredit(BalanceOperation bo) {
         return bo.getType().equals("CREDIT");
     }
 
-
     @Test
-    public void testGetDebtisAndCreditsAndComputeBalance() {
+    public void testGetDebitsCreditsAndCB() {
         /*
          * Premessa: le API non hanno un modo per impostare esplicitamente la data,
          * quindi non so come eseguire i test sui range
@@ -2177,6 +2163,20 @@ public class TestEZShop {
             e.printStackTrace();
             fail();
         }
+    }
+
+    @Test
+    public void testValidBarCode() {
+        String[] validBarCodes = { "3000000000083", "3000000000076", "3000000580073", "8500000580073", "8928498284264",
+                "29293947954740", "92898971949586", "5945749748286", "28957949539596" };
+        String[] invalidBarCodes = { "11515175855455758", "4841784284188", "82529148548268", "8488485581161",
+                "516164156169", "18748959596150" };
+        Boolean res;
+
+        res = Arrays.stream(validBarCodes).allMatch(bc -> EZShop.validBarCode(bc));
+        assertTrue(res);
+        res = Arrays.stream(invalidBarCodes).noneMatch(bc -> EZShop.validBarCode(bc));
+        assertTrue(res);
     }
 
 }
