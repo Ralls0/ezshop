@@ -1,6 +1,5 @@
 package it.polito.ezshop;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.util.List;
@@ -10,7 +9,6 @@ import org.junit.Test;
 
 import it.polito.ezshop.data.EZAccountBook;
 import it.polito.ezshop.data.BalanceOperation;
-import it.polito.ezshop.EZShop;
 import it.polito.ezshop.data.EZShopDBManager;
 
 public class TestEZAccountBook {
