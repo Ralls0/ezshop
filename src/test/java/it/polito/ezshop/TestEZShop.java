@@ -2019,7 +2019,7 @@ public class TestEZShop {
             order = EZShopDBManager.getInstance().loadOrder(result);
             assertTrue(order != null);
 
-            assertEquals(order, order.getOrderId());
+            assertTrue(order.getOrderId() > 0);
             assertEquals(positivePPU, order.getPricePerUnit(), 0.001);
             assertEquals(quantity.intValue(), order.getQuantity());
             assertTrue(order.getProductCode().equals(validCode));
