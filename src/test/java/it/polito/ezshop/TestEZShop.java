@@ -625,9 +625,23 @@ public class TestEZShop {
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.getProductTypesByDescription("descrizione");
         });
+        // ------------------------------------------------------------- //
 
-        // Todo: finire
+        List<ProductType> products = null;
 
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+            ezShop.createProductType("descrizione 2", "3000000000076", 10, "nota 2");
+            products = ezShop.getProductTypesByDescription("descrizione");
+            assertFalse(products.isEmpty());
+            products = ezShop.getProductTypesByDescription("descrizione 2");
+            assertFalse(products.isEmpty());
+            products = ezShop.getProductTypesByDescription("descrizione 3");
+            assertTrue(products.isEmpty());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
