@@ -121,39 +121,43 @@ JUnit test cases applied to them> JUnit test classes should be here src/test/jav
 ## Step x
 
 
-|    Classes    |             JUnit Test Cases             |
-| :-----------: | :--------------------------------------: |
-| EZAccountBook |              testGetBOList               |
-| EZAccountBook |      testComputeBalanceAllPositive       |
-| EZAccountBook |      testComputeBalanceAllNegative       |
-| EZAccountBook |       testComputeBalanceAllMixed1        |
-| EZAccountBook |       testComputeBalanceAllMixed2        |
-| EZAccountBook |       testComputeBalanceAllMixed3        |
-|    EZOrder    |              testIssueOrder              |
-|    EZUser     |                                          |
-|    EZShop     |                                          |
-| EZProductType |                                          |
-|    EZOrder    |               testPayOrder               |
-|    EZUser     |                                          |
-|    EZShop     |                                          |
-| EZProductType |                                          |
-| EZAccountBook |                                          |
-|    EZOrder    |             testPayOrderFor              |
-|    EZUser     |                                          |
-|    EZShop     |                                          |
-| EZProductType |                                          |
-| EZAccountBook |                                          |
-|    EZOrder    |          testRecordOrderArrival          |
-|    EZUser     |                                          |
-|    EZShop     |                                          |
-| EZProductType |                                          |
-| EZAccountBook |                                          |
-|    EZOrder    | testRecordBalanceUpdateAndComputeBalance |
-|    EZUser     |                                          |
-|    EZShop     |                                          |
-| EZProductType |                                          |
-| EZAccountBook |                                          |
-
+|    Classes    |       JUnit Test Cases        |
+| :-----------: | :---------------------------: |
+| EZAccountBook |         testGetBOList         |
+| EZAccountBook | testComputeBalanceAllPositive |
+| EZAccountBook | testComputeBalanceAllNegative |
+| EZAccountBook |  testComputeBalanceAllMixed1  |
+| EZAccountBook |  testComputeBalanceAllMixed2  |
+| EZAccountBook |  testComputeBalanceAllMixed3  |
+|    EZOrder    |        testIssueOrder         |
+|    EZUser     |                               |
+|    EZShop     |                               |
+| EZProductType |                               |
+|    EZOrder    |         testPayOrder          |
+|    EZUser     |                               |
+|    EZShop     |                               |
+| EZProductType |                               |
+| EZAccountBook |                               |
+|    EZOrder    |        testPayOrderFor        |
+|    EZUser     |                               |
+|    EZShop     |                               |
+| EZProductType |                               |
+| EZAccountBook |                               |
+|    EZOrder    |    testRecordOrderArrival     |
+|    EZUser     |                               |
+|    EZShop     |                               |
+| EZProductType |                               |
+| EZAccountBook |                               |
+|    EZOrder    |       testRecordBUAndCB       |
+|    EZUser     |                               |
+|    EZShop     |                               |
+| EZProductType |                               |
+| EZAccountBook |                               |
+|    EZOrder    |   testGetDebitsCreditsAndCB   |
+|    EZUser     |                               |
+|    EZShop     |                               |
+| EZProductType |                               |
+| EZAccountBook |                               |
 
 # Scenarios
 
@@ -175,21 +179,26 @@ referring the UC in the OfficialRequirements that they detail>
 <Report in the following table the coverage of scenarios (from official requirements and from above) vs FR.
 Report also for each of the scenarios the (one or more) API JUnit tests that cover it. >
 
-| Scenario ID | Functional Requirements covered | JUnit Test(s) |
-| ----------- | ------------------------------- | ------------- |
-| ..          | FRx                             |               |
-| ..          | FRy                             |               |
-| ...         |                                 |               |
-| ...         |                                 |               |
-| ...         |                                 |               |
-| ...         |                                 |               |
-
+| Scenario ID | FR covered | JUnit Test(s)             |
+| ----------- | ---------- | ------------------------- |
+| ..          | FRx        |                           |
+| ..          | FRy        |                           |
+| ...         |            |                           |
+| ...         |            |                           |
+| ...         |            |                           |
+| ...         |            |                           |
+| ...         | FR4        | testIssueOrder            |
+| ...         |            | testPayOrder              |
+| ...         |            | testPayOrderFor           |
+| ...         | FR8        | testRecordBUAndCB         |
+| ...         |            | testGetDebitsCreditsAndCB |
 # Coverage of Non Functional Requirements
 
 <Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
 
 ###
 
-| Non Functional Requirement | Test name |
-| -------------------------- | --------- |
-|                            |           |
+| Non Functional Requirement | Test name        |
+| -------------------------- | ---------------- |
+|                            |                  |
+| NFR4                       | testValidBarCode |
