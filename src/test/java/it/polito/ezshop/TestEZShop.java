@@ -987,7 +987,16 @@ public class TestEZShop {
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.createCard();
         });
-        // Todo: finire
+
+        String cardNumber = "";
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            cardNumber = ezShop.createCard();
+            assertTrue(cardNumber.length() == 10 && cardNumber.matches("([0-9]{10}|^$)"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
