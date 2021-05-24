@@ -381,7 +381,7 @@ public class EZShop implements EZShopInterface {
 
     }
 
-    private boolean validBarCode(String barCode) {
+    public static boolean validBarCode(String barCode) {
         int sum = 0;
         int checksum = Character.getNumericValue(barCode.charAt(barCode.length() - 1));
         int offset = barCode.length() % 2;
