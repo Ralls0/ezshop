@@ -397,63 +397,552 @@ public class TestEZShop {
 
     @Test
     public void updateProduct() {
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidPricePerUnitException.class, () -> {
+            ezShop.updateProduct(1,"descrizione", "3000000000083", -9.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductDescriptionException.class, () -> {
+            ezShop.updateProduct(1,"", "3000000000083", 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductDescriptionException.class, () -> {
+            ezShop.updateProduct(1, null, "3000000000083", 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.updateProduct(1,"descrizione", "", 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.updateProduct(1,"descrizione", null, 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.updateProduct(1,"descrizione", "3000000000087", 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
+            ezShop.updateProduct(null,"descrizione", "3000000000083", 10.5, "nota");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
+            ezShop.updateProduct(-2,"descrizione", "3000000000083", 10.5, "nota");
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.login("Anna", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+        });
+
+        // ------------------------------------------------------------- //
+
+        // Todo: finire
     }
 
     @Test
     public void deleteProductType() {
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
+            ezShop.deleteProductType(-1);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
+            ezShop.deleteProductType(null);
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.login("Anna", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.deleteProductType(1);
+        });
+
+        // ------------------------------------------------------------- //
+
+        // Todo: finire
     }
 
     @Test
     public void getAllProductTypes() {
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.getAllProductTypes();
+        });
+
+
+        // ------------------------------------------------------------- //
+
+        List<ProductType> products = null;
+
+        try {
+            ezShop.login("Giovanni", "password");
+            products = ezShop.getAllProductTypes();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertNotNull(products);
+
     }
 
     @Test
     public void getProductTypeByBarCode() {
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.getProductTypeByBarCode("");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.getProductTypeByBarCode(null);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductCodeException.class, () -> {
+            ezShop.getProductTypeByBarCode("3000000000087");
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.login("Anna", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.getProductTypeByBarCode("3000000000083");
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.logout();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.getProductTypeByBarCode("3000000000083");
+        });
+
+        // ------------------------------------------------------------- //
+
+        ProductType product = null;
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+            product = ezShop.getProductTypeByBarCode("3000000000083");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertNotNull(product);
+
     }
 
     @Test
     public void getProductTypesByDescription() {
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+            ezShop.login("Anna", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.getProductTypesByDescription("descrizione");
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.logout();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.getProductTypesByDescription("descrizione");
+        });
+
+        // Todo: finire
+
     }
 
     @Test
     public void updateQuantity() {
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+            ezShop.login("Anna", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.updateQuantity(1, 10);
+        });
+
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.logout();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.updateQuantity(1, 10);
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.login("Giovanni","password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
+            ezShop.updateQuantity(null, 10);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
+            ezShop.updateQuantity(-10, 10);
+        });
+
+        // Todo: finire
+
     }
 
     @Test
     public void updatePosition() {
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+            ezShop.login("Anna", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.updatePosition(1, "1-a-1");
+        });
+
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.logout();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.updatePosition(1, "1-a-1");
+        });
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.login("Giovanni","password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
+            ezShop.updatePosition(null, "1-a-1");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidProductIdException.class, () -> {
+            ezShop.updatePosition(-10, "1-a-1");
+        });
+
+        // ------------------------------------------------------------- //
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidLocationException.class, () -> {
+            ezShop.updatePosition(1, "aaa");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidLocationException.class, () -> {
+            ezShop.updatePosition(1, "aaa-b-c");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidLocationException.class, () -> {
+            ezShop.updatePosition(1, "1-aaa-3c");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidLocationException.class, () -> {
+            ezShop.updatePosition(1, "1ccc-ab2-3123");
+        });
+
+
+        // Todo: finire
+
     }
 
     @Test
     public void defineCustomer() {
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+            ezShop.logout();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.defineCustomer("Marco");
+        });
+
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.login("Giovanni", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerNameException.class, () -> {
+            ezShop.defineCustomer(null);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerNameException.class, () -> {
+            ezShop.defineCustomer("");
+        });
+
+        // Todo: finire
+
     }
 
     @Test
     public void modifyCustomer() {
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.createUser("Anna", "password", "Cashier");
+            ezShop.logout();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.modifyCustomer(1, "Carlo", "1111111111");
+        });
+
+
+        // ------------------------------------------------------------- //
+
+        try {
+            ezShop.login("Giovanni", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerNameException.class, () -> {
+            ezShop.modifyCustomer(1, null, "1111111111");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerNameException.class, () -> {
+            ezShop.modifyCustomer(1, "", "1111111111");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+            ezShop.modifyCustomer(null, "Carlo", "1111111111");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+            ezShop.modifyCustomer(-10, "Carlo", "1111111111");
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerCardException.class, () -> {
+            ezShop.modifyCustomer(1, "Carlo", "11111111");
+        });
+
+        // Todo: finire
+
     }
 
     @Test
     public void deleteCustomer() {
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.deleteCustomer(1);
+        });
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+            ezShop.deleteCustomer(null);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+            ezShop.deleteCustomer(-10);
+        });
+
+        // Todo: finire
     }
 
     @Test
     public void getCustomer() {
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.getCustomer(1);
+        });
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+            ezShop.getCustomer(null);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+            ezShop.getCustomer(-10);
+        });
+
+        // Todo: finire
+
     }
 
     @Test
     public void getAllCustomers() {
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.getAllCustomers();
+        });
+        // Todo: finire
+
     }
 
     @Test
     public void createCard() {
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.createCard();
+        });
+        // Todo: finire
+
     }
 
     @Test
     public void attachCardToCustomer() {
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.attachCardToCustomer("1111111111", 1);
+        });
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+            ezShop.attachCardToCustomer("1111111111", null);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+            ezShop.attachCardToCustomer("1111111111", -10);
+        });
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerCardException.class, () -> {
+            ezShop.attachCardToCustomer("11111111", 1);
+
+        });
+
+        // Todo: finire
+
     }
 
     @Test
     public void modifyPointsOnCard() {
+
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.modifyPointsOnCard("1111111111", 1);
+        });
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerCardException.class, () -> {
+            ezShop.modifyPointsOnCard("11111111", 1);
+
+        });
+        
+        // Todo: finire
+
     }
+
+
+
 // FIXME: Start Marco test
     @Test
     public void testStartSaleTransaction() {
