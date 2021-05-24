@@ -395,6 +395,7 @@ public class TestEZShop {
 
     @Test
     public void updateProduct() {
+
         try {
             ezShop.createUser("Giovanni", "password", "Administrator");
             ezShop.login("Giovanni", "password");
@@ -444,12 +445,24 @@ public class TestEZShop {
         }
 
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
-            ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+            ezShop.updateProduct(1, "descrizione", "3000000000083", 10.5, "nota");
         });
 
         // ------------------------------------------------------------- //
 
-        // Todo: finire
+        boolean updated = false;
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.createProductType("descrizione", "3000000000083", 10, "nota");
+            updated = ezShop.updateProduct(1, "new descrizione", "3000000000076", 10, "new nota");
+            assertTrue(updated);
+            updated = ezShop.updateProduct(1, "new descrizione", "3000000000076", 10, "new nota");
+            assertTrue(updated);
+            updated = ezShop.updateProduct(2, "new descrizione", "3000000000076", 10, "new nota");
+            assertFalse(updated);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -484,7 +497,16 @@ public class TestEZShop {
 
         // ------------------------------------------------------------- //
 
-        // Todo: finire
+        boolean deleted = false;
+
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.createProductType("descrizione", "3000000000083", 10, "nota");
+            deleted = ezShop.deleteProductType(1);
+            assertTrue(deleted);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
