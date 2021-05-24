@@ -1,11 +1,8 @@
 package it.polito.ezshop;
 
 import it.polito.ezshop.data.BalanceOperation;
-import it.polito.ezshop.data.EZOrder;
-import it.polito.ezshop.data.EZProductType;
 import it.polito.ezshop.data.EZShopDBManager;
 import it.polito.ezshop.data.EZShopInterface;
-import it.polito.ezshop.data.EZUser;
 import it.polito.ezshop.data.Order;
 import it.polito.ezshop.data.ProductType;
 import it.polito.ezshop.data.SaleTransaction;
@@ -18,7 +15,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TestEZShop {
@@ -1951,7 +1947,7 @@ public class TestEZShop {
     }
 
     @Test
-    public void payOrderTest() {
+    public void testPayOrder() {
 
         Integer negativeOrderID = -10;
         Integer validOrderID;
