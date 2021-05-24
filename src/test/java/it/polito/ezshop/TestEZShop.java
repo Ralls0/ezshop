@@ -1,13 +1,7 @@
 package it.polito.ezshop;
 
-import it.polito.ezshop.data.BalanceOperation;
+import it.polito.ezshop.data.*;
 import it.polito.ezshop.data.EZShop;
-import it.polito.ezshop.data.EZShopDBManager;
-import it.polito.ezshop.data.EZShopInterface;
-import it.polito.ezshop.data.Order;
-import it.polito.ezshop.data.ProductType;
-import it.polito.ezshop.data.SaleTransaction;
-import it.polito.ezshop.data.User;
 import it.polito.ezshop.exceptions.*;
 
 import org.junit.After;
@@ -16,6 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -935,7 +930,7 @@ public class TestEZShop {
     @Test
     public void getCustomer() {
 
-        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+        assertThrows(UnauthorizedException.class, () -> {
             ezShop.getCustomer(1);
         });
 
@@ -946,16 +941,25 @@ public class TestEZShop {
             e.printStackTrace();
         }
 
-        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+        assertThrows(InvalidCustomerIdException.class, () -> {
             ezShop.getCustomer(null);
         });
 
-        assertThrows(it.polito.ezshop.exceptions.InvalidCustomerIdException.class, () -> {
+        assertThrows(InvalidCustomerIdException.class, () -> {
             ezShop.getCustomer(-10);
         });
 
-        // Todo: finire
+        // ------------------------------------------------------------- //
 
+        Customer customer = null;
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.defineCustomer("Vincenzo");
+            customer = ezShop.getCustomer(1);
+            assertNotNull(customer);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -963,8 +967,19 @@ public class TestEZShop {
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.getAllCustomers();
         });
-        // Todo: finire
 
+        List<Customer> customers = null;
+
+        try {
+            ezShop.createUser("Giovanni", "password", "Administrator");
+            ezShop.login("Giovanni", "password");
+            ezShop.defineCustomer("Vincenzo");
+            ezShop.defineCustomer("Carlo");
+            customers = ezShop.getAllCustomers();
+            assertNotNull(customers);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
