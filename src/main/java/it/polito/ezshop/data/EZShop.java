@@ -1205,9 +1205,22 @@ public class EZShop implements EZShopInterface {
         if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
-        if (openReturnTransaction == null || returnId != openReturnTransaction.getReturnId()
-                || openReturnTransaction.getStatus().equals("open"))
-            return false;
+        if (openReturnTransaction != null){
+            if(returnId != openReturnTransaction.getReturnId()
+                || openReturnTransaction.getStatus().equals("open")) {
+                    return false;
+                }
+        }
+        else {
+            try {
+                openReturnTransaction = EZShopDBManager.getInstance().loadReturn(returnId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (openReturnTransaction == null) {
+                return false;
+            }
+        }
 
         EZSaleTransaction transaction = null;
         ProductType product = null;
