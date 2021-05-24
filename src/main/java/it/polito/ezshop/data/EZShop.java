@@ -365,8 +365,9 @@ public class EZShop implements EZShopInterface {
             positionAlredyExists = EZShopDBManager.getInstance().searchProductByLocation(newPos) && !newPos.equals("");
             product = EZShopDBManager.getInstance().loadProduct(productId);
 
-            if (product == null || positionAlredyExists)
+            if (product == null || positionAlredyExists) {
                 return false;
+            }
 
             if (product.getLocation().equals(newPos))
                 return true;

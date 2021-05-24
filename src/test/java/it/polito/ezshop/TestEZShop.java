@@ -688,8 +688,25 @@ public class TestEZShop {
             ezShop.updateQuantity(-10, 10);
         });
 
-        // Todo: finire
+        // ------------------------------------------------------------- //
 
+        boolean updated = false;
+
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+            updated = ezShop.updateQuantity(3, 10);
+            assertFalse(updated);
+            ezShop.updatePosition(1, "1-a-1");
+            updated = ezShop.updateQuantity(1, 10);
+            assertTrue(updated);
+            updated = ezShop.updateQuantity(1, -1);
+            assertTrue(updated);
+            updated = ezShop.updateQuantity(1, -15);
+            assertFalse(updated);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -754,8 +771,22 @@ public class TestEZShop {
             ezShop.updatePosition(1, "1ccc-ab2-3123");
         });
 
-        // Todo: finire
+        // ------------------------------------------------------------- //
 
+        boolean updated = false;
+        try {
+            ezShop.login("Giovanni", "password");
+            ezShop.createProductType("descrizione", "3000000000083", 10.5, "nota");
+            ezShop.createProductType("descrizione 2", "3000000000076", 15, "nota 2");
+            updated = ezShop.updatePosition(10, "1-a-1");
+            assertFalse(updated);
+            updated = ezShop.updatePosition(1, "1-a-1");
+            assertTrue(updated);
+            updated = ezShop.updatePosition(2, "1-a-1");
+            assertFalse(updated);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
