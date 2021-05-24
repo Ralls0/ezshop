@@ -22,6 +22,7 @@ Version: 1.0
   - [Step 1](#step-1)
   - [Step 2](#step-2)
   - [Step n](#step-n)
+  - [Step x](#step-x)
 - [Scenarios](#scenarios)
   - [Scenario UCx.y](#scenario-ucxy)
 - [Coverage of Scenarios and FR](#coverage-of-scenarios-and-fr)
@@ -116,6 +117,43 @@ JUnit test cases applied to them> JUnit test classes should be here src/test/jav
 | Classes | JUnit test cases |
 | ------- | ---------------- |
 |         |                  |
+
+## Step x
+
+
+|    Classes    |             JUnit Test Cases             |
+| :-----------: | :--------------------------------------: |
+| EZAccountBook |              testGetBOList               |
+| EZAccountBook |      testComputeBalanceAllPositive       |
+| EZAccountBook |      testComputeBalanceAllNegative       |
+| EZAccountBook |       testComputeBalanceAllMixed1        |
+| EZAccountBook |       testComputeBalanceAllMixed2        |
+| EZAccountBook |       testComputeBalanceAllMixed3        |
+|    EZOrder    |              testIssueOrder              |
+|    EZUser     |                                          |
+|    EZShop     |                                          |
+| EZProductType |                                          |
+|    EZOrder    |               testPayOrder               |
+|    EZUser     |                                          |
+|    EZShop     |                                          |
+| EZProductType |                                          |
+| EZAccountBook |                                          |
+|    EZOrder    |             testPayOrderFor              |
+|    EZUser     |                                          |
+|    EZShop     |                                          |
+| EZProductType |                                          |
+| EZAccountBook |                                          |
+|    EZOrder    |          testRecordOrderArrival          |
+|    EZUser     |                                          |
+|    EZShop     |                                          |
+| EZProductType |                                          |
+| EZAccountBook |                                          |
+|    EZOrder    | testRecordBalanceUpdateAndComputeBalance |
+|    EZUser     |                                          |
+|    EZShop     |                                          |
+| EZProductType |                                          |
+| EZAccountBook |                                          |
+
 
 # Scenarios
 
