@@ -1173,7 +1173,7 @@ public class EZShop implements EZShopInterface {
 
         if (!commit) {
             openReturnTransaction = null;
-            return false;
+            return true;
         }
 
         try {

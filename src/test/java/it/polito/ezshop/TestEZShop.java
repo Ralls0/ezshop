@@ -1126,7 +1126,91 @@ public class TestEZShop {
 
     @Test
     public void testEndReturnTransaction() {
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        Integer returnId = -1;
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            ezShop.addProductToSale(transactionId, productCode, 12);
+            ezShop.endSaleTransaction(transactionId);
+            // Pay transaction
+            ezShop.receiveCashPayment(transactionId, 1000);
+            // Start Return product
+            returnId = ezShop.startReturnTransaction(transactionId);
+            // Add product to return
+            ezShop.returnProduct(returnId, productCode, 12);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        final Integer tempRId = returnId;
+    
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.endReturnTransaction(tempRId, true);
+        });
+    
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.endReturnTransaction(null, true);
+        });
 
+        // test returnId not valid
+        boolean resultOp = true;
+        try {
+            resultOp = ezShop.endReturnTransaction(10, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("endReturnTransaction mismatch", !resultOp);
+        resultOp = false;
+        try {
+            resultOp = ezShop.endReturnTransaction(tempRId, false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("endReturnTransaction mismatch", resultOp);
+        Integer quantity = -1;
+        try {
+            quantity = ezShop.getProductTypeByBarCode(productCode).getQuantity();
+            // Start Return product
+            returnId = ezShop.startReturnTransaction(transactionId);
+            // Add product to return
+            ezShop.returnProduct(returnId, productCode, 12);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(Integer.valueOf(8), quantity);
+        resultOp = false;
+        try {
+            resultOp = ezShop.endReturnTransaction(returnId, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("endReturnTransaction mismatch", resultOp);
+        quantity = -1;
+        try {
+            quantity = ezShop.getProductTypeByBarCode(productCode).getQuantity();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(Integer.valueOf(20), quantity);
     }
 
     @Test
