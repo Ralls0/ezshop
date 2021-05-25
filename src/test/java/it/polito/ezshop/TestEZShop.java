@@ -2296,8 +2296,6 @@ public class TestEZShop {
         Double positivePPU = 420.69;
         Double negativePPU = -positivePPU;
         Double zeroPPU = 0.0;
-        Double balanceToAdd = Double.MAX_VALUE;
-        Double remainder;
 
         createw("ShopManager", "Password", "ShopManager");
         loginw("ShopManager", "Password");
@@ -2330,17 +2328,13 @@ public class TestEZShop {
         assertThrows(InvalidPricePerUnitException.class, () -> ezShop.issueOrder(validCode, one, zeroPPU));
 
         try {
-            result = ezShop.issueOrder(validCode, one, positivePPU);
-            assertTrue(result == -1); // Product does not exists
-
+            result = ezShop.payOrderFor(validCode, one, positivePPU);
+            assertTrue(result == -1); // Product does not exist
+            
+            ezShop.recordBalanceUpdate(3 * one * positivePPU);
             ezShop.createProductType("Descr", validCode, positivePPU, "Integration Test");
-            result = ezShop.issueOrder(validCode, one, positivePPU);
+            result = ezShop.payOrderFor(validCode, one, positivePPU);
             assertTrue(result > 0);
-            ezShop.recordBalanceUpdate(balanceToAdd);
-            assertTrue(ezShop.payOrder(result));
-
-            remainder = balanceToAdd - one * positivePPU;
-            assertEquals(remainder, ezShop.computeBalance(), 0.01);
         } catch (Exception e) {
             e.printStackTrace();
             fail();
