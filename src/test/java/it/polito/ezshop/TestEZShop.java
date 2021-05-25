@@ -2382,7 +2382,7 @@ public class TestEZShop {
             
             remainder = balanceToAdd - one * positivePPU;
             assertEquals(remainder, ezShop.computeBalance(), 0.01);
-            
+
             assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(null));
             ezShop.logout();
             assertThrows(UnauthorizedException.class, () -> ezShop.payOrder(1));
@@ -2456,9 +2456,9 @@ public class TestEZShop {
             product = EZShopDBManager.getInstance().loadProduct(productID);
             assertEquals(product.getQuantity(), quantity);
 
-            assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(null));
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.recordOrderArrival(null));
             ezShop.logout();
-            assertThrows(UnauthorizedException.class, () -> ezShop.payOrder(1));
+            assertThrows(UnauthorizedException.class, () -> ezShop.recordOrderArrival(1));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -2503,10 +2503,6 @@ public class TestEZShop {
             expectedBalance += negativeBalance;
             assertTrue(ezShop.recordBalanceUpdate(negativeBalance));
             assertEquals(expectedBalance.doubleValue(), ezShop.computeBalance(), 0.001);
-
-            assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(null));
-            ezShop.logout();
-            assertThrows(UnauthorizedException.class, () -> ezShop.payOrder(1));
         } catch (Exception e) {
             e.printStackTrace();
             fail();
