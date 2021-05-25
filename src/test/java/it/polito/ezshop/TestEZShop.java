@@ -2376,10 +2376,16 @@ public class TestEZShop {
 
             assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(negativeOrderID));
             assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(zero));
-            assertTrue(ezShop.payOrder(validOrderID));
 
+            
+            assertTrue(ezShop.payOrder(validOrderID));
+            
             remainder = balanceToAdd - one * positivePPU;
             assertEquals(remainder, ezShop.computeBalance(), 0.01);
+            
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(null));
+            ezShop.logout();
+            assertThrows(UnauthorizedException.class, () -> ezShop.payOrder(1));
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -2449,6 +2455,11 @@ public class TestEZShop {
             assertTrue(ezShop.recordOrderArrival(orderID));
             product = EZShopDBManager.getInstance().loadProduct(productID);
             assertEquals(product.getQuantity(), quantity);
+
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(null));
+            ezShop.logout();
+            assertThrows(UnauthorizedException.class, () -> ezShop.payOrder(1));
+
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -2492,6 +2503,10 @@ public class TestEZShop {
             expectedBalance += negativeBalance;
             assertTrue(ezShop.recordBalanceUpdate(negativeBalance));
             assertEquals(expectedBalance.doubleValue(), ezShop.computeBalance(), 0.001);
+
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(null));
+            ezShop.logout();
+            assertThrows(UnauthorizedException.class, () -> ezShop.payOrder(1));
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -2566,6 +2581,10 @@ public class TestEZShop {
             assertEquals(expectedBalance, ezShop.computeBalance(), 0.001);
             assertEquals(4, credits.longValue());
             assertEquals(2, debits.longValue());
+
+            assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(null));
+            ezShop.logout();
+            assertThrows(UnauthorizedException.class, () -> ezShop.payOrder(1));
         } catch (Exception e) {
             e.printStackTrace();
             fail();
