@@ -53,4 +53,16 @@ public class EZUser implements User{
     public void setRole(String role) {
         this.role = role;
     }
+
+    public int hashCode(){
+        return id.hashCode();
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof EZUser))
+            return false;
+        EZUser otherUser = (EZUser) other;
+
+        return this.id == otherUser.getId();
+    }
 }

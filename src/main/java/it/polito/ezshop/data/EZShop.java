@@ -189,7 +189,7 @@ public class EZShop implements EZShopInterface {
 
         boolean barCodeAlredyExists = false;
         try {
-            barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(productCode);
+            barCodeAlredyExists = EZShopDBManager.getInstance().productExists(productCode);
             if (!barCodeAlredyExists) {
                 EZShopDBManager.getInstance().saveProduct(product);
                 productID = product.getId();
@@ -222,8 +222,8 @@ public class EZShop implements EZShopInterface {
         ProductType product = null;
         boolean updated = false;
         try {
-            found = EZShopDBManager.getInstance().searchProductById(id);
-            barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(newCode);
+            found = EZShopDBManager.getInstance().productExists(id);
+            barCodeAlredyExists = EZShopDBManager.getInstance().productExists(newCode);
             if (found) {
                 product = EZShopDBManager.getInstance().loadProduct(id);
                 if (product.getBarCode().equals(newCode)) {
@@ -362,7 +362,7 @@ public class EZShop implements EZShopInterface {
         ProductType product = null;
 
         try {
-            positionAlredyExists = EZShopDBManager.getInstance().searchProductByLocation(newPos) && !newPos.equals("");
+            positionAlredyExists = EZShopDBManager.getInstance().productExistsFromLocation(newPos) && !newPos.equals("");
             product = EZShopDBManager.getInstance().loadProduct(productId);
 
             if (product == null || positionAlredyExists)
@@ -415,7 +415,7 @@ public class EZShop implements EZShopInterface {
         EZOrder newOrder = null;
 
         try {
-            if (!EZShopDBManager.getInstance().searchProductByBarCode(productCode))
+            if (!EZShopDBManager.getInstance().productExists(productCode))
                 return -1;
 
             nextOrderId = EZShopDBManager.getInstance().getNextOrderID();
@@ -574,7 +574,7 @@ public class EZShop implements EZShopInterface {
         Customer customer = null;
 
         try {
-            if (EZShopDBManager.getInstance().searchCustomerByName(customerName))
+            if (EZShopDBManager.getInstance().customerExists(customerName))
                 return -1;
 
             customer = new EZCustomer(EZShopDBManager.getInstance().getNextCustomerID(), customerName, "", 0);
@@ -601,7 +601,7 @@ public class EZShop implements EZShopInterface {
 
         Customer customer = null;
         try {
-            if (!EZShopDBManager.getInstance().searchCustomerById(id))
+            if (!EZShopDBManager.getInstance().customerExists(id))
                 return false;
             customer = EZShopDBManager.getInstance().loadCustomer(id);
             EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, newCustomerCard, customer.getPoints());
@@ -621,7 +621,7 @@ public class EZShop implements EZShopInterface {
 
         boolean existsAndDeleted = false;
         try {
-            existsAndDeleted = EZShopDBManager.getInstance().searchCustomerById(id);
+            existsAndDeleted = EZShopDBManager.getInstance().customerExists(id);
             if (existsAndDeleted)
                 EZShopDBManager.getInstance().deleteCustomer(id);
         } catch (Exception e) {
@@ -674,7 +674,7 @@ public class EZShop implements EZShopInterface {
         long_random = random.nextLong(1_000_000_000, 10_000_000_000L);
         while (!newCard) {
             try {
-                if (long_random >= 0 && !EZShopDBManager.getInstance().searchCustomerByCard(long_random.toString())) {
+                if (long_random >= 0 && !EZShopDBManager.getInstance().customerExistsFromCard(long_random.toString())) {
                     newCard = true;
                 } else {
                     long_random = random.nextLong(1_000_000_000, 10_000_000_000L);
@@ -700,7 +700,7 @@ public class EZShop implements EZShopInterface {
         Customer customer = null;
         boolean updated = false;
         try {
-            cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
+            cardAlredyExists = EZShopDBManager.getInstance().customerExistsFromCard(customerCard);
             customer = EZShopDBManager.getInstance().loadCustomer(customerId);
             if (!cardAlredyExists && customer != null) {
                 EZShopDBManager.getInstance().updateCustomer(customerId, customer.getCustomerName(), customerCard,
@@ -726,7 +726,7 @@ public class EZShop implements EZShopInterface {
         boolean cardAlredyExists = false;
         boolean updated = false;
         try {
-            cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
+            cardAlredyExists = EZShopDBManager.getInstance().customerExistsFromCard(customerCard);
             if (cardAlredyExists) {
                 customer = EZShopDBManager.getInstance().loadCustomer(customerCard);
                 if (customer.getPoints() + pointsToBeAdded > 0) {

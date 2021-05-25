@@ -17,8 +17,8 @@ public class TestEZAccountBook {
 
     private void resetDB() {
         try {
+            EZShopDBManager.getInstance().createTableIfNotExists();
             EZShopDBManager.getInstance().resetDB();
-            EZShop.createTableIfNotExists();
         } catch (Exception e) {
             e.printStackTrace();
         }

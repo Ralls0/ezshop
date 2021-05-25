@@ -90,4 +90,16 @@ public class EZProductType implements ProductType{
         if(id > 0)
             this.id = id;
     }
+
+    public int hashCode(){
+        return id.hashCode();
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof EZProductType))
+            return false;
+        EZProductType otherProduct = (EZProductType) other;
+
+        return this.id == otherProduct.getId();
+    }
 }

@@ -79,4 +79,16 @@ public class EZReturnTransaction {
         this.products.add(entry);
         return true;
     }
+
+    public int hashCode(){
+        return returnId.hashCode();
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof EZReturnTransaction))
+            return false;
+        EZReturnTransaction otherReturn = (EZReturnTransaction) other;
+
+        return this.returnId == otherReturn.getReturnId();
+    }
 }

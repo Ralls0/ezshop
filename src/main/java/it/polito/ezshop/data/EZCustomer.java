@@ -54,4 +54,16 @@ public class EZCustomer implements Customer{
     public void setPoints(Integer points) {
         this.points = points;
     }
+
+    public int hashCode(){
+        return id.hashCode();
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof EZCustomer))
+            return false;
+        EZCustomer otherCustomer = (EZCustomer) other;
+
+        return this.id == otherCustomer.getId();
+    }
 }

@@ -65,4 +65,16 @@ public class EZTicketEntry implements TicketEntry{
     public void setDiscountRate(double discountRate) {
         this.discountRate = discountRate;
     }
+
+    public int hashCode(){
+        return productCode.hashCode();
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof EZTicketEntry))
+            return false;
+        EZTicketEntry otherTicket = (EZTicketEntry) other;
+
+        return this.productCode.equals(otherTicket.getBarCode());
+    }
 }

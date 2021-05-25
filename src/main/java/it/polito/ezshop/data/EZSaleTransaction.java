@@ -17,6 +17,9 @@ public class EZSaleTransaction implements SaleTransaction {
             this.products = new ArrayList<TicketEntry>();
             this.status = "open";
             this.price = -1.0;
+
+            //  this.price = 0d;
+            this.discountRate = 0d;
         }
 
     public List<TicketEntry> getProducts() {
@@ -218,6 +221,18 @@ public class EZSaleTransaction implements SaleTransaction {
             isSecond = !isSecond;
         }
         return (nSum % 10 == 0);
+    }
+
+    public int hashCode(){
+        return id.hashCode();
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof EZSaleTransaction))
+            return false;
+        EZSaleTransaction otherSale = (EZSaleTransaction) other;
+
+        return this.id == otherSale.getTicketNumber();
     }
     
 }
