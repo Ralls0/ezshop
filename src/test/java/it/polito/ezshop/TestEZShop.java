@@ -1092,7 +1092,6 @@ public class TestEZShop {
 
     }
 
-    // FIXME: Start Marco test
     @Test
     public void testStartSaleTransaction() {
 
@@ -1927,15 +1926,264 @@ public class TestEZShop {
 
     @Test
     public void testReceiveCashPayment() {
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            ezShop.addProductToSale(transactionId, productCode, 12);
+            ezShop.endSaleTransaction(transactionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        final Integer tempId = transactionId;
+    
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.receiveCashPayment(tempId, 200);
+        });
+    
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.receiveCashPayment(null, 200.0);
+        });
 
+        // test InvalidPaymentException
+        assertThrows(it.polito.ezshop.exceptions.InvalidPaymentException.class, () -> {
+            ezShop.receiveCashPayment(tempId, 0.0);
+        });
+    
+        // test returnId not valid
+        double resultOp = -1.0;
+        try {
+            resultOp = ezShop.receiveCashPayment(10, 200.0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(-1.0, resultOp, 0.01);
+        resultOp = -1.0;
+        try {
+            resultOp = ezShop.receiveCashPayment(tempId, 200.0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(56.0, resultOp, 0.01);
     }
 
     @Test
     public void testReceiveCreditCardPayment() {
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            ezShop.addProductToSale(transactionId, productCode, 12);
+            ezShop.endSaleTransaction(transactionId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        final Integer tempId = transactionId;
+    
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.receiveCreditCardPayment(tempId, "4030270951989685");
+        });
+    
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.receiveCreditCardPayment(null, "4030270951989685");
+        });
 
+        // test InvalidCreditCardException
+        assertThrows(it.polito.ezshop.exceptions.InvalidCreditCardException.class, () -> {
+            ezShop.receiveCreditCardPayment(tempId, "");
+        });
+    
+        // test returnId not valid
+        boolean resultOp = true;
+        try {
+            resultOp = ezShop.receiveCreditCardPayment(10, "4030270951989685");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("receiveCreditCardPayment not valid mismatch", !resultOp);
+        resultOp = false;
+        try {
+            resultOp = ezShop.receiveCreditCardPayment(tempId, "4030270951989685");;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertTrue("receiveCreditCardPayment valid mismatch", resultOp);
     }
 
-    // FIXME: End Marco test
+    @Test
+    public void testReturnCashPayment() {
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        Integer returnId = -1;
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            ezShop.addProductToSale(transactionId, productCode, 12);
+            ezShop.endSaleTransaction(transactionId);
+            // Pay transaction
+            ezShop.receiveCashPayment(transactionId, 1000);
+            // Start Return product
+            returnId = ezShop.startReturnTransaction(transactionId);
+            // Add product to return
+            ezShop.returnProduct(returnId, productCode, 12);
+            // End return
+            ezShop.endReturnTransaction(returnId, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        final Integer tempRId = returnId;
+    
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.returnCashPayment(tempRId);
+        });
+    
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.returnCashPayment(null);
+        });
+    
+        // test returnId not valid
+        double resultOp = 0.0;
+        try {
+            resultOp = ezShop.returnCashPayment(10);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(-1.0, resultOp, 0.01);
+        resultOp = -1.0;
+        try {
+            resultOp = ezShop.returnCashPayment(tempRId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(144.0, resultOp, 0.01);
+    }
+
+    @Test
+    public void testReturnCreditCardPayment() {
+        String productCode = "3000000000076";
+        Integer productId = -1;
+        Integer transactionId = -1;
+        Integer returnId = -1;
+        try {
+            // start saleTransaction
+            ezShop.createUser("Marco", "CppSpaccaMaNoiUsiamoJava", "Administrator");
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+            // Create Product
+            productId = ezShop.createProductType("Product test", productCode, 12.0, "None");
+            ezShop.updatePosition(productId, "0-a-0");
+            ezShop.updateQuantity(productId, 20);
+            // Create SaleTransaction
+            transactionId = ezShop.startSaleTransaction();
+            ezShop.addProductToSale(transactionId, productCode, 12);
+            ezShop.endSaleTransaction(transactionId);
+            // Pay transaction
+            ezShop.receiveCashPayment(transactionId, 1000);
+            // Start Return product
+            returnId = ezShop.startReturnTransaction(transactionId);
+            // Add product to return
+            ezShop.returnProduct(returnId, productCode, 12);
+            // End return
+            ezShop.endReturnTransaction(returnId, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    
+        final Integer tempRId = returnId;
+    
+        // test UnauthorizedException
+        ezShop.logout();
+        assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
+            ezShop.returnCreditCardPayment(tempRId, "4030270951989685");
+        });
+    
+        try {
+            ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
+        } catch (Exception e1) {
+            e1.printStackTrace();
+        }
+    
+        // test InvalidTransactionIdException
+        assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
+            ezShop.returnCreditCardPayment(null, "4030270951989685");
+        });
+    
+        // test InvalidCreditCardException
+        assertThrows(it.polito.ezshop.exceptions.InvalidCreditCardException.class, () -> {
+            ezShop.returnCreditCardPayment(tempRId, "");
+        });
+    
+        // test returnId not valid
+        double resultOp = 0.0;
+        try {
+            resultOp = ezShop.returnCreditCardPayment(10, "4030270951989685");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(-1.0, resultOp, 0.01);
+        resultOp = -1.0;
+        try {
+            resultOp = ezShop.returnCreditCardPayment(tempRId, "4030270951989685");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        assertEquals(144.0, resultOp, 0.01);
+    }
 
     private void createw(String username, String passw, String role) {
         try {
