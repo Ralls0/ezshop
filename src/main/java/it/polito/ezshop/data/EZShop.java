@@ -503,9 +503,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidOrderIdException("Null Order ID");
         if (orderId <= 0)
             throw new InvalidOrderIdException("Negative (or zero) Order ID");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException("No User Logged In");
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
         Order myOrder = null;
