@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -2592,4 +2592,31 @@ public class TestEZShop {
         assertTrue(res);
     }
 
+    @Test
+    public void testBODates(){
+        Double fakeAmount = 100.0;
+        LocalDate now, then;
+        List<BalanceOperation> bos = null;
+        Long length;
+
+        now = LocalDate.of(1990, 01, 01);
+        then = LocalDate.of(2030, 01, 01);
+
+        createw("ShopManager", "Password", "ShopManager");
+        loginw("ShopManager", "Password");
+
+        try {
+            ezShop.recordBalanceUpdate(fakeAmount);
+            ezShop.recordBalanceUpdate(fakeAmount);
+            ezShop.recordBalanceUpdate(fakeAmount);
+            bos = ezShop.getCreditsAndDebits(then, now);
+        } catch (Exception e){
+            System.out.println(e.getClass());
+            e.printStackTrace();
+            fail();
+        }
+
+        length = bos.stream().count();
+        assertEquals(length.longValue(), 3);
+    }
 }
