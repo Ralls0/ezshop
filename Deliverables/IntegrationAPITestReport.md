@@ -21,10 +21,7 @@ Version: 1.0
 - [Tests](#tests)
   - [Step 1](#step-1)
   - [Step 2](#step-2)
-  - [Step n](#step-n)
-  - [Step x](#step-x)
-- [Scenarios](#scenarios)
-  - [Scenario UCx.y](#scenario-ucxy)
+  - [Step 3](#step-3)
 - [Coverage of Scenarios and FR](#coverage-of-scenarios-and-fr)
 - [Coverage of Non Functional Requirements](#coverage-of-non-functional-requirements)
 
@@ -82,18 +79,18 @@ EZAccountBook-->EZBalanceOperation
 EZReturnTransaction-->EZTicketEntry
 EZSaleTransaction-->EZTicketEntry
 
-EZShopDBManager-->tutti
-
 @enduml
 ```
 
 # Integration approach
 
-    <Write here the integration sequence you adopted, in general terms (top down, bottom up, mixed) and as sequence
-    (ex: step1: class A, step 2: class A+B, step 3: class A+B+C, etc)>
-    <Some steps may  correspond to unit testing (ex step1 in ex above), presented in other document UnitTestReport.md>
-    <One step will  correspond to API testing>
-    For our tests we have chosen a bottom up approach
+For our tests we have chosen a bottom up approach.
+
+Step 1: Unit testing
+
+Step 2: Intermediate testing
+
+Step : API testing
 
 # Tests
 
@@ -104,80 +101,32 @@ JUnit test cases applied to them> JUnit test classes should be here src/test/jav
 
 | Classes | JUnit test cases |
 | ------- | ---------------- |
-|         |                  |
+| EZTicketEntry.java | TestEZTicketEntry.testSetBarCode(), TestEZTicketEntry.testSetProductDescription(), TestEZTicketEntry.testSetAmount(), TestEZTicketEntry.testSetPricePerUnit(), TestEZTicketEntry.testSetDiscountRate() |
+| EZOrder.java | TestEZOrder.testSetBalanceId(), TestEZOrder.testSetProductCode(), TestEZOrder.testSetPricePerUnit(), TestEZOrder.testSetQuantity(), TestEZOrder.testSetStatus(), TestEZOrder.testSetOrderID() |
+| EZBalanceOperation.java | TestEZBalanceOperation.testSetBalanceId(), TestEZBalanceOperation.testSetDate(), TestEZBalanceOperation.testSetMoney(), TestEZBalanceOperation.testSetType() |
+| EZUser.java | TestEZUser.setId(), TestEZUser.setUsername(), TestEZUser.setPassword(), TestEZUser.setRole() |
+| EZProductType.java | TestEZProductType.setQuantity(), TestEZProductType.setLocation(), TestEZProductType.setNote(), TestEZProductType.setProductDescription(), TestEZProductType.setBarCode(), TestEZProductType.setPricePerUnit(), TestEZProductType.setId() |
+| EZCustomer.java | TestEZCustomer.testXSetter(), TestEZCustomer.testCustomerCardSetter(), TestEZCustomer.testCustomerNameSetter(), TestEZCustomer.testSetId(), TestEZCustomer.testSetPoints() |
+| CreditCardCircuit.java | TestCreditCardCircuit.testCardPresentInFile(), TestCreditCardCircuit.testCardNotPresentInFile(), TestCreditCardCircuit.testNegativeMinBalance(), TestCreditCardCircuit.testCardNotPresentDuringHasEnoughBalance(), TestCreditCardCircuit.testCardBalanceInsufficientDuringHasEnoughBalance(), TestCreditCardCircuit.testCardBalanceSufficientDuringHasEnoughBalance(), TestCreditCardCircuit.testNegativePayAmount(), TestCreditCardCircuit.testCardNotPresentDuringPay(), TestCreditCardCircuit.testCardBalanceInsufficientDuringPay(), TestCreditCardCircuit.testCardBalanceSufficientDuringPay(), TestCreditCardCircuit.testNegativeRefundAmount(), TestCreditCardCircuit.testCardNotPresentDuringRefund(), TestCreditCardCircuit.testRefundSuccess() |
 
 ## Step 2
 
 | Classes | JUnit test cases |
 | ------- | ---------------- |
-|         |                  |
+| EZAccountBook.java | TestEZAccountBook.testSingleton(), TestEZAccountBook.testGetBOList(), TestEZAccountBook.testComputeBalanceAllPositive(), TestEZAccountBook.testComputeBalanceAllNegative(), TestEZAccountBook.testComputeBalanceMixed1(), TestEZAccountBook.testComputeBalanceMixed2(), TestEZAccountBook.testComputeBalanceMixed3() |
+| EZReturnTransaction.java | TestEZReturnTransaction.testSetReturnId(), TestEZReturnTransaction.testSetTransactionId(), TestEZReturnTransaction.testSetProducts(), TestEZReturnTransaction.testSetCommit, TestEZReturnTransaction.testSetStatus, TestEZReturnTransaction.testSetDiscountRate(), TestEZReturnTransaction.testAddProductReturnedAndGetPrice(), TestEZReturnTransaction.testAddProductReturnedAndGetPriceWithDiscount() |
+| EZSaleTransaction.java | TestEZSaleTransaction.setUp(), TestEZSaleTransaction.tearDown(), TestEZSaleTransaction.testSetProducts(), TestEZSaleTransaction.testSetEntries(), TestEZSaleTransaction.testSetPaymentType(), TestEZSaleTransaction.testSetStatus(), TestEZSaleTransaction.testSetTicketNumber(), TestEZSaleTransaction.testSetDiscountRate(), TestEZSaleTransaction.testSetPrice(), TestEZSaleTransaction.testSetPriceWithProduct(), TestEZSaleTransaction.testComputePointsWithPrice(), TestEZSaleTransaction.testComputePointsWithProduct(), TestEZSaleTransaction.testReceiveCashPaymentValid(), TestEZSaleTransaction.testReceiveCashPaymentInvalid(), TestEZSaleTransaction.testReceiveCreditCardPayment(), TestEZSaleTransaction.testGetEntry(), TestEZSaleTransaction.testDeleteProductFromSaleValid(), TestEZSaleTransaction.testDeleteProductFromSaleInvalid(), TestEZSaleTransaction.testApplyDiscountRateToProduct(), TestEZSaleTransaction.testEndSaleTransaction(), TestEZSaleTransaction.testValidLuhnAlgorithm() |
+| EZTicketEntry.java | TestEZTicketEntry.testSetBarCode(), TestEZTicketEntry.testSetProductDescription(), TestEZTicketEntry.testSetAmount(), TestEZTicketEntry.testSetPricePerUnit(), TestEZTicketEntry.testSetDiscountRate() |
+| EZShopDBManager.java | TestEZShopDBManager.testGetNextUserID(), TestEZShopDBManager.testLoadAllUsers(), TestEZShopDBManager.testLoadUserFromID(), TestEZShopDBManager.testLoadUserFromUsernameAndPass(), TestEZShopDBManager.testUserExistsFromID(), TestEZShopDBManager.testUserExistsFromUsername(), TestEZShopDBManager.testUpdateUserRights(), TestEZShopDBManager.testDeleteUser(), TestEZShopDBManager.testGetNextCustomerID(), TestEZShopDBManager.testLoadAllCustomers(), TestEZShopDBManager.testLoadCustomerFromID(), TestEZShopDBManager.testLoadCustomerFromCard(), TestEZShopDBManager.testCustomerExistsFromID(), TestEZShopDBManager.testCustomerExistsFromName(), TestEZShopDBManager.testCustomerExistsFromCard(), TestEZShopDBManager.testUpdateCustomer(), TestEZShopDBManager.testDeleteCustomer(), TestEZShopDBManager.testGetNextOrderID(), TestEZShopDBManager.testLoadAllOrders(), TestEZShopDBManager.testLoadOrderFromID(), TestEZShopDBManager.testUpdateOrder(), TestEZShopDBManager.testGetNextProductID(), TestEZShopDBManager.testLoadAllProducts(), TestEZShopDBManager.testLoadProductFromID(), TestEZShopDBManager.testLoadProductFromBarCode(), TestEZShopDBManager.testProductExistsFromID(), TestEZShopDBManager.testProductExistsFromBarCode(), TestEZShopDBManager.testProductExistsFromLocation(), TestEZShopDBManager.testUpdateProduct(), TestEZShopDBManager.testDeleteProduct(), TestEZShopDBManager.testGetNextSaleID(), TestEZShopDBManager.testLoadAllSales(), TestEZShopDBManager.testLoadSaleFromID(), TestEZShopDBManager.testUpdateSale(), TestEZShopDBManager.testDeleteSale(), TestEZShopDBManager.testGetNextBalanceOperationID(), TestEZShopDBManager.testLoadAllBalanceOperations(), TestEZShopDBManager.testGetNextReturnID(), TestEZShopDBManager.testLoadReturnFromID(), TestEZShopDBManager.testUpdateReturnStatus(), TestEZShopDBManager.testDeleteReturn() |
 
-## Step n
+## Step 3
 
 | Classes | JUnit test cases |
 | ------- | ---------------- |
-|         |                  |
-
-## Step x
-
-
-|    Classes    |       JUnit Test Cases        |
-| :-----------: | :---------------------------: |
-| EZAccountBook |         testGetBOList         |
-| EZAccountBook | testComputeBalanceAllPositive |
-| EZAccountBook | testComputeBalanceAllNegative |
-| EZAccountBook |  testComputeBalanceAllMixed1  |
-| EZAccountBook |  testComputeBalanceAllMixed2  |
-| EZAccountBook |  testComputeBalanceAllMixed3  |
-|    EZOrder    |        testIssueOrder         |
-|    EZUser     |                               |
-|    EZShop     |                               |
-| EZProductType |                               |
-|    EZOrder    |         testPayOrder          |
-|    EZUser     |                               |
-|    EZShop     |                               |
-| EZProductType |                               |
-| EZAccountBook |                               |
-|    EZOrder    |        testPayOrderFor        |
-|    EZUser     |                               |
-|    EZShop     |                               |
-| EZProductType |                               |
-| EZAccountBook |                               |
-|    EZOrder    |    testRecordOrderArrival     |
-|    EZUser     |                               |
-|    EZShop     |                               |
-| EZProductType |                               |
-| EZAccountBook |                               |
-|    EZOrder    |       testRecordBUAndCB       |
-|    EZUser     |                               |
-|    EZShop     |                               |
-| EZProductType |                               |
-| EZAccountBook |                               |
-|    EZOrder    |   testGetDebitsCreditsAndCB   |
-|    EZUser     |                               |
-|    EZShop     |                               |
-| EZProductType |                               |
-| EZAccountBook |                               |
-
-# Scenarios
-
-<If needed, define here additional scenarios for the application. Scenarios should be named
-referring the UC in the OfficialRequirements that they detail>
-
-## Scenario UCx.y
-
-| Scenario       |    name     |
-| -------------- | :---------: |
-| Precondition   |             |
-| Post condition |             |
-| Step#          | Description |
-| 1              |     ...     |
-| 2              |     ...     |
+| EZShop.java | TestEZShop.testCreateUser(), TestEZShop.testDeleteUser(), TestEZShop.testGetAllUsers(), TestEZShop.testGetUser(), TestEZShop.testUpdateUserRights(), TestEZShop.testLogin(), TestEZShop.testLogout(), TestEZShop.createProductType(), TestEZShop.updateProduct(), TestEZShop.deleteProductType(), TestEZShop.getAllProductTypes(), TestEZShop.getProductTypeByBarCode(), TestEZShop.getProductTypesByDescription(), TestEZShop.updateQuantity(), TestEZShop.updatePosition(), TestEZShop.defineCustomer(), TestEZShop.modifyCustomer(), TestEZShop.deleteCustomer(), TestEZShop.getCustomer(), TestEZShop.getAllCustomers(), TestEZShop.createCard(), TestEZShop.attachCardToCustomer(), TestEZShop.modifyPointsOnCard(), TestEZShop.testStartSaleTransaction(), TestEZShop.testAddProductToSale(), TestEZShop.testDeleteProductFromSale(), TestEZShop.testApplyDiscountRateToProduct(), TestEZShop.testapplyDiscountRateToSale(), TestEZShop.testComputePointsForSale(), TestEZShop.testEndSaleTransaction(), TestEZShop.testDeleteSaleTransaction(), TestEZShop.testGetSaleTransactio(), TestEZShop.testStartReturnTransaction(), TestEZShop.testReturnProduct(), TestEZShop.testEndReturnTransaction(), TestEZShop.testDeleteReturnTransaction(), TestEZShop.testReceiveCashPayment(), TestEZShop.testReceiveCreditCardPayment(), TestEZShop.testReturnCashPayment(), TestEZShop.testReturnCreditCardPayment(), TestEZShop.testIssueOrder(), TestEZShop.testPayOrderFor(), TestEZShop.testPayOrder(), TestEZShop.testRecordOrderArrival(), TestEZShop.testRecordBUAndCB(), TestEZShop.testGetDebitsCreditsAndCB(), TestEZShop.testValidBarCode() |
 
 # Coverage of Scenarios and FR
 
-<Report in the following table the coverage of scenarios (from official requirements and from above) vs FR.
-Report also for each of the scenarios the (one or more) API JUnit tests that cover it. >
 
 | Scenario ID | FR covered | JUnit Test(s)             |
 | ----------- | ---------- | ------------------------- |
@@ -201,4 +150,6 @@ Report also for each of the scenarios the (one or more) API JUnit tests that cov
 | Non Functional Requirement | Test name        |
 | -------------------------- | ---------------- |
 |                            |                  |
-| NFR4                       | testValidBarCode |
+| NFR4 | TestEZShop.testValidBarCode() |
+| NFR5 | TestEZSaleTransaction.testValidLuhnAlgorithm() |
+| NFR6 | TestEZSaleTransaction.createCard() |
