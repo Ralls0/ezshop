@@ -101,109 +101,109 @@ JUnit test cases applied to them> JUnit test classes should be here src/test/jav
 
 | Classes | JUnit test cases |
 | ------- | ---------------- |
-| EZTicketEntry.java | TestEZTicketEntry.testSetBarCode(), TestEZTicketEntry.testSetProductDescription(), TestEZTicketEntry.testSetAmount(), TestEZTicketEntry.testSetPricePerUnit(), TestEZTicketEntry.testSetDiscountRate() |
-| EZOrder.java | TestEZOrder.testSetBalanceId(), TestEZOrder.testSetProductCode(), TestEZOrder.testSetPricePerUnit(), TestEZOrder.testSetQuantity(), TestEZOrder.testSetStatus(), TestEZOrder.testSetOrderID() |
-| EZBalanceOperation.java | TestEZBalanceOperation.testSetBalanceId(), TestEZBalanceOperation.testSetDate(), TestEZBalanceOperation.testSetMoney(), TestEZBalanceOperation.testSetType() |
-| EZUser.java | TestEZUser.setId(), TestEZUser.setUsername(), TestEZUser.setPassword(), TestEZUser.setRole() |
-| EZProductType.java | TestEZProductType.setQuantity(), TestEZProductType.setLocation(), TestEZProductType.setNote(), TestEZProductType.setProductDescription(), TestEZProductType.setBarCode(), TestEZProductType.setPricePerUnit(), TestEZProductType.setId() |
-| EZCustomer.java | TestEZCustomer.testXSetter(), TestEZCustomer.testCustomerCardSetter(), TestEZCustomer.testCustomerNameSetter(), TestEZCustomer.testSetId(), TestEZCustomer.testSetPoints() |
-| CreditCardCircuit.java | TestCreditCardCircuit.testCardPresentInFile(), TestCreditCardCircuit.testCardNotPresentInFile(), TestCreditCardCircuit.testNegativeMinBalance(), TestCreditCardCircuit.testCardNotPresentDuringHasEnoughBalance(), TestCreditCardCircuit.testCardBalanceInsufficientDuringHasEnoughBalance(), TestCreditCardCircuit.testCardBalanceSufficientDuringHasEnoughBalance(), TestCreditCardCircuit.testNegativePayAmount(), TestCreditCardCircuit.testCardNotPresentDuringPay(), TestCreditCardCircuit.testCardBalanceInsufficientDuringPay(), TestCreditCardCircuit.testCardBalanceSufficientDuringPay(), TestCreditCardCircuit.testNegativeRefundAmount(), TestCreditCardCircuit.testCardNotPresentDuringRefund(), TestCreditCardCircuit.testRefundSuccess() |
+| EZTicketEntry.java | TestEZTicketEntry.testSetBarCode()<br/>TestEZTicketEntry.testSetProductDescription()<br/>TestEZTicketEntry.testSetAmount()<br/>TestEZTicketEntry.testSetPricePerUnit()<br/>TestEZTicketEntry.testSetDiscountRate() |
+| EZOrder.java | TestEZOrder.testSetBalanceId()<br/>TestEZOrder.testSetProductCode()<br/>TestEZOrder.testSetPricePerUnit()<br/>TestEZOrder.testSetQuantity()<br/>TestEZOrder.testSetStatus()<br/>TestEZOrder.testSetOrderID() |
+| EZBalanceOperation.java | TestEZBalanceOperation.testSetBalanceId()<br/>TestEZBalanceOperation.testSetDate()<br/>TestEZBalanceOperation.testSetMoney()<br/>TestEZBalanceOperation.testSetType() |
+| EZUser.java | TestEZUser.setId()<br/>TestEZUser.setUsername()<br/>TestEZUser.setPassword()<br/>TestEZUser.setRole() |
+| EZProductType.java | TestEZProductType.setQuantity()<br/>TestEZProductType.setLocation()<br/>TestEZProductType.setNote()<br/>TestEZProductType.setProductDescription()<br/>TestEZProductType.setBarCode()<br/>TestEZProductType.setPricePerUnit()<br/>TestEZProductType.setId() |
+| EZCustomer.java | TestEZCustomer.testXSetter()<br/>TestEZCustomer.testCustomerCardSetter()<br/>TestEZCustomer.testCustomerNameSetter()<br/>TestEZCustomer.testSetId()<br/>TestEZCustomer.testSetPoints() |
+| CreditCardCircuit.java | TestCreditCardCircuit.testCardPresentInFile()<br/>TestCreditCardCircuit.testCardNotPresentInFile()<br/>TestCreditCardCircuit.testNegativeMinBalance()<br/>TestCreditCardCircuit.testCardNotPresentDuringHasEnoughBalance()<br/>TestCreditCardCircuit.testCardBalanceInsufficientDuringHasEnoughBalance()<br/>TestCreditCardCircuit.testCardBalanceSufficientDuringHasEnoughBalance()<br/>TestCreditCardCircuit.testNegativePayAmount()<br/>TestCreditCardCircuit.testCardNotPresentDuringPay()<br/>TestCreditCardCircuit.testCardBalanceInsufficientDuringPay()<br/>TestCreditCardCircuit.testCardBalanceSufficientDuringPay()<br/>TestCreditCardCircuit.testNegativeRefundAmount()<br/>TestCreditCardCircuit.testCardNotPresentDuringRefund()<br/>TestCreditCardCircuit.testRefundSuccess() |
 
 ## Step 2
 
 | Classes | JUnit test cases |
 | ------- | ---------------- |
-| EZAccountBook.java | TestEZAccountBook.testSingleton(), TestEZAccountBook.testGetBOList(), TestEZAccountBook.testComputeBalanceAllPositive(), TestEZAccountBook.testComputeBalanceAllNegative(), TestEZAccountBook.testComputeBalanceMixed1(), TestEZAccountBook.testComputeBalanceMixed2(), TestEZAccountBook.testComputeBalanceMixed3() |
-| EZReturnTransaction.java | TestEZReturnTransaction.testSetReturnId(), TestEZReturnTransaction.testSetTransactionId(), TestEZReturnTransaction.testSetProducts(), TestEZReturnTransaction.testSetCommit, TestEZReturnTransaction.testSetStatus, TestEZReturnTransaction.testSetDiscountRate(), TestEZReturnTransaction.testAddProductReturnedAndGetPrice(), TestEZReturnTransaction.testAddProductReturnedAndGetPriceWithDiscount() |
-| EZSaleTransaction.java | TestEZSaleTransaction.setUp(), TestEZSaleTransaction.tearDown(), TestEZSaleTransaction.testSetProducts(), TestEZSaleTransaction.testSetEntries(), TestEZSaleTransaction.testSetPaymentType(), TestEZSaleTransaction.testSetStatus(), TestEZSaleTransaction.testSetTicketNumber(), TestEZSaleTransaction.testSetDiscountRate(), TestEZSaleTransaction.testSetPrice(), TestEZSaleTransaction.testSetPriceWithProduct(), TestEZSaleTransaction.testComputePointsWithPrice(), TestEZSaleTransaction.testComputePointsWithProduct(), TestEZSaleTransaction.testReceiveCashPaymentValid(), TestEZSaleTransaction.testReceiveCashPaymentInvalid(), TestEZSaleTransaction.testReceiveCreditCardPayment(), TestEZSaleTransaction.testGetEntry(), TestEZSaleTransaction.testDeleteProductFromSaleValid(), TestEZSaleTransaction.testDeleteProductFromSaleInvalid(), TestEZSaleTransaction.testApplyDiscountRateToProduct(), TestEZSaleTransaction.testEndSaleTransaction(), TestEZSaleTransaction.testValidLuhnAlgorithm() |
-| EZTicketEntry.java | TestEZTicketEntry.testSetBarCode(), TestEZTicketEntry.testSetProductDescription(), TestEZTicketEntry.testSetAmount(), TestEZTicketEntry.testSetPricePerUnit(), TestEZTicketEntry.testSetDiscountRate() |
-| EZShopDBManager.java | TestEZShopDBManager.testGetNextUserID(), TestEZShopDBManager.testLoadAllUsers(), TestEZShopDBManager.testLoadUserFromID(), TestEZShopDBManager.testLoadUserFromUsernameAndPass(), TestEZShopDBManager.testUserExistsFromID(), TestEZShopDBManager.testUserExistsFromUsername(), TestEZShopDBManager.testUpdateUserRights(), TestEZShopDBManager.testDeleteUser(), TestEZShopDBManager.testGetNextCustomerID(), TestEZShopDBManager.testLoadAllCustomers(), TestEZShopDBManager.testLoadCustomerFromID(), TestEZShopDBManager.testLoadCustomerFromCard(), TestEZShopDBManager.testCustomerExistsFromID(), TestEZShopDBManager.testCustomerExistsFromName(), TestEZShopDBManager.testCustomerExistsFromCard(), TestEZShopDBManager.testUpdateCustomer(), TestEZShopDBManager.testDeleteCustomer(), TestEZShopDBManager.testGetNextOrderID(), TestEZShopDBManager.testLoadAllOrders(), TestEZShopDBManager.testLoadOrderFromID(), TestEZShopDBManager.testUpdateOrder(), TestEZShopDBManager.testGetNextProductID(), TestEZShopDBManager.testLoadAllProducts(), TestEZShopDBManager.testLoadProductFromID(), TestEZShopDBManager.testLoadProductFromBarCode(), TestEZShopDBManager.testProductExistsFromID(), TestEZShopDBManager.testProductExistsFromBarCode(), TestEZShopDBManager.testProductExistsFromLocation(), TestEZShopDBManager.testUpdateProduct(), TestEZShopDBManager.testDeleteProduct(), TestEZShopDBManager.testGetNextSaleID(), TestEZShopDBManager.testLoadAllSales(), TestEZShopDBManager.testLoadSaleFromID(), TestEZShopDBManager.testUpdateSale(), TestEZShopDBManager.testDeleteSale(), TestEZShopDBManager.testGetNextBalanceOperationID(), TestEZShopDBManager.testLoadAllBalanceOperations(), TestEZShopDBManager.testGetNextReturnID(), TestEZShopDBManager.testLoadReturnFromID(), TestEZShopDBManager.testUpdateReturnStatus(), TestEZShopDBManager.testDeleteReturn() |
+| EZAccountBook.java | TestEZAccountBook.testSingleton()<br/>TestEZAccountBook.testGetBOList()<br/>TestEZAccountBook.testComputeBalanceAllPositive()<br/>TestEZAccountBook.testComputeBalanceAllNegative()<br/>TestEZAccountBook.testComputeBalanceMixed1()<br/>TestEZAccountBook.testComputeBalanceMixed2()<br/>TestEZAccountBook.testComputeBalanceMixed3() |
+| EZReturnTransaction.java | TestEZReturnTransaction.testSetReturnId()<br/>TestEZReturnTransaction.testSetTransactionId()<br/>TestEZReturnTransaction.testSetProducts()<br/>TestEZReturnTransaction.testSetCommit<br/>TestEZReturnTransaction.testSetStatus<br/>TestEZReturnTransaction.testSetDiscountRate()<br/>TestEZReturnTransaction.testAddProductReturnedAndGetPrice()<br/>TestEZReturnTransaction.testAddProductReturnedAndGetPriceWithDiscount() |
+| EZSaleTransaction.java | TestEZSaleTransaction.setUp()<br/>TestEZSaleTransaction.tearDown()<br/>TestEZSaleTransaction.testSetProducts()<br/>TestEZSaleTransaction.testSetEntries()<br/>TestEZSaleTransaction.testSetPaymentType()<br/>TestEZSaleTransaction.testSetStatus()<br/>TestEZSaleTransaction.testSetTicketNumber()<br/>TestEZSaleTransaction.testSetDiscountRate()<br/>TestEZSaleTransaction.testSetPrice()<br/>TestEZSaleTransaction.testSetPriceWithProduct()<br/>TestEZSaleTransaction.testComputePointsWithPrice()<br/>TestEZSaleTransaction.testComputePointsWithProduct()<br/>TestEZSaleTransaction.testReceiveCashPaymentValid()<br/>TestEZSaleTransaction.testReceiveCashPaymentInvalid()<br/>TestEZSaleTransaction.testReceiveCreditCardPayment()<br/>TestEZSaleTransaction.testGetEntry()<br/>TestEZSaleTransaction.testDeleteProductFromSaleValid()<br/>TestEZSaleTransaction.testDeleteProductFromSaleInvalid()<br/>TestEZSaleTransaction.testApplyDiscountRateToProduct()<br/>TestEZSaleTransaction.testEndSaleTransaction()<br/>TestEZSaleTransaction.testValidLuhnAlgorithm() |
+| EZTicketEntry.java | TestEZTicketEntry.testSetBarCode()<br/>TestEZTicketEntry.testSetProductDescription()<br/>TestEZTicketEntry.testSetAmount()<br/>TestEZTicketEntry.testSetPricePerUnit()<br/>TestEZTicketEntry.testSetDiscountRate() |
+| EZShopDBManager.java | TestEZShopDBManager.testGetNextUserID()<br/>TestEZShopDBManager.testLoadAllUsers()<br/>TestEZShopDBManager.testLoadUserFromID()<br/>TestEZShopDBManager.testLoadUserFromUsernameAndPass()<br/>TestEZShopDBManager.testUserExistsFromID()<br/>TestEZShopDBManager.testUserExistsFromUsername()<br/>TestEZShopDBManager.testUpdateUserRights()<br/>TestEZShopDBManager.testDeleteUser()<br/>TestEZShopDBManager.testGetNextCustomerID()<br/>TestEZShopDBManager.testLoadAllCustomers()<br/>TestEZShopDBManager.testLoadCustomerFromID()<br/>TestEZShopDBManager.testLoadCustomerFromCard()<br/>TestEZShopDBManager.testCustomerExistsFromID()<br/>TestEZShopDBManager.testCustomerExistsFromName()<br/>TestEZShopDBManager.testCustomerExistsFromCard()<br/>TestEZShopDBManager.testUpdateCustomer()<br/>TestEZShopDBManager.testDeleteCustomer()<br/>TestEZShopDBManager.testGetNextOrderID()<br/>TestEZShopDBManager.testLoadAllOrders()<br/>TestEZShopDBManager.testLoadOrderFromID()<br/>TestEZShopDBManager.testUpdateOrder()<br/>TestEZShopDBManager.testGetNextProductID()<br/>TestEZShopDBManager.testLoadAllProducts()<br/>TestEZShopDBManager.testLoadProductFromID()<br/>TestEZShopDBManager.testLoadProductFromBarCode()<br/>TestEZShopDBManager.testProductExistsFromID()<br/>TestEZShopDBManager.testProductExistsFromBarCode()<br/>TestEZShopDBManager.testProductExistsFromLocation()<br/>TestEZShopDBManager.testUpdateProduct()<br/>TestEZShopDBManager.testDeleteProduct()<br/>TestEZShopDBManager.testGetNextSaleID()<br/>TestEZShopDBManager.testLoadAllSales()<br/>TestEZShopDBManager.testLoadSaleFromID()<br/>TestEZShopDBManager.testUpdateSale()<br/>TestEZShopDBManager.testDeleteSale()<br/>TestEZShopDBManager.testGetNextBalanceOperationID()<br/>TestEZShopDBManager.testLoadAllBalanceOperations()<br/>TestEZShopDBManager.testGetNextReturnID()<br/>TestEZShopDBManager.testLoadReturnFromID()<br/>TestEZShopDBManager.testUpdateReturnStatus()<br/>TestEZShopDBManager.testDeleteReturn() |
 
 ## Step 3
 
 | Classes | JUnit test cases |
 | ------- | ---------------- |
-| EZShop.java | TestEZShop.testCreateUser(), TestEZShop.testDeleteUser(), TestEZShop.testGetAllUsers(), TestEZShop.testGetUser(), TestEZShop.testUpdateUserRights(), TestEZShop.testLogin(), TestEZShop.testLogout(), TestEZShop.createProductType(), TestEZShop.updateProduct(), TestEZShop.deleteProductType(), TestEZShop.getAllProductTypes(), TestEZShop.getProductTypeByBarCode(), TestEZShop.getProductTypesByDescription(), TestEZShop.updateQuantity(), TestEZShop.updatePosition(), TestEZShop.defineCustomer(), TestEZShop.modifyCustomer(), TestEZShop.deleteCustomer(), TestEZShop.getCustomer(), TestEZShop.getAllCustomers(), TestEZShop.createCard(), TestEZShop.attachCardToCustomer(), TestEZShop.modifyPointsOnCard(), TestEZShop.testStartSaleTransaction(), TestEZShop.testAddProductToSale(), TestEZShop.testDeleteProductFromSale(), TestEZShop.testApplyDiscountRateToProduct(), TestEZShop.testapplyDiscountRateToSale(), TestEZShop.testComputePointsForSale(), TestEZShop.testEndSaleTransaction(), TestEZShop.testDeleteSaleTransaction(), TestEZShop.testGetSaleTransactio(), TestEZShop.testStartReturnTransaction(), TestEZShop.testReturnProduct(), TestEZShop.testEndReturnTransaction(), TestEZShop.testDeleteReturnTransaction(), TestEZShop.testReceiveCashPayment(), TestEZShop.testReceiveCreditCardPayment(), TestEZShop.testReturnCashPayment(), TestEZShop.testReturnCreditCardPayment(), TestEZShop.testIssueOrder(), TestEZShop.testPayOrderFor(), TestEZShop.testPayOrder(), TestEZShop.testRecordOrderArrival(), TestEZShop.testRecordBUAndCB(), TestEZShop.testGetDebitsCreditsAndCB(), TestEZShop.testValidBarCode() |
+| EZShop.java | TestEZShop.testCreateUser()<br/> TestEZShop.testDeleteUser()<br/>TestEZShop.testGetAllUsers()<br/>TestEZShop.testGetUser()<br/>TestEZShop.testUpdateUserRights()<br/>TestEZShop.testLogin()<br/>TestEZShop.testLogout()<br/>TestEZShop.createProductType()<br/>TestEZShop.updateProduct()<br/>TestEZShop.deleteProductType()<br/>TestEZShop.getAllProductTypes()<br/>TestEZShop.getProductTypeByBarCode()<br/>TestEZShop.getProductTypesByDescription()<br/>TestEZShop.updateQuantity()<br/>TestEZShop.updatePosition()<br/>TestEZShop.defineCustomer()<br/>TestEZShop.modifyCustomer()<br/>TestEZShop.deleteCustomer()<br/>TestEZShop.getCustomer()<br/>TestEZShop.getAllCustomers()<br/>TestEZShop.createCard()<br/>TestEZShop.attachCardToCustomer()<br/>TestEZShop.modifyPointsOnCard()<br/>TestEZShop.testStartSaleTransaction()<br/>TestEZShop.testAddProductToSale()<br/>TestEZShop.testDeleteProductFromSale()<br/>TestEZShop.testApplyDiscountRateToProduct()<br/>TestEZShop.testapplyDiscountRateToSale()<br/>TestEZShop.testComputePointsForSale()<br/>TestEZShop.testEndSaleTransaction()<br/>TestEZShop.testDeleteSaleTransaction()<br/>TestEZShop.testGetSaleTransactio()<br/>TestEZShop.testStartReturnTransaction()<br/>TestEZShop.testReturnProduct()<br/>TestEZShop.testEndReturnTransaction()<br/>TestEZShop.testDeleteReturnTransaction()<br/>TestEZShop.testReceiveCashPayment()<br/>TestEZShop.testReceiveCreditCardPayment()<br/>TestEZShop.testReturnCashPayment()<br/>TestEZShop.testReturnCreditCardPayment()<br/>TestEZShop.testIssueOrder()<br/>TestEZShop.testPayOrderFor()<br/>TestEZShop.testPayOrder()<br/>TestEZShop.testRecordOrderArrival()<br/>TestEZShop.testRecordBUAndCB()<br/>TestEZShop.testGetDebitsCreditsAndCB()<br/>TestEZShop.testValidBarCode() |
 
 # Coverage of Scenarios and FR
 
 
 | Scenario ID | FR covered | JUnit Test(s)                  |
 | :---------: | :--------: | :----------------------------- |
-|     1-*     |    FR3     | testDeleteProductType          |
-|             |            | testGetAllProductTypes         |
-|     1-1     |    FR3     | testCreateProductType          |
-|             |            | testValdiBarCode               |
-|     1-2     |    FR3     | testUpdatePosition             |
-|             |            | testUpdateProduct              |
-|     1-3     |    FR3     | testUpdateProduct              |
-|     2-*     |    FR1     | testGetAllUsers                |
-|     2-1     |    FR1     | testCreateUser                 |
-|     2-2     |    FR1     | testDeleteUsers                |
-|     2-3     |    FR1     | testGetUser                    |
-|     2-3     |            | testUpdateUserRights           |
-|     3-*     |    FR4     | testGetAllOrders               |
-|     3-1     |    FR4     | testIssueOrder                 |
-|     3-2     |    FR4     | testPayOrder                   |
-|     3-2     |    FR4     | testPayOrderFor                |
-|     3-3     |    FR4     | testRecordOrderArrival         |
-|     4-*     |    FR5     | testGetCustomer                |
-|             |            | testGetAllCustomers            |
-|             |            | testDeleteCustomers            |
-|     4-1     |    FR5     | testDefineCustomer             |
-|     4-2     |    FR5     | testAttachCardToCustomer       |
-|             |            | testCreateCard                 |
-|     4-3     |    FR5     | testAttachCardToCustomer       |
-|     4-4     |    FR5     | testModifyCustomer             |
-|             |    FR5     | testModifyPointsOnCard         |
-|     5-1     |    FR1     | testLogin                      |
-|     5-2     |    FR1     | testLogout                     |
-|     6-*     |    FR6     | testGetSaleTransaction         |
-|     6-1     |    FR6     | testStartSaleTransaction       |
-|             |            | testAddProductToSale           |
-|             |            | testDeleteProductFromSale      |
-|             |            | testRecieveCashPayment         |
-|             |            | testEndSaleTransaction         |
-|     6-2     |    FR6     | testStartSaleTransaction       |
-|             |            | testAddProductToSale           |
-|             |            | testDeleteProductFromSale      |
-|             |            | testApplyDiscountRateToProduct |
-|             |            | testRecieveCashPayment         |
-|             |            | testEndSaleTransaction         |
-|     6-3     |    FR6     | testStartSaleTransaction       |
-|             |            | testAddProductToSale           |
-|             |            | testDeleteProductFromSale      |
-|             |            | testApplyDiscountRateToSale    |
-|             |            | testRecieveCashPayment         |
-|             |            | testEndSaleTransaction         |
-|     6-4     |    FR6     | testStartSaleTransaction       |
-|             |            | testAddProductToSale           |
-|             |            | testDeleteProductFromSale      |
-|             |            | testApplyDiscountRateToSale    |
-|             |            | testComputePointsForSale       |
-|             |            | testRecieveCashPayment         |
-|             |            | testEndSaleTransaction         |
-|     6-4     |    FR6     | testStartSaleTransaction       |
-|             |            | testEndSaleTransaction         | <td> ? </td> |
-|     6-5     |    FR6     | testEndSaleTransaction         |
-|             |            | testRecieveCashPayment         |
-|     7-1     |    FR7     | testRecieveCreditCardPayment   |
-|     7-2     |    FR7     | testRecieveCreditCardPayment   |
-|     7-3     |    FR7     | testRecieveCreditCardPayment   |
-|     7-4     |    FR7     | testRecieveCashPayment         |
-|     8-*     |    FR7     | testDeleteReturnTransaction    |
-|     8-1     |    FR7     | testStartReturnTransaction     |
-|             |            | testReturnProduct              |
-|             |            | testEndReturnTransaction       |
-|             |            | testReturnCreditCardPayment    |
-|     8-2     |    FR7     | testStartReturnTransaction     |
-|             |            | testReturnProduct              |
-|             |            | testEndReturnTransaction       |
-|             |            | testRetrunCashPayment          |
-|     9-1     |    FR8     | testGetDebitdsAndCreditsAndCB  |
-|             |            | testGetBODates                 |
-|    10-1     |    FR7     | testReturnCreditCardPayment    |
-|    10-2     |    FR7     | testReturnCashPayment          |
+|     1-*     |    FR3     | TestEZShop.testDeleteProductType()          |
+|             |            | TestEZShop.testGetAllProductTypes()         |
+|     1-1     |    FR3     | TestEZShop.testCreateProductType()          |
+|             |            | TestEZShop.testValdiBarCode()               |
+|     1-2     |    FR3     | TestEZShop.testUpdatePosition()             |
+|             |            | TestEZShop.testUpdateProduct()              |
+|     1-3     |    FR3     | TestEZShop.testUpdateProduct()              |
+|     2-*     |    FR1     | TestEZShop.testGetAllUsers()                |
+|     2-1     |    FR1     | TestEZShop.testCreateUser()                 |
+|     2-2     |    FR1     | TestEZShop.testDeleteUsers()                |
+|     2-3     |    FR1     | TestEZShop.testGetUser()                    |
+|     2-3     |            | TestEZShop.testUpdateUserRights()           |
+|     3-*     |    FR4     | TestEZShop.testGetAllOrders()               |
+|     3-1     |    FR4     | TestEZShop.testIssueOrder()                 |
+|     3-2     |    FR4     | TestEZShop.testPayOrder()                   |
+|     3-2     |    FR4     | TestEZShop.testPayOrderFor()                |
+|     3-3     |    FR4     | TestEZShop.testRecordOrderArrival()         |
+|     4-*     |    FR5     | TestEZShop.testGetCustomer()                |
+|             |            | TestEZShop.testGetAllCustomers()            |
+|             |            | TestEZShop.testDeleteCustomers()            |
+|     4-1     |    FR5     | TestEZShop.testDefineCustomer()             |
+|     4-2     |    FR5     | TestEZShop.testAttachCardToCustomer()       |
+|             |            | TestEZShop.testCreateCard()                 |
+|     4-3     |    FR5     | TestEZShop.testAttachCardToCustomer()       |
+|     4-4     |    FR5     | TestEZShop.testModifyCustomer()             |
+|             |    FR5     | TestEZShop.testModifyPointsOnCard()         |
+|     5-1     |    FR1     | TestEZShop.testLogin()                      |
+|     5-2     |    FR1     | TestEZShop.testLogout()                     |
+|     6-*     |    FR6     | TestEZShop.testGetSaleTransaction()         |
+|     6-1     |    FR6     | TestEZShop.testStartSaleTransaction()       |
+|             |            | TestEZShop.testAddProductToSale()           |
+|             |            | TestEZShop.testDeleteProductFromSale()      |
+|             |            | TestEZShop.testRecieveCashPayment()         |
+|             |            | TestEZShop.testEndSaleTransaction()         |
+|     6-2     |    FR6     | TestEZShop.testStartSaleTransaction()       |
+|             |            | TestEZShop.testAddProductToSale()           |
+|             |            | TestEZShop.testDeleteProductFromSale()      |
+|             |            | TestEZShop.testApplyDiscountRateToProduct() |
+|             |            | TestEZShop.testRecieveCashPayment()         |
+|             |            | TestEZShop.testEndSaleTransaction()         |
+|     6-3     |    FR6     | TestEZShop.testStartSaleTransaction()       |
+|             |            | TestEZShop.testAddProductToSale()           |
+|             |            | TestEZShop.testDeleteProductFromSale()      |
+|             |            | TestEZShop.testApplyDiscountRateToSale()    |
+|             |            | TestEZShop.testRecieveCashPayment()         |
+|             |            | TestEZShop.testEndSaleTransaction()         |
+|     6-4     |    FR6     | TestEZShop.testStartSaleTransaction()       |
+|             |            | TestEZShop.testAddProductToSale()           |
+|             |            | TestEZShop.testDeleteProductFromSale()      |
+|             |            | TestEZShop.testApplyDiscountRateToSale()    |
+|             |            | TestEZShop.testComputePointsForSale()       |
+|             |            | TestEZShop.testRecieveCashPayment()         |
+|             |            | TestEZShop.testEndSaleTransaction()         |
+|     6-4     |    FR6     | TestEZShop.testStartSaleTransaction()       |
+|             |            | TestEZShop.testEndSaleTransaction()         |
+|     6-5     |    FR6     | TestEZShop.testEndSaleTransaction()         |
+|             |            | TestEZShop.testRecieveCashPayment()         |
+|     7-1     |    FR7     | TestEZShop.testRecieveCreditCardPayment()   |
+|     7-2     |    FR7     | TestEZShop.testRecieveCreditCardPayment()   |
+|     7-3     |    FR7     | TestEZShop.testRecieveCreditCardPayment()   |
+|     7-4     |    FR7     | TestEZShop.testRecieveCashPayment()         |
+|     8-*     |    FR7     | TestEZShop.testDeleteReturnTransaction()    |
+|     8-1     |    FR7     | TestEZShop.testStartReturnTransaction()     |
+|             |            | TestEZShop.testReturnProduct()              |
+|             |            | TestEZShop.testEndReturnTransaction()       |
+|             |            | TestEZShop.testReturnCreditCardPayment()    |
+|     8-2     |    FR7     | TestEZShop.testStartReturnTransaction()     |
+|             |            | TestEZShop.testReturnProduct()              |
+|             |            | TestEZShop.testEndReturnTransaction()       |
+|             |            | TestEZShop.testRetrunCashPayment()          |
+|     9-1     |    FR8     | TestEZShop.testGetDebitdsAndCreditsAndCB()  |
+|             |            | TestEZShop.testGetBODates()                 |
+|    10-1     |    FR7     | TestEZShop.testReturnCreditCardPayment()    |
+|    10-2     |    FR7     | TestEZShop.testReturnCashPayment()          |
 
 # Coverage of Non Functional Requirements
 
