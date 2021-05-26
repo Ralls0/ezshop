@@ -791,9 +791,7 @@ public class EZShop implements EZShopInterface {
                 .orElse(null);
         Boolean branch;
 
-        if (product == null)
-            return false;
-        if (product.getQuantity() < amount)
+        if (product == null || product.getQuantity() < amount)
             return false;
 
         branch = openTransaction.addProductToSale(productCode, product.getProductDescription(),
@@ -843,8 +841,6 @@ public class EZShop implements EZShopInterface {
         }
 
         product = products.stream().filter(p -> p.getBarCode().equals(productCode)).findFirst().get();
-        if (product == null)
-            return false;
 
         ticketEntry = openTransaction.getEntry(productCode);
         if (ticketEntry == null)
@@ -1094,9 +1090,6 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
-        if (transaction == null)
-            return false;
-
         for (TicketEntry entry : transaction.getEntries()) {
             if (entry.getBarCode().equals(productCode)) {
                 if (amount <= entry.getAmount()) {
@@ -1313,8 +1306,6 @@ public class EZShop implements EZShopInterface {
             return -1;
 
         double retm = openReturnTransaction.getPrice();
-        if (retm < 0.0)
-            return -1;
 
         try {
             EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
@@ -1349,9 +1340,6 @@ public class EZShop implements EZShopInterface {
         Integer orderBalanceOperationID = null;
         BalanceOperation balanceOperation = null;
         double retm = openReturnTransaction.getPrice();
-
-        if (retm < 0.0)
-            return -1;
 
         try {
             if (!CreditCardCircuit.getInstance().isCardPresent(creditCard))
