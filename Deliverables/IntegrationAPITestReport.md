@@ -217,3 +217,7 @@ JUnit test cases applied to them> JUnit test classes should be here src/test/jav
 | NFR4                       | TestEZShop.testValidBarCode()                   |
 | NFR5                       | TestEZSaleTransaction.testValidLughnAlgorithm() |
 | NFR6                       | TestEZShop.testAttachCardToCustomer()           |
+
+# Final Coverage
+
+![](img/coverage.png)
