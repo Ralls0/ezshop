@@ -128,19 +128,83 @@ JUnit test cases applied to them> JUnit test classes should be here src/test/jav
 # Coverage of Scenarios and FR
 
 
-| Scenario ID | FR covered | JUnit Test(s)             |
-| ----------- | ---------- | ------------------------- |
-| ..          | FRx        |                           |
-| ..          | FRy        |                           |
-| ...         |            |                           |
-| ...         |            |                           |
-| ...         |            |                           |
-| ...         |            |                           |
-| ...         | FR4        | testIssueOrder            |
-| ...         |            | testPayOrder              |
-| ...         |            | testPayOrderFor           |
-| ...         | FR8        | testRecordBUAndCB         |
-| ...         |            | testGetDebitsCreditsAndCB |
+| Scenario ID | FR covered | JUnit Test(s)                  |
+| :---------: | :--------: | :----------------------------- |
+|     1-*     |    FR3     | testDeleteProductType          |
+|             |            | testGetAllProductTypes         |
+|     1-1     |    FR3     | testCreateProductType          |
+|             |            | testValdiBarCode               |
+|     1-2     |    FR3     | testUpdatePosition             |
+|             |            | testUpdateProduct              |
+|     1-3     |    FR3     | testUpdateProduct              |
+|     2-*     |    FR1     | testGetAllUsers                |
+|     2-1     |    FR1     | testCreateUser                 |
+|     2-2     |    FR1     | testDeleteUsers                |
+|     2-3     |    FR1     | testGetUser                    |
+|     2-3     |            | testUpdateUserRights           |
+|     3-*     |    FR4     | testGetAllOrders               |
+|     3-1     |    FR4     | testIssueOrder                 |
+|     3-2     |    FR4     | testPayOrder                   |
+|     3-2     |    FR4     | testPayOrderFor                |
+|     3-3     |    FR4     | testRecordOrderArrival         |
+|     4-*     |    FR5     | testGetCustomer                |
+|             |            | testGetAllCustomers            |
+|             |            | testDeleteCustomers            |
+|     4-1     |    FR5     | testDefineCustomer             |
+|     4-2     |    FR5     | testAttachCardToCustomer       |
+|             |            | testCreateCard                 |
+|     4-3     |    FR5     | testAttachCardToCustomer       |
+|     4-4     |    FR5     | testModifyCustomer             |
+|             |    FR5     | testModifyPointsOnCard         |
+|     5-1     |    FR1     | testLogin                      |
+|     5-2     |    FR1     | testLogout                     |
+|     6-*     |    FR6     | testGetSaleTransaction         |
+|     6-1     |    FR6     | testStartSaleTransaction       |
+|             |            | testAddProductToSale           |
+|             |            | testDeleteProductFromSale      |
+|             |            | testRecieveCashPayment         |
+|             |            | testEndSaleTransaction         |
+|     6-2     |    FR6     | testStartSaleTransaction       |
+|             |            | testAddProductToSale           |
+|             |            | testDeleteProductFromSale      |
+|             |            | testApplyDiscountRateToProduct |
+|             |            | testRecieveCashPayment         |
+|             |            | testEndSaleTransaction         |
+|     6-3     |    FR6     | testStartSaleTransaction       |
+|             |            | testAddProductToSale           |
+|             |            | testDeleteProductFromSale      |
+|             |            | testApplyDiscountRateToSale    |
+|             |            | testRecieveCashPayment         |
+|             |            | testEndSaleTransaction         |
+|     6-4     |    FR6     | testStartSaleTransaction       |
+|             |            | testAddProductToSale           |
+|             |            | testDeleteProductFromSale      |
+|             |            | testApplyDiscountRateToSale    |
+|             |            | testComputePointsForSale       |
+|             |            | testRecieveCashPayment         |
+|             |            | testEndSaleTransaction         |
+|     6-4     |    FR6     | testStartSaleTransaction       |
+|             |            | testEndSaleTransaction         | <td> ? </td> |
+|     6-5     |    FR6     | testEndSaleTransaction         |
+|             |            | testRecieveCashPayment         |
+|     7-1     |    FR7     | testRecieveCreditCardPayment   |
+|     7-2     |    FR7     | testRecieveCreditCardPayment   |
+|     7-3     |    FR7     | testRecieveCreditCardPayment   |
+|     7-4     |    FR7     | testRecieveCashPayment         |
+|     8-*     |    FR7     | testDeleteReturnTransaction    |
+|     8-1     |    FR7     | testStartReturnTransaction     |
+|             |            | testReturnProduct              |
+|             |            | testEndReturnTransaction       |
+|             |            | testReturnCreditCardPayment    |
+|     8-2     |    FR7     | testStartReturnTransaction     |
+|             |            | testReturnProduct              |
+|             |            | testEndReturnTransaction       |
+|             |            | testRetrunCashPayment          |
+|     9-1     |    FR8     | testGetDebitdsAndCreditsAndCB  |
+|             |            | testGetBODates                 |
+|    10-1     |    FR7     | testReturnCreditCardPayment    |
+|    10-2     |    FR7     | testReturnCashPayment          |
+
 # Coverage of Non Functional Requirements
 
 <Report in the following table the coverage of the Non Functional Requirements of the application - only those that can be tested with automated testing frameworks.>
