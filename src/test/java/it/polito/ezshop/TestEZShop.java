@@ -1788,21 +1788,21 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         final Integer tempRId = returnId;
-    
+
         // test UnauthorizedException
         ezShop.logout();
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.endReturnTransaction(tempRId, true);
         });
-    
+
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-    
+
         // test InvalidTransactionIdException
         assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
             ezShop.endReturnTransaction(null, true);
@@ -1879,26 +1879,26 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         final Integer tempRId = returnId;
-    
+
         // test UnauthorizedException
         ezShop.logout();
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.deleteReturnTransaction(tempRId);
         });
-    
+
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-    
+
         // test InvalidTransactionIdException
         assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
             ezShop.deleteReturnTransaction(null);
         });
-    
+
         // test returnId not valid
         boolean resultOp = true;
         try {
@@ -1944,21 +1944,21 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         final Integer tempId = transactionId;
-    
+
         // test UnauthorizedException
         ezShop.logout();
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.receiveCashPayment(tempId, 200);
         });
-    
+
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-    
+
         // test InvalidTransactionIdException
         assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
             ezShop.receiveCashPayment(null, 200.0);
@@ -1968,7 +1968,7 @@ public class TestEZShop {
         assertThrows(it.polito.ezshop.exceptions.InvalidPaymentException.class, () -> {
             ezShop.receiveCashPayment(tempId, 0.0);
         });
-    
+
         // test returnId not valid
         double resultOp = -1.0;
         try {
@@ -2006,21 +2006,21 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         final Integer tempId = transactionId;
-    
+
         // test UnauthorizedException
         ezShop.logout();
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.receiveCreditCardPayment(tempId, "4030270951989685");
         });
-    
+
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-    
+
         // test InvalidTransactionIdException
         assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
             ezShop.receiveCreditCardPayment(null, "4030270951989685");
@@ -2030,7 +2030,7 @@ public class TestEZShop {
         assertThrows(it.polito.ezshop.exceptions.InvalidCreditCardException.class, () -> {
             ezShop.receiveCreditCardPayment(tempId, "");
         });
-    
+
         // test returnId not valid
         boolean resultOp = true;
         try {
@@ -2041,7 +2041,8 @@ public class TestEZShop {
         assertTrue("receiveCreditCardPayment not valid mismatch", !resultOp);
         resultOp = false;
         try {
-            resultOp = ezShop.receiveCreditCardPayment(tempId, "4030270951989685");;
+            resultOp = ezShop.receiveCreditCardPayment(tempId, "4030270951989685");
+            ;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2077,26 +2078,26 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         final Integer tempRId = returnId;
-    
+
         // test UnauthorizedException
         ezShop.logout();
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.returnCashPayment(tempRId);
         });
-    
+
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-    
+
         // test InvalidTransactionIdException
         assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
             ezShop.returnCashPayment(null);
         });
-    
+
         // test returnId not valid
         double resultOp = 0.0;
         try {
@@ -2143,31 +2144,31 @@ public class TestEZShop {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    
+
         final Integer tempRId = returnId;
-    
+
         // test UnauthorizedException
         ezShop.logout();
         assertThrows(it.polito.ezshop.exceptions.UnauthorizedException.class, () -> {
             ezShop.returnCreditCardPayment(tempRId, "4030270951989685");
         });
-    
+
         try {
             ezShop.login("Marco", "CppSpaccaMaNoiUsiamoJava");
         } catch (Exception e1) {
             e1.printStackTrace();
         }
-    
+
         // test InvalidTransactionIdException
         assertThrows(it.polito.ezshop.exceptions.InvalidTransactionIdException.class, () -> {
             ezShop.returnCreditCardPayment(null, "4030270951989685");
         });
-    
+
         // test InvalidCreditCardException
         assertThrows(it.polito.ezshop.exceptions.InvalidCreditCardException.class, () -> {
             ezShop.returnCreditCardPayment(tempRId, "");
         });
-    
+
         // test returnId not valid
         double resultOp = 0.0;
         try {
@@ -2330,7 +2331,7 @@ public class TestEZShop {
         try {
             result = ezShop.payOrderFor(validCode, one, positivePPU);
             assertTrue(result == -1); // Product does not exist
-            
+
             ezShop.recordBalanceUpdate(3 * one * positivePPU);
             ezShop.createProductType("Descr", validCode, positivePPU, "Integration Test");
             result = ezShop.payOrderFor(validCode, one, positivePPU);
@@ -2372,18 +2373,20 @@ public class TestEZShop {
         try {
             ezShop.createProductType("Test Integration", validCode, positivePPU, "Test");
             validOrderID = ezShop.issueOrder(validCode, one, positivePPU);
-            ezShop.recordBalanceUpdate(balanceToAdd);
 
             assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(negativeOrderID));
             assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(zero));
 
-            
+            assertFalse(ezShop.payOrder(validOrderID));
+            ezShop.recordBalanceUpdate(balanceToAdd);
             assertTrue(ezShop.payOrder(validOrderID));
-            
+
             remainder = balanceToAdd - one * positivePPU;
             assertEquals(remainder, ezShop.computeBalance(), 0.01);
 
             assertThrows(InvalidOrderIdException.class, () -> ezShop.payOrder(null));
+            assertFalse(ezShop.payOrder(2));
+            assertFalse(ezShop.payOrder(validOrderID));
             ezShop.logout();
             assertThrows(UnauthorizedException.class, () -> ezShop.payOrder(1));
         } catch (Exception e) {
@@ -2450,8 +2453,9 @@ public class TestEZShop {
             product.setLocation(validLocation);
             EZShopDBManager.getInstance().updateProduct(product);
 
-            assertTrue(ezShop.recordOrderArrival(orderID) == false);
+            assertFalse(ezShop.recordOrderArrival(orderID));
             ezShop.payOrder(orderID);
+            assertTrue(ezShop.recordOrderArrival(orderID));
             assertTrue(ezShop.recordOrderArrival(orderID));
             product = EZShopDBManager.getInstance().loadProduct(productID);
             assertEquals(product.getQuantity(), quantity);
@@ -2503,6 +2507,10 @@ public class TestEZShop {
             expectedBalance += negativeBalance;
             assertTrue(ezShop.recordBalanceUpdate(negativeBalance));
             assertEquals(expectedBalance.doubleValue(), ezShop.computeBalance(), 0.001);
+            ezShop.logout();
+            assertThrows(UnauthorizedException.class, () -> ezShop.computeBalance());
+            loginw("Cashier", "Password");
+            assertThrows(UnauthorizedException.class, () -> ezShop.computeBalance());
         } catch (Exception e) {
             e.printStackTrace();
             fail();
@@ -2602,7 +2610,7 @@ public class TestEZShop {
     }
 
     @Test
-    public void testBODates(){
+    public void testBODates() {
         Double fakeAmount = 100.0;
         LocalDate now, then;
         List<BalanceOperation> bos = null;
@@ -2619,7 +2627,7 @@ public class TestEZShop {
             ezShop.recordBalanceUpdate(fakeAmount);
             ezShop.recordBalanceUpdate(fakeAmount);
             bos = ezShop.getCreditsAndDebits(then, now);
-        } catch (Exception e){
+        } catch (Exception e) {
             System.out.println(e.getClass());
             e.printStackTrace();
             fail();
@@ -2628,4 +2636,40 @@ public class TestEZShop {
         length = bos.stream().count();
         assertEquals(length.longValue(), 3);
     }
+
+    @Test
+    public void testGetAllOrders() {
+        List<Order> orders;
+        String[] validBarCodes = { "3000000000083", "3000000000076", "3000000580073", "8500000580073", "8928498284264",
+                "29293947954740", "92898971949586", "5945749748286", "28957949539596" };
+        Boolean res;
+        createw("ShopManager", "pwd", "ShopManager");
+        loginw("ShopManager", "pwd");
+        createw("Cashier", "pwd", "Cashier");
+        ezShop.logout();
+        
+        assertThrows(UnauthorizedException.class, () -> ezShop.getAllOrders());
+        loginw("Cashier", "pwd");
+        assertThrows(UnauthorizedException.class, () -> ezShop.getAllOrders());
+        ezShop.logout();
+        loginw("ShopManager", "pwd");
+
+        try {
+            for (String code : validBarCodes) {
+                ezShop.issueOrder(code, 1, 1.0);
+            }
+            orders = ezShop.getAllOrders();
+            res = orders.stream().map( o -> o.getProductCode()).allMatch( bc -> {
+                for (String code : validBarCodes)
+                    if (code.equals(bc))
+                        return true;
+                return false;
+            });
+            assertTrue(res);
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
 }
