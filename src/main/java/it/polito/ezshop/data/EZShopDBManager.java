@@ -219,19 +219,19 @@ public class EZShopDBManager {
         return true;
     }
 
-    public boolean searchCustomerByName(String customerName) throws SQLException {
+    public boolean customerExists(String customerName) throws SQLException {
         String sql = "SELECT * FROM Customers WHERE Name = '" + customerName + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
     }
 
-    public boolean searchCustomerById(Integer id) throws SQLException {
+    public boolean customerExists(Integer id) throws SQLException {
         String sql = "SELECT * FROM Customers WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
     }
 
-    public boolean searchCustomerByCard(String card) throws SQLException {
+    public boolean customerExistsFromCard(String card) throws SQLException {
         String sql = "SELECT * FROM Customers WHERE Card = '" + card + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
@@ -378,19 +378,19 @@ public class EZShopDBManager {
         return null;
     }
 
-    public boolean searchProductByBarCode(String barCode) throws SQLException {
+    public boolean productExists(String barCode) throws SQLException {
         String sql = "SELECT * FROM Products WHERE ProductCode = '" + barCode + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
     }
 
-    public boolean searchProductById(Integer id) throws SQLException {
+    public boolean productExists(Integer id) throws SQLException {
         String sql = "SELECT * FROM Products WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
     }
 
-    public boolean searchProductByLocation(String location) throws SQLException {
+    public boolean productExistsFromLocation(String location) throws SQLException {
         String sql = "SELECT * FROM Products WHERE Position = '" + location + "'";
         ResultSet res = db.executeSelectionQuery(sql);
         return res.next();
@@ -514,8 +514,7 @@ public class EZShopDBManager {
     }
 
     public boolean saveSale(EZSaleTransaction sale) throws SQLException {
-        PreparedStatement statement = db
-                .prepareStatement("INSERT INTO Sales (ID, Price, DiscountRate, Status) VALUES (?, ?, ?, ?)");
+        PreparedStatement statement = db.prepareStatement("INSERT INTO Sales (ID, Price, DiscountRate, Status) VALUES (?, ?, ?, ?)");
         statement.setInt(1, sale.getTicketNumber());
         statement.setDouble(2, sale.getPrice());
         statement.setDouble(3, sale.getDiscountRate());
@@ -538,15 +537,6 @@ public class EZShopDBManager {
         statement.close();
 
         return true;
-    }
-
-    public void updateSaleStatus(Integer transactionID, String status) throws SQLException {
-        PreparedStatement statement = db.prepareStatement("UPDATE Sales SET Status = ? WHERE ID = ?");
-        statement.setInt(2, transactionID);
-        statement.setString(1, status);
-
-        statement.execute();
-        statement.close();
     }
 
     public boolean updateSale(EZSaleTransaction sale) throws SQLException {
@@ -663,7 +653,7 @@ public class EZShopDBManager {
 
         return ops;
     }
-
+/*
     public BalanceOperation loadBalanceOperation(Integer id) throws SQLException {
         String sql = "SELECT * FROM BalanceOperations WHERE ID = " + id;
         ResultSet res = db.executeSelectionQuery(sql);
@@ -677,6 +667,8 @@ public class EZShopDBManager {
         return null;
     }
 
+ */
+
     public boolean saveBalanceOperation(BalanceOperation operation) throws SQLException {
         PreparedStatement statement = db.prepareStatement("INSERT INTO BalanceOperations (ID, Amount, Date, Type) VALUES (?, ?, ?, ?)");
         statement.setInt(1, operation.getBalanceId());
@@ -689,7 +681,7 @@ public class EZShopDBManager {
 
         return true;
     }
-
+/*
     public boolean updateBalanceOperation(BalanceOperation operation) throws SQLException {
         PreparedStatement statement = db.prepareStatement("UPDATE BalanceOperations SET Amount = ?, Date = ?, Type = ? WHERE ID = ?");
         statement.setInt(4, operation.getBalanceId());
@@ -712,6 +704,8 @@ public class EZShopDBManager {
 
         return true;
     }
+
+ */
 
     //  RETURN TRANSACTION CLASS QUERIES
     public Integer getNextReturnID() throws SQLException {
@@ -836,6 +830,99 @@ public class EZShopDBManager {
         statement = db.prepareStatement("DELETE FROM ReturnTicketsEntries");
         statement.execute();
         statement.close();
+    }
+
+    public void createTableIfNotExists() throws SQLException {
+        try {
+            db.execute("CREATE TABLE Users (" +
+                    " ID int NOT NULL," +
+                    " Username varchar(255) UNIQUE," +
+                    " Password varchar(255) NOT NULL," +
+                    " Role varchar(255) NOT NULL," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+            db.execute("CREATE TABLE Customers (" +
+                    " ID int NOT NULL," +
+                    " Name varchar(255) UNIQUE," +
+                    " Card varchar(255) NOT NULL," +
+                    " Points int NOT NULL," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+
+            db.execute("CREATE TABLE Products (" +
+                    " ID int NOT NULL," +
+                    " ProductCode varchar(255) UNIQUE," +
+                    " Description varchar(255) NOT NULL," +
+                    " Quantity int NOT NULL," +
+                    " PricePerUnit double NOT NULL," +
+                    " Note varchar(255) NOT NULL," +
+                    " Position varchar(255)," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+
+            db.execute("CREATE TABLE BalanceOperations (" +
+                    " ID int NOT NULL," +
+                    " Amount double NOT NULL," +
+                    " Date date NOT NULL," +
+                    " Type varchar(255) NOT NULL," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+
+            db.execute("CREATE TABLE Orders (" +
+                    " ID int NOT NULL," +
+                    " ProductCode varchar(255) NOT NULL," +
+                    " PricePerUnit double NOT NULL," +
+                    " Status varchar(255) NOT NULL," +
+                    " Quantity int NOT NULL," +
+                    " BalanceID int NOT NULL," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+
+            db.execute("CREATE TABLE Sales (" +
+                    " ID int NOT NULL," +
+                    " Status varchar(255) NOT NULL," +
+                    " Price double NOT NULL," +
+                    " DiscountRate double NOT NULL," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+
+            db.execute("CREATE TABLE TicketsEntries (" +
+                    " ID int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                    " SaleID int NOT NULL," +
+                    " ProductCode varchar(255) NOT NULL," +
+                    " ProductDescription varchar(255) NOT NULL," +
+                    " PricePerUnit double NOT NULL," +
+                    " Quantity int NOT NULL," +
+                    " DiscountRate double NOT NULL," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+
+            db.execute("CREATE TABLE ReturnTransactions (" +
+                    " ID int NOT NULL," +
+                    " SaleID int NOT NULL," +
+                    " Status varchar(255) NOT NULL," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+
+            db.execute("CREATE TABLE ReturnTicketsEntries (" +
+                    " ID int NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)," +
+                    " ReturnID int NOT NULL," +
+                    " ProductCode varchar(255) NOT NULL," +
+                    " ProductDescription varchar(255) NOT NULL," +
+                    " PricePerUnit double NOT NULL," +
+                    " Quantity int NOT NULL," +
+                    " DiscountRate double NOT NULL," +
+                    " PRIMARY KEY(ID)" +
+                    ")");
+        } catch (SQLException e) {
+            if (e.getSQLState().equals("X0Y32")) {              //      X0Y32 IS THE ERROR WHEN TABLE ALREADY EXISTS
+                //System.out.println("Tables in DB already exists, skipping creation...");
+            } else {
+                throw e;
+            }
+        }
+
+
     }
 
     public DBConnector getConnector() {

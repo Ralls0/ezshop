@@ -37,7 +37,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidUsernameException();
         if (password == null || password.equals(""))
             throw new InvalidPasswordException();
-        if (!role.matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null && !role.matches("(Administrator|ShopManager)"))
             throw new InvalidRoleException();
 
         Integer userID = -1;
@@ -189,7 +189,7 @@ public class EZShop implements EZShopInterface {
 
         boolean barCodeAlredyExists = false;
         try {
-            barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(productCode);
+            barCodeAlredyExists = EZShopDBManager.getInstance().productExists(productCode);
             if (!barCodeAlredyExists) {
                 EZShopDBManager.getInstance().saveProduct(product);
                 productID = product.getId();
@@ -222,8 +222,8 @@ public class EZShop implements EZShopInterface {
         ProductType product = null;
         boolean updated = false;
         try {
-            found = EZShopDBManager.getInstance().searchProductById(id);
-            barCodeAlredyExists = EZShopDBManager.getInstance().searchProductByBarCode(newCode);
+            found = EZShopDBManager.getInstance().productExists(id);
+            barCodeAlredyExists = EZShopDBManager.getInstance().productExists(newCode);
             if (found) {
                 product = EZShopDBManager.getInstance().loadProduct(id);
                 if (product.getBarCode().equals(newCode)) {
@@ -362,11 +362,12 @@ public class EZShop implements EZShopInterface {
         ProductType product = null;
 
         try {
-            positionAlredyExists = EZShopDBManager.getInstance().searchProductByLocation(newPos) && !newPos.equals("");
+            positionAlredyExists = EZShopDBManager.getInstance().productExistsFromLocation(newPos) && !newPos.equals("");
             product = EZShopDBManager.getInstance().loadProduct(productId);
 
-            if (product == null || positionAlredyExists)
+            if (product == null || positionAlredyExists) {
                 return false;
+            }
 
             if (product.getLocation().equals(newPos))
                 return true;
@@ -381,7 +382,7 @@ public class EZShop implements EZShopInterface {
 
     }
 
-    private boolean validBarCode(String barCode) {
+    public static boolean validBarCode(String barCode) {
         int sum = 0;
         int checksum = Character.getNumericValue(barCode.charAt(barCode.length() - 1));
         int offset = barCode.length() % 2;
@@ -415,6 +416,9 @@ public class EZShop implements EZShopInterface {
         EZOrder newOrder = null;
 
         try {
+            if (!EZShopDBManager.getInstance().productExists(productCode))
+                return -1;
+
             nextOrderId = EZShopDBManager.getInstance().getNextOrderID();
             nextBalanceOperationId = EZShopDBManager.getInstance().getNextBalanceOperationID();
             newOrder = new EZOrder(productCode, quantity, pricePerUnit);
@@ -451,9 +455,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidOrderIdException("Null Order ID");
         if (orderId <= 0)
             throw new InvalidOrderIdException("Negative (or zero) Order ID");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException("No User Logged In");
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
         Order orderToPay = null;
@@ -501,9 +503,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidOrderIdException("Null Order ID");
         if (orderId <= 0)
             throw new InvalidOrderIdException("Negative (or zero) Order ID");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException("No User Logged In");
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException("User has not enough rights");
 
         Order myOrder = null;
@@ -512,26 +512,21 @@ public class EZShop implements EZShopInterface {
 
         try {
             myOrder = EZShopDBManager.getInstance().loadOrder(orderId);
+            productCode = myOrder.getProductCode();
+            orderProduct = getProductTypeByBarCode(productCode);
         } catch (Exception dbException) {
             dbException.printStackTrace();
             return false;
-        }
-
-        if (!myOrder.getStatus().matches("(ORDERED|COMPLETED)"))
-            return false;
-
-        productCode = myOrder.getProductCode();
-
-        try {
-            orderProduct = getProductTypeByBarCode(productCode);
-        } catch (Exception e) {
-            // Can't happen...
         }
 
         if (orderProduct.getLocation() == null)
             throw new InvalidLocationException("Null Location");
         if (!orderProduct.getLocation().matches("[0-9]{1,}-[a-zA-Z]{1,}-[0-9]{1,}"))
             throw new InvalidLocationException("Invalid Location");
+        if (myOrder.getStatus().matches("(ORDERED|ISSUED)"))
+            return false;
+        if (myOrder.getStatus().matches("COMPLETED"))
+            return true;
 
         orderProduct.setQuantity(orderProduct.getQuantity() + myOrder.getQuantity());
         myOrder.setStatus("COMPLETED");
@@ -576,7 +571,7 @@ public class EZShop implements EZShopInterface {
         Customer customer = null;
 
         try {
-            if (EZShopDBManager.getInstance().searchCustomerByName(customerName))
+            if (EZShopDBManager.getInstance().customerExists(customerName))
                 return -1;
 
             customer = new EZCustomer(EZShopDBManager.getInstance().getNextCustomerID(), customerName, "", 0);
@@ -596,16 +591,14 @@ public class EZShop implements EZShopInterface {
             throw new InvalidCustomerCardException();
         if (newCustomerName == null || newCustomerName.equals(""))
             throw new InvalidCustomerNameException();
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
         if (id == null || id <= 0)
             throw new InvalidCustomerIdException();
 
         Customer customer = null;
         try {
-            if (!EZShopDBManager.getInstance().searchCustomerById(id))
+            if (!EZShopDBManager.getInstance().customerExists(id))
                 return false;
             customer = EZShopDBManager.getInstance().loadCustomer(id);
             EZShopDBManager.getInstance().updateCustomer(id, newCustomerName, newCustomerCard, customer.getPoints());
@@ -625,7 +618,7 @@ public class EZShop implements EZShopInterface {
 
         boolean existsAndDeleted = false;
         try {
-            existsAndDeleted = EZShopDBManager.getInstance().searchCustomerById(id);
+            existsAndDeleted = EZShopDBManager.getInstance().customerExists(id);
             if (existsAndDeleted)
                 EZShopDBManager.getInstance().deleteCustomer(id);
         } catch (Exception e) {
@@ -678,7 +671,7 @@ public class EZShop implements EZShopInterface {
         long_random = random.nextLong(1_000_000_000, 10_000_000_000L);
         while (!newCard) {
             try {
-                if (long_random >= 0 && !EZShopDBManager.getInstance().searchCustomerByCard(long_random.toString())) {
+                if (long_random >= 0 && !EZShopDBManager.getInstance().customerExistsFromCard(long_random.toString())) {
                     newCard = true;
                 } else {
                     long_random = random.nextLong(1_000_000_000, 10_000_000_000L);
@@ -704,7 +697,7 @@ public class EZShop implements EZShopInterface {
         Customer customer = null;
         boolean updated = false;
         try {
-            cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
+            cardAlredyExists = EZShopDBManager.getInstance().customerExistsFromCard(customerCard);
             customer = EZShopDBManager.getInstance().loadCustomer(customerId);
             if (!cardAlredyExists && customer != null) {
                 EZShopDBManager.getInstance().updateCustomer(customerId, customer.getCustomerName(), customerCard,
@@ -723,14 +716,14 @@ public class EZShop implements EZShopInterface {
             throws InvalidCustomerCardException, UnauthorizedException {
         if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
-        if (customerCard.length() != 10 && !(customerCard.equals("") && customerCard.matches("[0-9]{10}")))
+        if (!customerCard.matches("[0-9]{10}"))
             throw new InvalidCustomerCardException();
 
         Customer customer = null;
         boolean cardAlredyExists = false;
         boolean updated = false;
         try {
-            cardAlredyExists = EZShopDBManager.getInstance().searchCustomerByCard(customerCard);
+            cardAlredyExists = EZShopDBManager.getInstance().customerExistsFromCard(customerCard);
             if (cardAlredyExists) {
                 customer = EZShopDBManager.getInstance().loadCustomer(customerCard);
                 if (customer.getPoints() + pointsToBeAdded > 0) {
@@ -749,9 +742,7 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public Integer startSaleTransaction() throws UnauthorizedException {
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         Integer id = null;
@@ -780,9 +771,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0.0)
             throw new InvalidQuantityException("quantity is less than 0");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (openTransaction == null || transactionId != openTransaction.getTicketNumber()
@@ -802,9 +791,7 @@ public class EZShop implements EZShopInterface {
                 .orElse(null);
         Boolean branch;
 
-        if (product == null)
-            return false;
-        if (product.getQuantity() < amount)
+        if (product == null || product.getQuantity() < amount)
             return false;
 
         branch = openTransaction.addProductToSale(productCode, product.getProductDescription(),
@@ -835,9 +822,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0)
             throw new InvalidQuantityException("quantity is less than 0");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (openTransaction == null || transactionId != openTransaction.getTicketNumber()
@@ -856,8 +841,6 @@ public class EZShop implements EZShopInterface {
         }
 
         product = products.stream().filter(p -> p.getBarCode().equals(productCode)).findFirst().get();
-        if (product == null)
-            return false;
 
         ticketEntry = openTransaction.getEntry(productCode);
         if (ticketEntry == null)
@@ -889,9 +872,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductCodeException("product code is invalid");
         if (discountRate < 0 || discountRate >= 1.0)
             throw new InvalidDiscountRateException("discount rate is less than 0 or greater than or equal to 1.00");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (openTransaction == null || transactionId != openTransaction.getTicketNumber()
@@ -913,9 +894,7 @@ public class EZShop implements EZShopInterface {
         if (discountRate < 0.0 || discountRate >= 1.0)
             throw new InvalidDiscountRateException(
                     "discount rate is less than 0 or if it greater than or equal to 1.00");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (openTransaction == null || transactionId != openTransaction.getTicketNumber()
@@ -932,9 +911,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         List<EZSaleTransaction> st = null;
@@ -960,9 +937,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (openTransaction == null || transactionId != openTransaction.getTicketNumber()
@@ -987,9 +962,7 @@ public class EZShop implements EZShopInterface {
 
         if (saleNumber == null || saleNumber <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         ProductType product = null;
@@ -997,11 +970,6 @@ public class EZShop implements EZShopInterface {
 
         try {
             if (openTransaction != null && saleNumber == openTransaction.getTicketNumber()) {
-                if (openTransaction.getStatus().equals("payed"))
-                    return false;
-
-                if (saleNumber != openTransaction.getTicketNumber())
-                    return false;
 
                 for (TicketEntry e : openTransaction.getEntries()) {
                     product = getProductTypeByBarCode(e.getBarCode());
@@ -1044,9 +1012,7 @@ public class EZShop implements EZShopInterface {
 
         if (transactionId == null || transactionId <= 0)
             throw new InvalidTransactionIdException("transaction id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         List<EZSaleTransaction> st = null;
@@ -1073,9 +1039,7 @@ public class EZShop implements EZShopInterface {
 
         if (saleNumber == null || saleNumber <= 0)
             throw new InvalidTransactionIdException("sale id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (openReturnTransaction != null)
@@ -1110,9 +1074,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidProductCodeException("product code is empty or null");
         if (amount < 0)
             throw new InvalidQuantityException("quantity is less than 0");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (openReturnTransaction == null || returnId != openReturnTransaction.getReturnId())
@@ -1128,17 +1090,11 @@ public class EZShop implements EZShopInterface {
             return false;
         }
 
-        if (transaction == null)
-            return false;
-
         for (TicketEntry entry : transaction.getEntries()) {
             if (entry.getBarCode().equals(productCode)) {
                 if (amount <= entry.getAmount()) {
-                    EZTicketEntry e = new EZTicketEntry(entry.getBarCode(),
-                    entry.getProductDescription(),
-                    amount,
-                    entry.getPricePerUnit(),
-                    entry.getDiscountRate());
+                    EZTicketEntry e = new EZTicketEntry(entry.getBarCode(), entry.getProductDescription(), amount,
+                            entry.getPricePerUnit(), entry.getDiscountRate());
                     if (openReturnTransaction.addProductReturned(e)) {
                         openReturnTransaction.setDiscountRate(transaction.getDiscountRate());
                         return true;
@@ -1160,9 +1116,7 @@ public class EZShop implements EZShopInterface {
             throws InvalidTransactionIdException, UnauthorizedException {
         if (returnId == null || returnId <= 0)
             throw new InvalidTransactionIdException("return id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (openReturnTransaction == null || returnId != openReturnTransaction.getReturnId())
@@ -1183,7 +1137,7 @@ public class EZShop implements EZShopInterface {
 
         if (!commit) {
             openReturnTransaction = null;
-            return false;
+            return true;
         }
 
         try {
@@ -1212,14 +1166,25 @@ public class EZShop implements EZShopInterface {
 
         if (returnId == null || returnId <= 0)
             throw new InvalidTransactionIdException("return id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
-        if (openReturnTransaction == null || returnId != openReturnTransaction.getReturnId()
-                || openReturnTransaction.getStatus().equals("open"))
-            return false;
+        if (openReturnTransaction != null){
+            if(returnId != openReturnTransaction.getReturnId()
+                || openReturnTransaction.getStatus().equals("open")) {
+                    return false;
+                }
+        }
+        else {
+            try {
+                openReturnTransaction = EZShopDBManager.getInstance().loadReturn(returnId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (openReturnTransaction == null) {
+                return false;
+            }
+        }
 
         EZSaleTransaction transaction = null;
         ProductType product = null;
@@ -1251,9 +1216,7 @@ public class EZShop implements EZShopInterface {
 
         if (ticketNumber == null || ticketNumber <= 0)
             throw new InvalidTransactionIdException("return id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (cash <= 0.0)
@@ -1290,9 +1253,7 @@ public class EZShop implements EZShopInterface {
 
         if (ticketNumber == null || ticketNumber <= 0)
             throw new InvalidTransactionIdException("ticket number less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (creditCard == null || creditCard.equals("") || !EZSaleTransaction.validLuhnAlgorithm(creditCard))
@@ -1334,9 +1295,7 @@ public class EZShop implements EZShopInterface {
 
         if (returnId == null || returnId <= 0)
             throw new InvalidTransactionIdException("return id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         Integer orderBalanceOperationID = null;
@@ -1347,8 +1306,6 @@ public class EZShop implements EZShopInterface {
             return -1;
 
         double retm = openReturnTransaction.getPrice();
-        if (retm < 0.0)
-            return -1;
 
         try {
             EZShopDBManager.getInstance().updateReturnStatus(openReturnTransaction.getReturnId(), "payed");
@@ -1370,9 +1327,7 @@ public class EZShop implements EZShopInterface {
 
         if (returnId == null || returnId <= 0)
             throw new InvalidTransactionIdException("return Id less than or equal to 0 or it is null");
-        if (authenticatedUser == null)
-            throw new UnauthorizedException();
-        if (!authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
+        if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
         if (creditCard == null || creditCard.equals("") || !EZSaleTransaction.validLuhnAlgorithm(creditCard))
@@ -1385,9 +1340,6 @@ public class EZShop implements EZShopInterface {
         Integer orderBalanceOperationID = null;
         BalanceOperation balanceOperation = null;
         double retm = openReturnTransaction.getPrice();
-
-        if (retm < 0.0)
-            return -1;
 
         try {
             if (!CreditCardCircuit.getInstance().isCardPresent(creditCard))

@@ -91,4 +91,16 @@ public class EZOrder implements Order {
         this.orderId = orderId;
     }
 
+    public int hashCode(){
+        return orderId.hashCode();
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof EZOrder))
+            return false;
+        EZOrder otherOrder = (EZOrder) other;
+
+        return this.orderId == otherOrder.getOrderId();
+    }
+
 }

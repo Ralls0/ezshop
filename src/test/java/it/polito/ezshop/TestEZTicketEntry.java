@@ -22,35 +22,35 @@ public class TestEZTicketEntry {
     }
 
     @Test
-    public void setBarCode() {
+    public void testSetBarCode() {
         String barCode = "9999999999999";
         ticket.setBarCode(barCode);
         assertEquals(barCode, ticket.getBarCode());
     }
 
     @Test
-    public void setProductDescription() {
+    public void testSetProductDescription() {
         String description = "Test descrizione";
         ticket.setProductDescription(description);
         assertEquals(description, ticket.getProductDescription());
     }
 
     @Test
-    public void setAmount() {
+    public void testSetAmount() {
         Integer amount = 10;
         ticket.setAmount(amount);
         assertEquals(amount.intValue(), ticket.getAmount());
     }
 
     @Test
-    public void setPricePerUnit() {
+    public void testSetPricePerUnit() {
         Double price = 10.25;
         ticket.setPricePerUnit(price);
         assertEquals(price, ticket.getPricePerUnit(), 0.0);
     }
 
     @Test
-    public void setDiscountRate() {
+    public void testSetDiscountRate() {
         Double discount = 10.25;
         ticket.setDiscountRate(discount);
         assertEquals(discount, ticket.getDiscountRate(), 0.0);

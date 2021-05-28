@@ -71,5 +71,16 @@ public class EZBalanceOperation implements BalanceOperation {
     public void setType(String type) {
         this.type = type;
     }
-    
+
+    public int hashCode(){
+        return balanceId.hashCode();
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof EZBalanceOperation))
+            return false;
+        EZBalanceOperation otherOperation = (EZBalanceOperation) other;
+
+        return this.balanceId == otherOperation.getBalanceId();
+    }
 }

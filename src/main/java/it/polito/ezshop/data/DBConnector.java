@@ -32,8 +32,4 @@ public class DBConnector {
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         return connection.prepareStatement(sql);
     }
-
-    public void closeConnection() throws SQLException {
-        connection.close();
-    }
 }
