@@ -975,8 +975,9 @@ public class EZShop implements EZShopInterface {
                     product = getProductTypeByBarCode(e.getBarCode());
                     product.setQuantity(product.getQuantity() + e.getAmount());
                     EZShopDBManager.getInstance().updateProduct(product);
-                    EZShopDBManager.getInstance().deleteSale(saleNumber);
                 }
+                
+                EZShopDBManager.getInstance().deleteSale(saleNumber);
 
                 openTransaction = null;
                 return true;
@@ -1067,13 +1068,12 @@ public class EZShop implements EZShopInterface {
     @Override
     public boolean returnProduct(Integer returnId, String productCode, int amount) throws InvalidTransactionIdException,
             InvalidProductCodeException, InvalidQuantityException, UnauthorizedException {
-
+        if (amount <= 0)
+            throw new InvalidQuantityException("quantity is less than 0");
         if (returnId == null || returnId <= 0)
             throw new InvalidTransactionIdException("return id less than or equal to 0 or it is null");
         if (productCode == null || productCode.equals("") || !validBarCode(productCode))
             throw new InvalidProductCodeException("product code is empty or null");
-        if (amount < 0)
-            throw new InvalidQuantityException("quantity is less than 0");
         if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
