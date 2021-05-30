@@ -37,7 +37,7 @@ public class EZShop implements EZShopInterface {
             throw new InvalidUsernameException();
         if (password == null || password.equals(""))
             throw new InvalidPasswordException();
-        if (authenticatedUser == null && !role.matches("(Administrator|ShopManager)"))
+        if (role == null || !role.matches("(Administrator|ShopManager|Cashier)"))
             throw new InvalidRoleException();
 
         Integer userID = -1;
@@ -70,13 +70,15 @@ public class EZShop implements EZShopInterface {
         if (id == null || id <= 0)
             throw new InvalidUserIdException();
 
-        boolean deleted = false;
         try {
-            deleted = EZShopDBManager.getInstance().deleteUser(id);
+            if (!EZShopDBManager.getInstance().userExists(id))
+                return false;
+
+            return EZShopDBManager.getInstance().deleteUser(id);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return deleted;
+        return false;
     }
 
     @Override
@@ -690,7 +692,7 @@ public class EZShop implements EZShopInterface {
             throw new UnauthorizedException();
         if (customerId == null || customerId <= 0)
             throw new InvalidCustomerIdException();
-        if (!customerCard.matches("[0-9]{10}"))
+        if (customerCard == null || !customerCard.matches("[0-9]{10}"))
             throw new InvalidCustomerCardException();
 
         boolean cardAlredyExists = false;
@@ -716,7 +718,7 @@ public class EZShop implements EZShopInterface {
             throws InvalidCustomerCardException, UnauthorizedException {
         if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
-        if (!customerCard.matches("[0-9]{10}"))
+        if (customerCard == null || !customerCard.matches("[0-9]{10}"))
             throw new InvalidCustomerCardException();
 
         Customer customer = null;

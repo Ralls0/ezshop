@@ -47,7 +47,7 @@ public class EZProductType implements ProductType{
 
     @Override
     public void setNote(String note) {
-        this.note = note;
+        this.note = note == null ? "" : note;
     }
 
     @Override
