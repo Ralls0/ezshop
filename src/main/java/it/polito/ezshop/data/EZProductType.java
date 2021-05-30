@@ -15,7 +15,7 @@ public class EZProductType implements ProductType{
         this.quantity = quantity;
         this.productCode = productCode;
         this.description = description;
-        this.note = note;
+        this.note = note == null ? "" : note;
         this.location = location;
         this.pricePerUnit = pricePerUnit;
     }

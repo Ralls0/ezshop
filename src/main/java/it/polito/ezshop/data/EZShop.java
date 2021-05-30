@@ -7,6 +7,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 public class EZShop implements EZShopInterface {
@@ -160,8 +161,9 @@ public class EZShop implements EZShopInterface {
 
     @Override
     public boolean logout() {
+        boolean ret = authenticatedUser == null ? false : true;
         authenticatedUser = null;
-        return true;
+        return ret;
     }
 
     @Override
@@ -255,15 +257,16 @@ public class EZShop implements EZShopInterface {
         if (id == null || id <= 0)
             throw new InvalidProductIdException();
 
-        boolean deleted = false;
         try {
-            deleted = EZShopDBManager.getInstance().deleteProduct(id);
+            if (!EZShopDBManager.getInstance().productExists(id))
+                return false;
+            EZShopDBManager.getInstance().deleteProduct(id);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
 
-        return deleted;
+        return true;
     }
 
     @Override
@@ -303,17 +306,11 @@ public class EZShop implements EZShopInterface {
         if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager)"))
             throw new UnauthorizedException();
 
-        List<ProductType> toReturn = new ArrayList<>();
-        List<ProductType> products = null;
+        String d = description == null ? "" : description; // Sfolli di Java, non chiedete
 
-        // Get all products and search if you find product with the same description and
-        // add them to the list
-        products = getAllProductTypes();
-        for (ProductType product : products) {
-            if (product.getProductDescription().equals(description))
-                toReturn.add(product);
-        }
-        return toReturn;
+        return getAllProductTypes().stream()
+                .filter(pt -> pt.getProductDescription().toLowerCase().contains(d.toLowerCase()))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -364,7 +361,8 @@ public class EZShop implements EZShopInterface {
         ProductType product = null;
 
         try {
-            positionAlredyExists = EZShopDBManager.getInstance().productExistsFromLocation(newPos) && !newPos.equals("");
+            positionAlredyExists = EZShopDBManager.getInstance().productExistsFromLocation(newPos)
+                    && !newPos.equals("");
             product = EZShopDBManager.getInstance().loadProduct(productId);
 
             if (product == null || positionAlredyExists) {
@@ -589,14 +587,14 @@ public class EZShop implements EZShopInterface {
     public boolean modifyCustomer(Integer id, String newCustomerName, String newCustomerCard)
             throws InvalidCustomerNameException, InvalidCustomerCardException, InvalidCustomerIdException,
             UnauthorizedException {
+        if (id == null || id <= 0)
+            throw new InvalidCustomerIdException();
         if (newCustomerCard == null || !newCustomerCard.matches("([0-9]{10}|^$)"))
             throw new InvalidCustomerCardException();
         if (newCustomerName == null || newCustomerName.equals(""))
             throw new InvalidCustomerNameException();
         if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
-        if (id == null || id <= 0)
-            throw new InvalidCustomerIdException();
 
         Customer customer = null;
         try {
@@ -978,7 +976,7 @@ public class EZShop implements EZShopInterface {
                     product.setQuantity(product.getQuantity() + e.getAmount());
                     EZShopDBManager.getInstance().updateProduct(product);
                 }
-                
+
                 EZShopDBManager.getInstance().deleteSale(saleNumber);
 
                 openTransaction = null;
@@ -1171,13 +1169,11 @@ public class EZShop implements EZShopInterface {
         if (authenticatedUser == null || !authenticatedUser.getRole().matches("(Administrator|ShopManager|Cashier)"))
             throw new UnauthorizedException();
 
-        if (openReturnTransaction != null){
-            if(returnId != openReturnTransaction.getReturnId()
-                || openReturnTransaction.getStatus().equals("open")) {
-                    return false;
-                }
-        }
-        else {
+        if (openReturnTransaction != null) {
+            if (returnId != openReturnTransaction.getReturnId() || openReturnTransaction.getStatus().equals("open")) {
+                return false;
+            }
+        } else {
             try {
                 openReturnTransaction = EZShopDBManager.getInstance().loadReturn(returnId);
             } catch (Exception e) {
