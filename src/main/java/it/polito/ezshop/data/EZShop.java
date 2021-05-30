@@ -512,7 +512,11 @@ public class EZShop implements EZShopInterface {
 
         try {
             myOrder = EZShopDBManager.getInstance().loadOrder(orderId);
+
+            if (myOrder == null)
+                return false;
             productCode = myOrder.getProductCode();
+            
             orderProduct = getProductTypeByBarCode(productCode);
         } catch (Exception dbException) {
             dbException.printStackTrace();
